@@ -68,7 +68,7 @@ inline double poisson_pmf(double lambda, int k)
 
 // An efficient implementation of the algorithm for the computation of non-crossing probability for a binomial process given in the paper:
 //     Khmaladze and Shinjikashvili (2001) "Calculation of noncrossing probabilities for Poisson processes and its corollaries"
-double crossing_probability(const vector<double>& lower_bounds, const vector<double>& upper_bounds)
+double binomial_process_noncrossing_probability(const vector<double>& lower_bounds, const vector<double>& upper_bounds)
 {
     assert(lower_bounds.size() == upper_bounds.size());
     int n = lower_bounds.size();
@@ -142,13 +142,11 @@ double crossing_probability(const vector<double>& lower_bounds, const vector<dou
 
     vector<double>& last_to_buffer = *buffers[bounds.size() % 2];
     double poisson_process_noncrossing_probability = last_to_buffer[n];
-    double binomial_process_noncrossing_probability = poisson_process_noncrossing_probability / poisson_pmf(n, n);
-
-    return 1-binomial_process_noncrossing_probability;
+    return poisson_process_noncrossing_probability / poisson_pmf(n, n);
 }
 
 
-double crossing_probability_fft(const vector<double>& lower_bounds, const vector<double>& upper_bounds)
+double binomial_process_noncrossing_probability_fft(const vector<double>& lower_bounds, const vector<double>& upper_bounds)
 {
     assert(lower_bounds.size() == upper_bounds.size());
     int n = lower_bounds.size();
@@ -223,7 +221,6 @@ double crossing_probability_fft(const vector<double>& lower_bounds, const vector
 
     vector<double>& last_to_buffer = *buffers[bounds.size() % 2];
     double poisson_process_noncrossing_probability = last_to_buffer[n];
-    double binomial_process_noncrossing_probability = poisson_process_noncrossing_probability / poisson_pmf(n, n);
 
-    return 1-binomial_process_noncrossing_probability;
+    return poisson_process_noncrossing_probability / poisson_pmf(n, n);
 }

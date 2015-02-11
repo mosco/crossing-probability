@@ -4,7 +4,7 @@
 #include <fftw3.h>
 
 #include "fftw_wrappers.hh"
-#include "crossing_probability.hh"
+#include "noncrossing_probability.hh"
 
 using namespace std;
 
@@ -90,9 +90,9 @@ int handle_file_command(const char* filename, bool use_fft)
         verify_bounds_are_valid(bounds.first, bounds.second);
         double probability = -1;
         if (use_fft) {
-            probability = crossing_probability_fft(bounds.first, bounds.second);
+            probability = 1.0 - binomial_process_noncrossing_probability_fft(bounds.first, bounds.second);
         } else {
-            probability = crossing_probability(bounds.first, bounds.second);
+            probability = 1.0 - binomial_process_noncrossing_probability(bounds.first, bounds.second);
         }
         cout << probability << endl;
         return 0;
