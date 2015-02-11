@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include <cassert>
 #include <cstring>
 #include "fftw_wrappers.hh"
@@ -52,7 +52,7 @@ FFTW_C2R_1D_Executor::~FFTW_C2R_1D_Executor()
     fftw_free(output_buffer);
 }
 
-void FFTW_C2R_1D_Executor::set_input(const double complex* buffer, int size)
+void FFTW_C2R_1D_Executor::set_input_zeropadded(const double complex* buffer, int size)
 {
     assert(size == input_size);
     memcpy(input_buffer, buffer, sizeof(double complex)*size);
@@ -63,4 +63,3 @@ void FFTW_C2R_1D_Executor::execute()
 {
     fftw_execute(plan);
 }
-

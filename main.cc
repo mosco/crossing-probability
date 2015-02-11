@@ -1,7 +1,6 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
-#include <complex.h>
 #include <fftw3.h>
 
 #include "fftw_wrappers.hh"

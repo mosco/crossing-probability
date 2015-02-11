@@ -1,5 +1,5 @@
-#ifndef __FFTWWrapper_h__
-#define __FFTWWrapper_h__
+#ifndef __fftw_wrappers_h__
+#define __fftw_wrappers_h__
 
 // Wrappers for common operations in the FFTW3 library.
 // Currently only one-dimensional transforms of real data to complex and back are supported.
@@ -9,11 +9,8 @@
 // 2. Compute a "plan" struct that. This tells FFTW what algorithms it should use when actually computing the FFT.
 // 3. Execute the FFT/IFFT operation on the buffers from step 1.
 
-#include <vector>
 #include <complex.h>
 #include <fftw3.h>
-#include <cassert>
-#include <iostream>
 
 // 1. Fill input_buffer with input containing n_real_samples double numbers
 //    (note, set_input_zeropadded will copy your buffer with optional zero padding)
@@ -45,7 +42,7 @@ class FFTW_C2R_1D_Executor {
 public:
     FFTW_C2R_1D_Executor(int n_real_samples);
     ~FFTW_C2R_1D_Executor();
-    void set_input(const double complex* buffer, int size);
+    void set_input_zeropadded(const double complex* buffer, int size);
     void execute();
 
     const int input_size;

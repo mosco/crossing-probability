@@ -1,3 +1,4 @@
+#include <cassert>
 #include <cstring>
 #include "fftw_wrappers.hh"
 #include "fftwconvolver.hh"
