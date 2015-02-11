@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 #include "fftwconvolver.hh"
 
 using namespace std;
@@ -174,7 +175,7 @@ double crossing_probability_fft(const vector<double>& lower_bounds, const vector
     int upper_bound_count = 0;
 
     //vector<typename fftw_traits<T>::complex_type> tmp(2*n);
-    FFTWConvolver<double> convolver(n+1);
+    FFTWConvolver convolver(n+1);
     for (unsigned int i = 0; i < bounds.size(); ++i) {
         // cout << "--------------------------------------------\n";
         // cout << "Iteration " << i << endl;
