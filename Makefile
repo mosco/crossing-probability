@@ -15,7 +15,7 @@ LDFLAGS = -lfftw3
 
 CXXFLAGS = -Wall -g -I$(FFTW_INCLUDE_LOCATION)
 
-OBJECTS = main.o crossing_probability.o incbet.o incbi.o gamma.o const.o mtherr.o ndtri.o polevl.o
+OBJECTS = main.o crossing_probability.o 
 
 all: main
 	
