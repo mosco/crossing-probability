@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 #include <fftw3.h>
 
 #include "fftw_wrappers.hh"
@@ -78,8 +79,19 @@ void print_usage()
     cout << "Usage options:" << endl;
     cout << "    crossing_probability file <boundaries-file>\n";
     cout << "    crossing_probability filefft <boundaries-file>\n";
+    cout << "    crossing_probability speedtest <n>\n";
+    cout << "    crossing_probability speedtestfft <n>\n";
     cout << endl;
     cout << "Where <boundaries-file> is a text file that contains a line for every uniform order statistic that specifies the lower and upper boundary for that order statistic, separated by a comma. e.g. \"0.2, 0.7\".\n";
+}
+
+double crossing_probability(const vector<double>& lower_bounds, const vector<double>& upper_bounds, bool use_fft)
+{
+    if (use_fft) {
+        return 1.0 - binomial_process_noncrossing_probability(lower_bounds, upper_bounds);
+    } else {
+        return 1.0 - binomial_process_noncrossing_probability_fft(lower_bounds, upper_bounds);
+    }
 }
 
 int handle_file_command(const char* filename, bool use_fft)
@@ -88,18 +100,30 @@ int handle_file_command(const char* filename, bool use_fft)
         pair<vector<double>, vector<double> > bounds;
         bounds = read_bounds_file(string(filename));
         verify_bounds_are_valid(bounds.first, bounds.second);
-        double probability = -1;
-        if (use_fft) {
-            probability = 1.0 - binomial_process_noncrossing_probability_fft(bounds.first, bounds.second);
-        } else {
-            probability = 1.0 - binomial_process_noncrossing_probability(bounds.first, bounds.second);
-        }
-        cout << probability << endl;
+        cout << crossing_probability(bounds.first, bounds.second, use_fft) << endl;
         return 0;
     } catch (InputFileReadError e) {
         cout << "Error reading file!\n";
         return -1;
     }
+}
+
+int handle_speed_test(const char* n_samples_str, bool use_fft)
+{
+    char* endptr = NULL;
+    long int n = strtol(n_samples_str, &endptr, 10);
+    if (*endptr != '\0')  {
+        cout << "Error parsing n-samples. Got: '" << n_samples_str << "'.\n";
+        return -1;
+    }
+
+    vector<double> lower_bounds(n, 0.0);
+    vector<double> upper_bounds(n, 1.0);
+    for (int i = 0; i < (n+1)/2; ++i) {
+        upper_bounds[i] = 0.5;
+    }
+    cout << crossing_probability(lower_bounds, upper_bounds, use_fft) << endl;
+    return 0;
 }
 
 int main(int argc, char* argv[])
@@ -124,6 +148,20 @@ int main(int argc, char* argv[])
             return -1;
         }
         return handle_file_command(argv[2], true);
+    } else if (command == "speedtest") {
+        if (argc != 3) {
+            cout << "Wrong number of arguments for 'speedtest' option.\n";
+            print_usage();
+            return -1;
+        }
+        return handle_speed_test(argv[2], false);
+    } else if (command == "speedtestfft") {
+        if (argc != 3) {
+            cout << "Wrong number of arguments for 'speedtestfft' option.\n";
+            print_usage();
+            return -1;
+        }
+        return handle_speed_test(argv[2], true);
     } else {
         cout << "Unknown option '" << argv[1] << "'.\n";
         return -1;
