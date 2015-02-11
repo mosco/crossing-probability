@@ -1,13 +1,6 @@
-#include <cstdio>
 #include <cassert>
-extern "C" {
-    #include <quadmath.h>
-}
-#include <cstring>
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <utility>
 #include <complex.h>
 #include <fftw3.h>
 
