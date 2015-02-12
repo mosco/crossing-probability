@@ -9,11 +9,11 @@ CXX = g++-4.9
 #CXXFLAGS = -g -pg -Wall -O3 -I$(FFTW_INCLUDE_LOCATION)
 #LDFLAGS = -g -pg -lfftw3 -lfftw3q -lquadmath 
 
-#CXXFLAGS = -Wall -O3 -march=native -I$(FFTW_INCLUDE_LOCATION)
+CXXFLAGS = -Wall -O3 -march=native -I$(FFTW_INCLUDE_LOCATION)
 #LDFLAGS = -lfftw3 -lfftw3q -lquadmath 
 LDFLAGS = -lfftw3
 
-CXXFLAGS = -Wall -g -I$(FFTW_INCLUDE_LOCATION)
+#CXXFLAGS = -Wall -g -I$(FFTW_INCLUDE_LOCATION)
 
 OBJECTS = main.o noncrossing_probability.o fftw_wrappers.o fftwconvolver.o
 

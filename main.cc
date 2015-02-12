@@ -88,9 +88,9 @@ void print_usage()
 double crossing_probability(const vector<double>& lower_bounds, const vector<double>& upper_bounds, bool use_fft)
 {
     if (use_fft) {
-        return 1.0 - binomial_process_noncrossing_probability(lower_bounds, upper_bounds);
-    } else {
         return 1.0 - binomial_process_noncrossing_probability_fft(lower_bounds, upper_bounds);
+    } else {
+        return 1.0 - binomial_process_noncrossing_probability(lower_bounds, upper_bounds);
     }
 }
 
@@ -118,9 +118,10 @@ int handle_speed_test(const char* n_samples_str, bool use_fft)
     }
 
     vector<double> lower_bounds(n, 0.0);
-    vector<double> upper_bounds(n, 1.0);
-    for (int i = 0; i < (n+1)/2; ++i) {
-        upper_bounds[i] = 0.5;
+    vector<double> upper_bounds(n, 0.0);
+    for (int i = 0; i < n; ++i) {
+        lower_bounds[i] = (i+1)/(2.0*(n+1));
+        upper_bounds[i] = min(2.0*(i+1)/(n+1), 1.0);
     }
     cout << crossing_probability(lower_bounds, upper_bounds, use_fft) << endl;
     return 0;
