@@ -15,14 +15,16 @@ LDFLAGS = -lfftw3
 
 CXXFLAGS = -Wall -g -I$(FFTW_INCLUDE_LOCATION)
 
-OBJECTS = main.o crossing_probability.o 
+OBJECTS = main.o noncrossing_probability.o fftw_wrappers.o fftwconvolver.o
 
 all: main
 	
-main: $(OBJECTS) fftw_wrappers.hh crossing_probability.hh
+main: $(OBJECTS) fftw_wrappers.hh noncrossing_probability.hh
 	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@ 
 
-crossing_probability.o: crossing_probability.cc fftwconvolver.hh fftw_wrappers.hh
+noncrossing_probability.o: noncrossing_probability.cc noncrossing_probability.hh fftwconvolver.hh fftw_wrappers.hh
+fftw_wrappers.o: fftw_wrappers.hh
+fftwconvolver.o: fftw_wrappers.hh fftwconvolver.hh
 
 clean:
 	rm -rf *.o main
