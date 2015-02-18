@@ -14,13 +14,15 @@ LDFLAGS = -lfftw3
 
 all: crossprob 
 	
-OBJECTS_CROSSPROB = crossprob.o twosided_noncrossing_probability.o fftw_wrappers.o fftwconvolver.o string_utils.o
-crossprob: $(OBJECTS_CROSSPROB) fftw_wrappers.hh twosided_noncrossing_probability.hh string_utils.hh
+OBJECTS_CROSSPROB = crossprob.o two_sided_noncrossing_probability.o fftw_wrappers.o fftwconvolver.o string_utils.o read_bounds_file.o
+crossprob: $(OBJECTS_CROSSPROB) fftw_wrappers.hh two_sided_noncrossing_probability.hh string_utils.hh read_bounds_file.hh
 	$(CXX) $(OBJECTS_CROSSPROB) $(LDFLAGS) -o $@ 
 
-twosided_noncrossing_probability.o: twosided_noncrossing_probability.hh fftwconvolver.hh fftw_wrappers.hh
+two_sided_noncrossing_probability.o: two_sided_noncrossing_probability.hh fftwconvolver.hh fftw_wrappers.hh
 fftw_wrappers.o: fftw_wrappers.hh
 fftwconvolver.o: fftw_wrappers.hh fftwconvolver.hh
+string_utils.o: string_utils.hh
+read_bounds_file.o: read_bounds_file.hh string_utils.hh
 
 clean:
 	rm -rf *.o crossprob
