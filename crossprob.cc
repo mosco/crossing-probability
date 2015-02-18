@@ -9,7 +9,7 @@
 #include <fftw3.h>
 
 #include "fftw_wrappers.hh"
-#include "noncrossing_probability.hh"
+#include "two_sided_noncrossing_probability.hh"
 #include "string_utils.hh"
 
 using namespace std;

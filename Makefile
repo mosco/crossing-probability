@@ -10,22 +10,18 @@ CXX = g++-4.7
 #LDFLAGS = -g -pg -lfftw3 -lfftw3q -lquadmath 
 
 CXXFLAGS = -Wall -O3 -march=native -I$(FFTW_INCLUDE_LOCATION)
-#LDFLAGS = -lfftw3 -lfftw3q -lquadmath 
 LDFLAGS = -lfftw3
 
-#CXXFLAGS = -Wall -g -I$(FFTW_INCLUDE_LOCATION)
-
-OBJECTS = main.o noncrossing_probability.o fftw_wrappers.o fftwconvolver.o string_utils.o
-
-all: main
+all: crossprob 
 	
-main: $(OBJECTS) fftw_wrappers.hh noncrossing_probability.hh string_utils.hh
-	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@ 
+OBJECTS_CROSSPROB = crossprob.o twosided_noncrossing_probability.o fftw_wrappers.o fftwconvolver.o string_utils.o
+crossprob: $(OBJECTS_CROSSPROB) fftw_wrappers.hh twosided_noncrossing_probability.hh string_utils.hh
+	$(CXX) $(OBJECTS_CROSSPROB) $(LDFLAGS) -o $@ 
 
-noncrossing_probability.o: noncrossing_probability.hh fftwconvolver.hh fftw_wrappers.hh
+twosided_noncrossing_probability.o: twosided_noncrossing_probability.hh fftwconvolver.hh fftw_wrappers.hh
 fftw_wrappers.o: fftw_wrappers.hh
 fftwconvolver.o: fftw_wrappers.hh fftwconvolver.hh
 
 clean:
-	rm -rf *.o main
+	rm -rf *.o crossprob
 

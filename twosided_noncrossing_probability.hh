@@ -1,5 +1,5 @@
-#ifndef __noncrossing_probability_hh__
-#define __noncrossing_probability_hh__
+#ifndef __twosided_noncrossing_probability_hh__
+#define __twosided_noncrossing_probability_hh__
 
 #include <vector>
 
