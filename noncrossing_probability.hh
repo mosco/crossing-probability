@@ -3,7 +3,7 @@
 
 #include <vector>
 
-double binomial_process_noncrossing_probability(const std::vector<double>& lower_bounds, const std::vector<double>& upper_bounds);
-double binomial_process_noncrossing_probability_fft(const std::vector<double>& lower_bounds, const std::vector<double>& upper_bounds);
+double poisson_process_noncrossing_probability(double intensity, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
+double binomial_process_noncrossing_probability(int n, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
 
 #endif
