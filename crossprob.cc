@@ -142,6 +142,10 @@ int handle_command_line_arguments(int argc, char* argv[])
 
     string command = string(argv[1]);
     long n = string_to_long(argv[2]);
+    if (n < 0) {
+        print_usage();
+        throw runtime_error("n must be non-negative!");
+    }
     string filename = string(argv[3]);
     bool use_fft = true;
     if (argc == 5) {
