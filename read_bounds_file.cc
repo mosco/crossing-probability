@@ -37,11 +37,11 @@ void verify_bounds_are_valid(const vector<double>& lower_bound_steps, const vect
         throw runtime_error("Lower bound steps are not monotone increasing."); 
     }
     
-    if ((upper_bound_steps.front() < 0.0) || (upper_bound_steps.back() > 1.0)) {
+    if ((upper_bound_steps.size() > 0) && ((upper_bound_steps.front() < 0.0) || (upper_bound_steps.back() > 1.0))) {
         throw runtime_error("Upper bound steps must be in the range 0 to 1.");
     }
 
-    if ((lower_bound_steps.front() < 0.0) || (lower_bound_steps.back() > 1.0)) {
+    if ((lower_bound_steps.size() > 0) && ((lower_bound_steps.front() < 0.0) || (lower_bound_steps.back() > 1.0))) {
         throw runtime_error("Lower bound steps must be in the range 0 to 1.");
     }
 
