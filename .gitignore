@@ -1,4 +1,6 @@
 *.o
 .*.swp
-main
+.DS_Store
+crossprob
+crossprob_mc
 build/*
