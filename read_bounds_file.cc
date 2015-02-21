@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <limits>
 #include <stdexcept>
 #include <cassert>
@@ -48,7 +49,9 @@ void verify_bounds_are_valid(const vector<double>& lower_bound_steps, const vect
     assert(upper_bound_steps.size() >= lower_bound_steps.size());
     for (int i = 0; i < (int)lower_bound_steps.size(); ++i) {
         if (!(upper_bound_steps[i] <= lower_bound_steps[i])) {
-            throw runtime_error("Lower bounary must be lower or equal to the upper boundary in the entire interval [0,1].");
+            stringstream ss;
+            ss << "Lower boundary must be lower or equal to the upper boundary in the entire interval [0,1]: upper_bound_steps[" << i << "]=" << upper_bound_steps[i] << " lower_bound_steps[" << i << "]=" << lower_bound_steps[i];
+            throw runtime_error(ss.str());
         }
     }
 }

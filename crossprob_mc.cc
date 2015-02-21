@@ -22,13 +22,20 @@ void print_array(const double* arr, int n)
 }
 
 // Random number generator for uniform samples in the range [0,1]
-class UniformRNG {
+class RandomNumberGenerator {
 public:
-    UniformRNG(uint64_t seed) {
+    RandomNumberGenerator(uint64_t seed) {
         cout << "Random seed: " << seed << endl;
         tinymt64_init(&random_state, seed);
     }
-    double generate() { return tinymt64_generate_double01(&random_state); }
+    double generate_uniform01()
+    {
+        return tinymt64_generate_double01(&random_state); 
+    }
+    double generate_exponential(double beta)
+    {
+        return -beta * log(generate_uniform01()); 
+    }
 private:
     tinymt64_t random_state;
 };
@@ -36,9 +43,12 @@ private:
 class ExponentialRNG {
 public:
     ExponentialRNG(uint64_t seed, double beta) : rng(seed), beta(beta) {}
-    double generate() { return -beta * log(rng.generate()); }
+    double generate()
+    {
+        return rng.generate_exponential(beta);
+    }
 private:
-    UniformRNG rng;
+    RandomNumberGenerator rng;
     double beta;
 };
 
@@ -65,12 +75,17 @@ bool does_integer_step_function_cross(const double* steps, size_t num_steps, con
     return false;
 }
 
-double does_random_binomial_process_cross(UniformRNG& rng, vector<double>& tmp_buffer, const vector<double>& g_steps, const vector<double>& h_steps)
+double does_random_binomial_process_cross(RandomNumberGenerator& rng, vector<double>& tmp_buffer, const vector<double>& g_steps, const vector<double>& h_steps)
 {
+    double last_x = 0.0;
     for (size_t i = 0; i < tmp_buffer.size(); ++i) {
-        tmp_buffer[i] = rng.generate();
+        last_x += rng.generate_exponential(1);
+        tmp_buffer[i] = last_x;
     }
-    sort(tmp_buffer.begin(), tmp_buffer.end());
+    double normalizing_factor = last_x + rng.generate_exponential(1);
+    for (size_t i = 0; i < tmp_buffer.size(); ++i) {
+        tmp_buffer[i] /= normalizing_factor;
+    }
     return does_integer_step_function_cross(&tmp_buffer[0], tmp_buffer.size(), g_steps, h_steps);
 }
 
@@ -82,7 +97,7 @@ double binomial_process_crossing_probability_montecarlo(long n, const vector<dou
     if ((long)g_steps.size() > n) {
         return 1.0;
     }
-    UniformRNG rng(time(NULL) + (n<<20));
+    RandomNumberGenerator rng(time(NULL) + (n<<20));
 
     vector<double> tmp_buffer(n);
     int count_crossings = 0;
