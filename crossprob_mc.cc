@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cassert>
 #include <ctime>
+#include <cmath>
 
 #include "string_utils.hh"
 #include "read_bounds_file.hh"
@@ -20,44 +21,57 @@ void print_array(const double* arr, int n)
     cout << endl;
 }
 
-class Uniform01Generator {
+// Random number generator for uniform samples in the range [0,1]
+class UniformRNG {
 public:
-    Uniform01Generator(uint64_t seed) {
-        //random_state.status[0] = 0;
-        //random_state.status[1] = 0;
-        //random_state.mat1 = 0;
-        //random_state.mat2 = 0;
-        //random_state.tmat = 0;
-        cout << "Seed: " << seed << endl;
+    UniformRNG(uint64_t seed) {
+        cout << "Random seed: " << seed << endl;
         tinymt64_init(&random_state, seed);
-        this->seed = seed;
     }
-    double generate() {
-        return tinymt64_generate_double01(&random_state);
-    }
+    double generate() { return tinymt64_generate_double01(&random_state); }
 private:
     tinymt64_t random_state;
-    uint64_t seed;
 };
 
+class ExponentialRNG {
+public:
+    ExponentialRNG(uint64_t seed, double beta) : rng(seed), beta(beta) {}
+    double generate() { return -beta * log(rng.generate()); }
+private:
+    UniformRNG rng;
+    double beta;
+};
 
-bool does_binomial_process_cross(const vector<double>& process_steps, const vector<double>& g_steps, const vector<double>& h_steps)
+bool does_integer_step_function_cross(const double* steps, size_t num_steps, const vector<double>& g_steps, const vector<double>& h_steps)
 {
-    assert(h_steps.size() >= process_steps.size());
-    assert(g_steps.size() <= process_steps.size());
+    if ((num_steps < g_steps.size()) || (num_steps > h_steps.size())) {
+        return true;
+    }
 
+    assert(h_steps.size() >= g_steps.size());
+    assert(num_steps >= g_steps.size());
     for (size_t i = 0; i < g_steps.size(); ++i) {
-        if ((process_steps[i] > g_steps[i]) || (process_steps[i] < h_steps[i])) {
+        if ((steps[i] > g_steps[i]) || (steps[i] < h_steps[i])) {
             return true;
         }
     }
-    for (size_t i = g_steps.size(); i < process_steps.size(); ++i) {
-        if (process_steps[i] < h_steps[i]) {
+    assert(h_steps.size() >= num_steps);
+    for (size_t i = g_steps.size(); i < num_steps; ++i) {
+        if (steps[i] < h_steps[i]) {
             return true;
         }
     }
-    return false;
 
+    return false;
+}
+
+double does_random_binomial_process_cross(UniformRNG& rng, vector<double>& tmp_buffer, const vector<double>& g_steps, const vector<double>& h_steps)
+{
+    for (size_t i = 0; i < tmp_buffer.size(); ++i) {
+        tmp_buffer[i] = rng.generate();
+    }
+    sort(tmp_buffer.begin(), tmp_buffer.end());
+    return does_integer_step_function_cross(&tmp_buffer[0], tmp_buffer.size(), g_steps, h_steps);
 }
 
 double binomial_process_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
@@ -68,17 +82,48 @@ double binomial_process_crossing_probability_montecarlo(long n, const vector<dou
     if ((long)g_steps.size() > n) {
         return 1.0;
     }
-    Uniform01Generator rng(time(NULL) + (n<<20));
+    UniformRNG rng(time(NULL) + (n<<20));
 
-    vector<double> X(n);
+    vector<double> tmp_buffer(n);
     int count_crossings = 0;
     for (int reps = 0; reps < num_simulations; ++reps) {
-        for (int i = 0; i < n; ++i) {
-            X[i] = rng.generate();
+        count_crossings += does_random_binomial_process_cross(rng, tmp_buffer, g_steps, h_steps);
+    }
+
+    return double(count_crossings) / num_simulations;
+}
+
+bool does_random_poisson_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, ExponentialRNG& exprng, vector<double>& tmp_buffer)
+{
+    size_t max_steps = h_steps.size();
+    assert(tmp_buffer.size() >= max_steps);
+
+    size_t num_steps = 0;
+    double last_x = 0.0;
+    while (true) {
+        last_x += exprng.generate();
+        if (last_x > 1.0) {
+            //cout << "Calling does_integer_step_function_cross with buffer:" << endl;
+            //print_array(&tmp_buffer[0], num_steps);
+            return does_integer_step_function_cross(&tmp_buffer[0], num_steps, g_steps, h_steps);
         }
-        sort(X.begin(), X.end());
-        //print_array(&X[0], X.size());
-        count_crossings += does_binomial_process_cross(X, g_steps, h_steps);
+        if (num_steps >= max_steps) {
+            //cout << "Buffer passed max_steps: (last_x=" << last_x << ")\n";
+            //print_array(&tmp_buffer[0], num_steps);
+            return true;
+        }
+        tmp_buffer[num_steps] = last_x;
+        ++num_steps;
+    }
+}
+
+double poisson_process_crossing_probability_montecarlo(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
+{
+    ExponentialRNG exprng(time(NULL) + (int)(intensity*1000000.0), 1.0/intensity);
+    vector<double> buffer(h_steps.size() + 1);
+    int count_crossings = 0;
+    for (int reps = 0; reps < num_simulations; ++reps) {
+        count_crossings += does_random_poisson_process_cross(g_steps, h_steps, exprng, buffer);
     }
 
     return double(count_crossings) / num_simulations;
@@ -146,10 +191,9 @@ int handle_command_line_arguments(int argc, char* argv[])
     pair<vector<double>, vector<double> > bounds = read_bounds_file(filename);
 
     if (command == "poisson") {
-        //cout << "Running " << num_simulations << " simulations...\n";
-        //double crossprob = poisson_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
-        //cout << "Crossing probability: " << crossprob << endl;
-        throw runtime_error("poisson MC simulation not implemented yet");
+        cout << "Running " << num_simulations << " simulations...\n";
+        double crossprob = poisson_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
+        cout << "Crossing probability: " << crossprob << endl;
     } else if (command == "binomial") {
         cout << "Running " << num_simulations << " simulations...\n";
         double crossprob = binomial_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
