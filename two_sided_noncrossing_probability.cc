@@ -91,12 +91,14 @@ void convolve_same_size(int size, const double* src0, const double* src1, double
 //
 // h_steps[i] is the LAST location where the upper boundary function is <= i
 // g_steps[i] is the FIRST location where the lower boundary function is >= i
-double poisson_process_noncrossing_probability(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
+double poisson_process_noncrossing_probability(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft, int endpoint)
 {
     cout << "intensity: " << intensity << endl;
     cout << "Computing..." << endl;
     assert(g_steps.size() <= h_steps.size());
+    assert((endpoint == -1) || ((endpoint >= (int)g_steps.size()) && (endpoint <= (int)h_steps.size())));
     vector<Bound> bounds = join_all_bounds(h_steps, g_steps);
+    cout << "Total boundary step count: " << bounds.size() << endl;
 
     int n = h_steps.size();
     vector<double> Qs0(n+1, -1);
@@ -124,18 +126,18 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
             pmf[j] = poisson_pmf(intensity*(location-prev_location), j);
         }
 
-        //cout << "--------------------------------------------\n";
-        //cout << "Iteration " << i << endl;
-        //cout << "h_step_count: " << h_step_count << endl;
-        //cout << "g_step_count: " << g_step_count << endl;
-        //cout << "location: " << location << endl;
-        //cout << "Src: ";
-        //print_array(&src_buffer[0], n+1);
-        //cout << "pmf: ";
-        //print_array(&pmf[0], n+1);
-        //cout << "cur_size: " << cur_size << endl;
-        //cout << "dest_buffer before convolution: ";
-        //print_array(&dest_buffer[0], n+1);
+        // cout << "--------------------------------------------\n";
+        // cout << "Iteration " << i << endl;
+        // cout << "h_step_count: " << h_step_count << endl;
+        // cout << "g_step_count: " << g_step_count << endl;
+        // cout << "location: " << location << endl;
+        // cout << "Src: ";
+        // print_array(&src_buffer[0], n+1);
+        // cout << "pmf: ";
+        // print_array(&pmf[0], n+1);
+        // cout << "cur_size: " << cur_size << endl;
+        // cout << "dest_buffer before convolution: ";
+        // print_array(&dest_buffer[0], n+1);
         
         if (use_fft) {
             fftconvolver.convolve_same_size(cur_size, &pmf[0], &src_buffer[g_step_count], &dest_buffer[g_step_count]);
@@ -151,12 +153,12 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
             ++h_step_count;
             Qs0[h_step_count] = 0.0;
             Qs1[h_step_count] = 0.0;
-            //cout << "h++\n";
+            // cout << "h++\n";
         } else if (tag == G_STEP) {
             Qs0[g_step_count] = 0.0;
             Qs1[g_step_count] = 0.0;
             ++g_step_count;
-            //cout << "g++\n";
+            // cout << "g++\n";
         } else {
             assert(tag == END);
         }
@@ -167,7 +169,12 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     }
 
     vector<double>& last_dest_buffer = *buffers[bounds.size() % 2];
-    double nocross_prob = accumulate(&last_dest_buffer[g_step_count], &last_dest_buffer[h_step_count+1], 0.0);
+    double nocross_prob;
+    if (endpoint == -1) {
+        nocross_prob = accumulate(&last_dest_buffer[g_step_count], &last_dest_buffer[h_step_count+1], 0.0);
+    } else {
+        nocross_prob = last_dest_buffer[endpoint];
+    }
     cout << "Poisson noncrossing probability: " << nocross_prob << endl;
     return nocross_prob;
 }
@@ -190,11 +197,7 @@ double binomial_process_noncrossing_probability(int n, const vector<double>& g_s
     // When all we care about is the probability to reach n.
     vector<double> truncated_h_steps(&h_steps[0], &h_steps[n]); 
 
-    vector<double> padded_g_steps(n, 1.0);
-    for (int i = 0; i < (int)g_steps.size(); ++i) {
-        padded_g_steps[i] = g_steps[i];
-    }
-    double poisson_nocross_prob = poisson_process_noncrossing_probability(n, padded_g_steps, truncated_h_steps, use_fft);
+    double poisson_nocross_prob = poisson_process_noncrossing_probability(n, g_steps, truncated_h_steps, use_fft, n);
     double binomial_nocross_prob = poisson_nocross_prob / poisson_pmf(n, n);
     cout << "Binomial noncrossing probability: " << binomial_nocross_prob << endl;
     return binomial_nocross_prob;
