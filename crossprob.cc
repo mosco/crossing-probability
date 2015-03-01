@@ -8,6 +8,7 @@
 #include <fftw3.h>
 
 #include "fftw_wrappers.hh"
+#include "one_sided_noncrossing_probability.hh"
 #include "two_sided_noncrossing_probability.hh"
 #include "string_utils.hh"
 #include "read_bounds_file.hh"
@@ -17,25 +18,28 @@ using namespace std;
 void print_usage()
 {
     cout << "SYNOPSIS\n";
-    cout << "    crossing_probability poisson <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "    crossing_probability binomial <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "    crossprob poisson2 <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "    crossprob binomial2 <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "    crossprob binomial1 <n> <one-sided-boundary-functions-file>\n";
     cout << endl;
     cout << "DESCRIPTION\n";
-    cout << "    crossing_probability poisson <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "        Computes the probability that g(t) < xi_n(t) < h(t) for all t in [0,1]\n";
-    cout << "        where xi_n(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
+    cout << "    crossprob poisson2 <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "        Computes the probability that g(t) <= p(t) <= h(t) for all t in [0,1]\n";
+    cout << "        Where p(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
     cout << endl;
-    cout << "    crossing_probability binomial <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "        Computes the probability that g(t) < eta_n(t) < h(t) for all t in [0,1]\n";
-    cout << "        where eta_n(t) is the Binomial stochastic process with n samples.\n";
-    cout << "        This process is the result of drawing n random variables X_1, ..., X_n\n";
-    cout << "        uniformly from the interval [0,1] and constructing the cumulative count function\n";
-    cout << "            eta_n(t) = number of X_i < t.\n";
+    cout << "    crossprob binomial2 <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "        Computes the probability that g(t) <= b(t) <= h(t) for all t in [0,1]\n";
+    cout << "        where b(t) is a binomial process with n samples. This process is the result of drawing n\n";
+    cout << "        random variables X_1, ..., X_n uniformly from [0,1] setting b(t) := number of X_i <= t.\n";
     cout << endl;
+    cout << "    crossprob binomial1 <n> <one-sided-boundary-functions-file>\n";
+    cout << "        Computes a one-sided non-crossing probability of a binomial process with n samples.\n";
+    cout << "        This works like the binomial2 command above, but using either a lower or upper boundary.\n";
+    cout << endl; 
     cout << "OPTIONS\n";
     cout << "    <n>\n";
-    cout << "        In the Poisson case, this is the intensity of the process (i.e. the expectation of xi_n(1)).\n";
-    cout << "        In the Binomial case, this is the number of points drawn from [0,1], hence eta_n(1) = 1.\n";
+    cout << "        In the Poisson case, this is the intensity of the process (i.e. the expectation of p(1)).\n";
+    cout << "        In the Binomial case, this is the number of points drawn from [0,1], hence b(1) is always n.\n";
     cout << endl;
     cout << "    <boundary-functions-file>\n";
     cout << "        This file describes the boundary functions g(t) and h(t).\n";
@@ -48,6 +52,9 @@ void print_usage()
     cout << "        Example:\n";
     cout << "            0.3, 0.7, 0.9, 1\n";
     cout << "            0, 0, 0.15, 0.5, 0.8\n";
+    cout << endl;
+    cout << "    <one-sided-boundary-functions-file\n";
+    cout << "        This file is structured like <boundary-functions-file>, but one of the lines must be empty.\n";
     cout << endl;
     cout << "    --no-fft\n";
     cout << "        Do not perform convolution using the FFT algorithm.\n";
@@ -80,17 +87,32 @@ int handle_command_line_arguments(int argc, char* argv[])
 
     pair<vector<double>, vector<double> > bounds = read_bounds_file(filename);
 
-    if (command == "poisson") {
-        cout << "Poisson crossing probability: " << 1.0 - poisson_process_noncrossing_probability(n, bounds.first, bounds.second, use_fft) << endl;
-    } else if (command == "binomial") {
-        cout << "Binomial crossing probability: " << 1.0 - binomial_process_noncrossing_probability(n, bounds.first, bounds.second, use_fft) << endl;
+    if (command == "poisson2") {
+        cout << "Poisson two crossing probability: " << 1.0 - poisson_process_noncrossing_probability(n, bounds.first, bounds.second, use_fft, -1) << endl;
+    } else if (command == "binomial2") {
+        cout << "Binomial two crossing probability: " << 1.0 - binomial_process_noncrossing_probability(n, bounds.first, bounds.second, use_fft) << endl;
+    } else if (command == "binomial1") {
+        if (use_fft == false) {
+            cout << "Warning: --no-fft flag is superfluous when using the 'binomial1' command.\n";
+        }
+        if ((bounds.first.size() > 0) && (bounds.second.size() > 0)) {
+            print_usage();
+            throw runtime_error("Expecting either a lower or an upper boundary function when using the 'binomial1' command.\n");
+        }
+        if (bounds.second.size() == 0) {
+            cout << "Binomial one-sided crossing probability: " << 1.0 - binomial_process_lower_noncrossing_probability(n, bounds.first) << endl;
+        } else {
+            assert (bounds.first.size() == 0);
+            cout << "Binomial one-sided crossing probability: " << 1.0 - binomial_process_upper_noncrossing_probability(n, bounds.second) << endl;
+        }
     } else {
         print_usage();
-        throw runtime_error("Second command line argument must be 'binomial' or 'poisson'");
+        throw runtime_error("Second command line argument must be 'binomial1', 'binomial2' or 'poisson2'");
     }
 
     return 0;
 }
+
 int main(int argc, char* argv[])
 {
     try {

@@ -76,13 +76,13 @@ pair<vector<double>, vector<double> > read_bounds_file(const string& filename)
 
     getline(f, line);
     vector<double> lower_bound_steps = read_comma_delimited_doubles(line);
-    cout << "Lower bound steps: (g(t))\n";
-    print_vector(lower_bound_steps);
+    //cout << "Lower bound steps: (g(t))\n";
+    //print_vector(lower_bound_steps);
 
     getline(f, line);
     vector<double> upper_bound_steps = read_comma_delimited_doubles(line);
-    cout << "Upper bound steps: (h(t))\n";
-    print_vector(upper_bound_steps);
+    //cout << "Upper bound steps: (h(t))\n";
+    //print_vector(upper_bound_steps);
 
     verify_bounds_are_valid(lower_bound_steps, upper_bound_steps);
     cout << "Bounds are valid.\n";
