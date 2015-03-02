@@ -8,7 +8,7 @@
 #include <cmath>
 
 #include "string_utils.hh"
-#include "read_bounds_file.hh"
+#include "read_boundaries_file.hh"
 #include "tinymt64.h"
 
 using namespace std;
@@ -203,7 +203,7 @@ int handle_command_line_arguments(int argc, char* argv[])
         throw runtime_error("num-simulations must be non-negative!");
     }
 
-    pair<vector<double>, vector<double> > bounds = read_bounds_file(filename);
+    pair<vector<double>, vector<double> > bounds = read_boundaries_file(filename);
 
     if (command == "poisson") {
         cout << "Running " << num_simulations << " simulations...\n";

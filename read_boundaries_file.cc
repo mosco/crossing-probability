@@ -1,4 +1,4 @@
-#include "read_bounds_file.hh"
+#include "read_boundaries_file.hh"
 
 #include <iostream>
 #include <fstream>
@@ -23,7 +23,17 @@ bool is_monotone_increasing(const vector<double>& v)
     return true;
 }
 
-void verify_bounds_are_valid(const vector<double>& lower_bound_steps, const vector<double>& upper_bound_steps)
+void verify_one_sided_boundary_is_valid(const vector<double>& steps)
+{
+    if (!is_monotone_increasing(steps)) {
+        throw runtime_error("Bound steps are not monotone increasing.");
+    }
+    if ((steps.size() > 0) && ((steps.front() < 0.0) || (steps.back() > 1.0))) {
+        throw runtime_error("Steps must be in the range 0 to 1.");
+    }
+}
+
+void verify_two_sided_boundaries_are_valid(const vector<double>& lower_bound_steps, const vector<double>& upper_bound_steps)
 {
     int n = upper_bound_steps.size();
     if ((int)lower_bound_steps.size() > n) {
@@ -65,7 +75,7 @@ void print_vector(const vector<T>& v)
     cout << endl;
 }
 
-pair<vector<double>, vector<double> > read_bounds_file(const string& filename)
+pair<vector<double>, vector<double> > read_boundaries_file(const string& filename)
 {
     string line;
     ifstream f(filename.c_str());
@@ -83,9 +93,6 @@ pair<vector<double>, vector<double> > read_bounds_file(const string& filename)
     vector<double> upper_bound_steps = read_comma_delimited_doubles(line);
     //cout << "Upper bound steps: (h(t))\n";
     //print_vector(upper_bound_steps);
-
-    verify_bounds_are_valid(lower_bound_steps, upper_bound_steps);
-    cout << "Bounds are valid.\n";
 
     return pair<vector<double>, vector<double> >(lower_bound_steps, upper_bound_steps);
 }

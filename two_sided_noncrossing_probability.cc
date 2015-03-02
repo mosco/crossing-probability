@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <numeric>
+#include <stdexcept>
 #include "fftwconvolver.hh"
 
 using namespace std;
@@ -83,8 +84,8 @@ void convolve_same_size(int size, const double* src0, const double* src1, double
 // An efficient implementation of the algorithm for the computation of non-crossing probability for a binomial process given in the paper:
 //     Khmaladze and Shinjikashvili (2001) "Calculation of noncrossing probabilities for Poisson processes and its corollaries"
 //
-// Let xi(t) be a Poisson process with n samples. We wish to compute the probability
-//     Pr[g(t) <= xi(t) <= h(t)]
+// Let p(t) be a Poisson process with n samples. We wish to compute the probability
+//     Pr[g(t) <= p(t) <= h(t)]
 //
 // h_steps, g_steps are monotone-increasing sequences of numbers in the range [0,1] that describe the
 // lower and upper boundary functions.
@@ -179,17 +180,17 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     return nocross_prob;
 }
 
-// Let eta(t) be a Binomial counting process with n samples. We wish to compute the probability
-//     Pr[g(t) <= eta(t) <= h(t)]
+// Let b(t) be a Binomial counting process with n samples. We wish to compute the probability
+//     Pr[g(t) <= b(t) <= h(t)]
 double binomial_process_noncrossing_probability(int n, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
 {
     assert(g_steps.size() <= h_steps.size());
     if ((int)h_steps.size() < n) {
-        cout << "Binomial process eta(t) must cross upper boundary h(t) since h(1) < n and eta(t) = n.\n";
+        throw runtime_error("Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n.");
         return 0;
     }
     if ((int)g_steps.size() > n) {
-        cout << "Binomial process eta(t) must cross lower boundary g(t) since g(1) > n and eta(t) = n.\n";
+        throw runtime_error("Binomial process b(t) must cross lower boundary g(t) since g(1) > n and b(t) = n.");
         return 0;
     }
 

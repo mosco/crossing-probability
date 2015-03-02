@@ -11,7 +11,7 @@
 #include "one_sided_noncrossing_probability.hh"
 #include "two_sided_noncrossing_probability.hh"
 #include "string_utils.hh"
-#include "read_bounds_file.hh"
+#include "read_boundaries_file.hh"
 
 using namespace std;
 
@@ -24,16 +24,16 @@ void print_usage()
     cout << endl;
     cout << "DESCRIPTION\n";
     cout << "    crossprob poisson2 <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "        Computes the probability that g(t) <= p(t) <= h(t) for all t in [0,1]\n";
+    cout << "        Computes the probability that p(t) will exit the boundaries [g(t), h(t)] at some point t in [0,1]\n";
     cout << "        Where p(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
     cout << endl;
     cout << "    crossprob binomial2 <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "        Computes the probability that g(t) <= b(t) <= h(t) for all t in [0,1]\n";
+    cout << "        Computes the probability that b(t) will exit the boundaries [g(t), h(t)] at some point t in [0,1]\n";
     cout << "        where b(t) is a binomial process with n samples. This process is the result of drawing n\n";
     cout << "        random variables X_1, ..., X_n uniformly from [0,1] setting b(t) := number of X_i <= t.\n";
     cout << endl;
     cout << "    crossprob binomial1 <n> <one-sided-boundary-functions-file>\n";
-    cout << "        Computes a one-sided non-crossing probability of a binomial process with n samples.\n";
+    cout << "        Computes the probability that a binomial process with n samples will cross a single boundary.\n";
     cout << "        This works like the binomial2 command above, but using either a lower or upper boundary.\n";
     cout << endl; 
     cout << "OPTIONS\n";
@@ -85,25 +85,31 @@ int handle_command_line_arguments(int argc, char* argv[])
         }
     }
 
-    pair<vector<double>, vector<double> > bounds = read_bounds_file(filename);
+    pair<vector<double>, vector<double> > bounds = read_boundaries_file(filename);
+    const vector<double>& lower_bound_steps = bounds.first;
+    const vector<double>& upper_bound_steps = bounds.second;
 
     if (command == "poisson2") {
-        cout << "Poisson two crossing probability: " << 1.0 - poisson_process_noncrossing_probability(n, bounds.first, bounds.second, use_fft, -1) << endl;
+        verify_two_sided_boundaries_are_valid(lower_bound_steps, upper_bound_steps);
+        cout << 1.0 - poisson_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft, -1) << endl;
     } else if (command == "binomial2") {
-        cout << "Binomial two crossing probability: " << 1.0 - binomial_process_noncrossing_probability(n, bounds.first, bounds.second, use_fft) << endl;
+        verify_two_sided_boundaries_are_valid(lower_bound_steps, upper_bound_steps);
+        cout <<  1.0 - binomial_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft) << endl;
     } else if (command == "binomial1") {
         if (use_fft == false) {
             cout << "Warning: --no-fft flag is superfluous when using the 'binomial1' command.\n";
         }
-        if ((bounds.first.size() > 0) && (bounds.second.size() > 0)) {
+        if ((lower_bound_steps.size() > 0) && (upper_bound_steps.size() > 0)) {
             print_usage();
-            throw runtime_error("Expecting either a lower or an upper boundary function when using the 'binomial1' command.\n");
+            throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'binomial1' command.\n");
         }
-        if (bounds.second.size() == 0) {
-            cout << "Binomial one-sided crossing probability: " << 1.0 - binomial_process_lower_noncrossing_probability(n, bounds.first) << endl;
+        if (upper_bound_steps.size() == 0) {
+            verify_one_sided_boundary_is_valid(lower_bound_steps);
+            cout << 1.0 - binomial_process_lower_noncrossing_probability(n, lower_bound_steps) << endl;
         } else {
-            assert (bounds.first.size() == 0);
-            cout << "Binomial one-sided crossing probability: " << 1.0 - binomial_process_upper_noncrossing_probability(n, bounds.second) << endl;
+            assert(lower_bound_steps.size() == 0);
+            verify_one_sided_boundary_is_valid(upper_bound_steps);
+            cout << 1.0 - binomial_process_upper_noncrossing_probability(n, upper_bound_steps) << endl;
         }
     } else {
         print_usage();

@@ -27,12 +27,12 @@ def dist(ctx):
 
 def build(bld):
     bld.program(
-        source       = 'crossprob.cc one_sided_noncrossing_probability.cc two_sided_noncrossing_probability.cc fftw_wrappers.cc fftwconvolver.cc string_utils.cc read_bounds_file.cc'.split(),
+        source       = 'crossprob.cc one_sided_noncrossing_probability.cc two_sided_noncrossing_probability.cc fftw_wrappers.cc fftwconvolver.cc string_utils.cc read_boundaries_file.cc'.split(),
         target       = 'crossprob',
     )
     bld.objects(source = 'tinymt64.c', name = 'tinymt')
     bld.program(
-        source = 'crossprob_mc.cc string_utils.cc read_bounds_file.cc'.split(),
+        source = 'crossprob_mc.cc string_utils.cc read_boundaries_file.cc'.split(),
         target = 'crossprob_mc',
         use = 'tinymt',
     )
