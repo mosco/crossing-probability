@@ -187,11 +187,9 @@ double binomial_process_noncrossing_probability(int n, const vector<double>& g_s
     assert(g_steps.size() <= h_steps.size());
     if ((int)h_steps.size() < n) {
         throw runtime_error("Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n.");
-        return 0;
     }
     if ((int)g_steps.size() > n) {
         throw runtime_error("Binomial process b(t) must cross lower boundary g(t) since g(1) > n and b(t) = n.");
-        return 0;
     }
 
     // No sense in wasting cycles on the probability that a Poisson process will reach n+1, n+2, etc.

@@ -5,7 +5,7 @@ os.environ['CXX'] = 'g++-4.9'
 #os.environ['CC'] = 'gcc-4.7'
 #os.environ['CXX'] = 'g++-4.7'
 
-APPNAME = 'two-sided-crossing-probability'
+APPNAME = 'crossing-probability'
 VERSION = '1.0'
 
 def configure(config):
@@ -14,7 +14,7 @@ def configure(config):
     config.env.CFLAGS = ['-Wall', '-O3', '-std=c99']
     config.env.CXXFLAGS = ['-Wall', '-O3', '-D__STDC_CONSTANT_MACROS']
     config.env.INCLUDES = ['/home/amitmo/local/include', '/usr/local/include']
-    config.env.LIB = ['fftw3']
+    config.env.LIB = ['fftw3', 'quadmath']
 
 def options(opt):
     opt.load('compiler_c')
