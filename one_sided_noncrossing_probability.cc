@@ -11,8 +11,10 @@ using namespace std;
 #define FLOAT_PRECISION_BITS 64
 
 #if FLOAT_PRECISION_BITS == 128
+    extern "C" {
+        #include <quadmath.h>
+    }
     typedef __float128 FLOAT;
-    #include <quadmath.h>
     #define EXP expq
     #define LOG logq
     #define GAMMA tgammaq
