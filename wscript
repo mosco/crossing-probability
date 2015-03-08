@@ -12,7 +12,9 @@ def configure(config):
     config.load('compiler_c')
     config.load('compiler_cxx')
     config.env.CFLAGS = ['-Wall', '-O3', '-std=c99']
-    config.env.CXXFLAGS = ['-Wall', '-O3', '-D__STDC_CONSTANT_MACROS', '-std=c++98']
+    config.env.CXXFLAGS = ['-DNDEBUG', '-Wall', '-O3', '-D__STDC_CONSTANT_MACROS', '-std=c++98']
+    #config.env.CXXFLAGS = ['-pg', '-g', '-Wall', '-D__STDC_CONSTANT_MACROS', '-std=c++98']
+    #config.env.LINKFLAGS = ['-pg', '-g']
     config.env.INCLUDES = ['/home/amitmo/local/include', '/usr/local/include']
     config.env.LIB = ['fftw3', 'quadmath']
 
