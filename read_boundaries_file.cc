@@ -3,15 +3,15 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <limits>
 #include <stdexcept>
 #include <cassert>
+#include <limits>
 
 #include "string_utils.hh"
 
 using namespace std;
 
-bool is_monotone_increasing(const vector<double>& v)
+static bool is_monotone_increasing(const vector<double>& v)
 {
     double prev = -numeric_limits<double>::infinity();
     for (int i = 0; i < (int)v.size(); ++i) {
@@ -21,6 +21,24 @@ bool is_monotone_increasing(const vector<double>& v)
         prev = v[i];
     }
     return true;
+}
+
+pair<vector<double>, vector<double> > read_boundaries_file(const string& filename)
+{
+    string line;
+    ifstream f(filename.c_str());
+    if (!f.is_open()) {
+        throw runtime_error("Unable to read input file '" + filename + "'");
+    }
+    f.exceptions(ifstream::failbit | ifstream::badbit);
+
+    getline(f, line);
+    vector<double> lower_bound_steps = read_comma_delimited_doubles(line);
+
+    getline(f, line);
+    vector<double> upper_bound_steps = read_comma_delimited_doubles(line);
+
+    return pair<vector<double>, vector<double> >(lower_bound_steps, upper_bound_steps);
 }
 
 void verify_one_sided_boundary_is_valid(const vector<double>& steps)
@@ -64,36 +82,5 @@ void verify_two_sided_boundaries_are_valid(const vector<double>& lower_bound_ste
             throw runtime_error(ss.str());
         }
     }
-}
-
-template <class T>
-void print_vector(const vector<T>& v)
-{
-    for (int i = 0; i < (int)v.size(); ++i) {
-        cout << v[i] << ", ";
-    }
-    cout << endl;
-}
-
-pair<vector<double>, vector<double> > read_boundaries_file(const string& filename)
-{
-    string line;
-    ifstream f(filename.c_str());
-    if (!f.is_open()) {
-        throw runtime_error("Unable to read input file '" + filename + "'");
-    }
-    f.exceptions(ifstream::failbit | ifstream::badbit);
-
-    getline(f, line);
-    vector<double> lower_bound_steps = read_comma_delimited_doubles(line);
-    //cout << "Lower bound steps: (g(t))\n";
-    //print_vector(lower_bound_steps);
-
-    getline(f, line);
-    vector<double> upper_bound_steps = read_comma_delimited_doubles(line);
-    //cout << "Upper bound steps: (h(t))\n";
-    //print_vector(upper_bound_steps);
-
-    return pair<vector<double>, vector<double> >(lower_bound_steps, upper_bound_steps);
 }
 

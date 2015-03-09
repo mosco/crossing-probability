@@ -2,20 +2,16 @@
 #include <fstream>
 #include <vector>
 #include <stdexcept>
-
 #include <cassert>
 
-#include <fftw3.h>
-
-#include "fftw_wrappers.hh"
 #include "one_sided_noncrossing_probability.hh"
 #include "two_sided_noncrossing_probability.hh"
-#include "string_utils.hh"
 #include "read_boundaries_file.hh"
+#include "string_utils.hh"
 
 using namespace std;
 
-void print_usage()
+static void print_usage()
 {
     cout << "SYNOPSIS\n";
     cout << "    crossprob poisson2 <n> <boundary-functions-file> [--no-fft]\n";
@@ -61,7 +57,7 @@ void print_usage()
     cout << "        This is typically faster for small values of n or when g(t) and h(t) are close to each other.\n";
 }
 
-int handle_command_line_arguments(int argc, char* argv[])
+static int handle_command_line_arguments(int argc, char* argv[])
 {
     if (!((argc == 4) || (argc == 5))) {
         print_usage();

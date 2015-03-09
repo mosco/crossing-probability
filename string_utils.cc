@@ -14,6 +14,7 @@ long string_to_long(const string& s)
 {
     const char* p = s.c_str();
     char* endptr = NULL;
+
     errno = 0;
     long value = strtol(p, &endptr, 10);
 
@@ -31,10 +32,12 @@ long string_to_long(const string& s)
 
     return value;
 }
+
 double string_to_double(const string& s)
 {
     const char* p = s.c_str();
     char* endptr = NULL;
+
     errno = 0;
     double value = strtod(p, &endptr);
 
@@ -57,13 +60,16 @@ vector<string> split(const string& s, char delimiter)
 {
     vector<string> substrings;
     int current_substring_start = 0;
+
     for (int i = 0; i < (int)s.size(); ++i) {
         if (s[i] == delimiter) {
             substrings.push_back(s.substr(current_substring_start, i-current_substring_start));
             current_substring_start = i+1;
         }
     }
+
     substrings.push_back(s.substr(current_substring_start, s.size()-current_substring_start));
+
     return substrings;
 }
 

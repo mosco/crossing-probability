@@ -11,6 +11,7 @@ using namespace std;
 #define FLOAT_PRECISION_BITS 80
 
 #if FLOAT_PRECISION_BITS == 128
+#include "string_utils.hh"
     extern "C" {
         #include <quadmath.h>
     }
@@ -60,7 +61,7 @@ using namespace std;
     #error FLOAT_PRECISION_BITS must be 64, 80 or 128.
 #endif
 
-string double_to_string(double x)
+static string double_to_string(double x)
 {
     stringstream ss;
     ss.precision(17); // http://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout
@@ -68,7 +69,7 @@ string double_to_string(double x)
     return ss.str();
 }
 
-string long_double_to_string(long double x)
+static string long_double_to_string(long double x)
 {
     stringstream ss;
     ss.precision(22); // http://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout
@@ -176,7 +177,7 @@ ostream& operator<<(ostream& stream, const PolynomialTranslatedMonomials& poly)
     return stream;
 }
 
-FLOAT minimum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
+static FLOAT minimum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
 {
     assert(p.degree >= 1);
     FLOAT m = p.get_multiplicative_coefficient(0);
@@ -189,7 +190,7 @@ FLOAT minimum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
     return m;
 }
 
-FLOAT maximum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
+static FLOAT maximum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
 {
     assert(p.degree >= 1);
     FLOAT m = p.get_multiplicative_coefficient(0);
@@ -202,7 +203,7 @@ FLOAT maximum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
     return m;
 }
 
-int extract_exponent(FLOAT x)
+static int extract_exponent(FLOAT x)
 {
     static int exponent;
     FREXP(x, &exponent);
@@ -213,7 +214,7 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
 {
     const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 1;
 
-    cout << "Using translated polynomials! precision: " << FLOAT_PRECISION_BITS << endl;
+    // cout << "Using translated polynomials! precision: " << FLOAT_PRECISION_BITS << endl;
     if ((int)upper_bound_steps.size() < n) {
         throw runtime_error("Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n");
     }
@@ -239,19 +240,19 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
             }
         }
     }
-    cout << p << endl;
+    // cout << p << endl;
     FLOAT max_coef = maximum_multiplicative_coefficient(p);
     FLOAT min_coef = minimum_multiplicative_coefficient(p);
-    cout << "max_coef: " << TO_STRING(max_coef) << endl;
-    cout << "min_coef: " << TO_STRING(min_coef) << endl;
+    // cout << "max_coef: " << TO_STRING(max_coef) << endl;
+    // cout << "min_coef: " << TO_STRING(min_coef) << endl;
     FLOAT integral_result = p.evaluate(1);
     FLOAT log_integral_result = LOG(integral_result);
-    cout << "Integral result: (no exponent fix) " << TO_STRING(integral_result) << endl;
-    cout << "Exponent delta: " << total_exponent_delta << endl;
-    cout << "LOG_GAMMA(n+1) == " << TO_STRING(LOG_GAMMA(n+1)) << endl;
-    cout << "log_integral_result (no exponent fix) == " << TO_STRING(log_integral_result) << endl;
+    // cout << "Integral result: (no exponent fix) " << TO_STRING(integral_result) << endl;
+    // cout << "Exponent delta: " << total_exponent_delta << endl;
+    // cout << "LOG_GAMMA(n+1) == " << TO_STRING(LOG_GAMMA(n+1)) << endl;
+    // cout << "log_integral_result (no exponent fix) == " << TO_STRING(log_integral_result) << endl;
     FLOAT noncrossing_probability = EXP(LOG_GAMMA(n+1) + log_integral_result - total_exponent_delta*LOG(2));
-    cout << "Final result: " << TO_STRING(noncrossing_probability) << endl;
+    // cout << "Final result: " << TO_STRING(noncrossing_probability) << endl;
     return noncrossing_probability;
 }
 

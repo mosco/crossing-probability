@@ -2,8 +2,8 @@
 #include <cmath>
 #include <cassert>
 #include <iostream>
-#include <numeric>
 #include <stdexcept>
+#include <numeric>
 #include "fftwconvolver.hh"
 
 using namespace std;
@@ -15,12 +15,12 @@ struct Bound {
     BoundType tag;
 };
 
-bool operator<(Bound b0, Bound b1)
+static bool operator<(Bound b0, Bound b1)
 {
     return (b0.location < b1.location);
 }
 
-vector<Bound> join_all_bounds(const vector<double>& h_steps, const vector<double>& g_steps)
+static vector<Bound> join_all_bounds(const vector<double>& h_steps, const vector<double>& g_steps)
 {
     assert(h_steps.size() >= g_steps.size());
 
@@ -50,7 +50,7 @@ vector<Bound> join_all_bounds(const vector<double>& h_steps, const vector<double
 
 // Computes the probability of a Poisson random variable with intensity lambda:
 // Pr[Pois(lambda)=k] = e^-lambda * lambda^k / k!
-inline double poisson_pmf(double lambda, int k)
+static inline double poisson_pmf(double lambda, int k)
 {
     assert(k >= 0);
     assert(lambda >= 0.0);
@@ -62,15 +62,15 @@ inline double poisson_pmf(double lambda, int k)
     return exp(log_pmf);
 }
 
-void print_array(const double* arr, int n)
-{
-    for (int i = 0; i < n; ++i) {
-        cout << arr[i] << ", ";
-    }
-    cout << endl;
-}
+// static void print_array(const double* arr, int n)
+// {
+//     for (int i = 0; i < n; ++i) {
+//         cout << arr[i] << ", ";
+//     }
+//     cout << endl;
+// }
 
-void convolve_same_size(int size, const double* src0, const double* src1, double* dest)
+static void convolve_same_size(int size, const double* src0, const double* src1, double* dest)
 {
     for (int j = 0; j < size; ++j) {
         double convolution_at_j = 0.0;
@@ -81,17 +81,6 @@ void convolve_same_size(int size, const double* src0, const double* src1, double
     }
 }
 
-// An efficient implementation of the algorithm for the computation of non-crossing probability for a binomial process given in the paper:
-//     Khmaladze and Shinjikashvili (2001) "Calculation of noncrossing probabilities for Poisson processes and its corollaries"
-//
-// Let p(t) be a Poisson process with n samples. We wish to compute the probability
-//     Pr[g(t) <= p(t) <= h(t)]
-//
-// h_steps, g_steps are monotone-increasing sequences of numbers in the range [0,1] that describe the
-// lower and upper boundary functions.
-//
-// h_steps[i] is the LAST location where the upper boundary function is <= i
-// g_steps[i] is the FIRST location where the lower boundary function is >= i
 double poisson_process_noncrossing_probability(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft, int endpoint)
 {
     cout << "intensity: " << intensity << endl;
@@ -112,7 +101,6 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     int h_step_count = 0;
     int g_step_count = 0;
 
-    //vector<typename fftw_traits<T>::complex_type> tmp(2*n);
     FFTWConvolver fftconvolver(n+1);
     vector<double> pmf(n+1, 0.0);
     for (unsigned int i = 0; i < bounds.size(); ++i) {
@@ -180,8 +168,6 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     return nocross_prob;
 }
 
-// Let b(t) be a Binomial counting process with n samples. We wish to compute the probability
-//     Pr[g(t) <= b(t) <= h(t)]
 double binomial_process_noncrossing_probability(int n, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
 {
     assert(g_steps.size() <= h_steps.size());

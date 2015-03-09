@@ -1,8 +1,7 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <stdexcept>
 #include <fstream>
+#include <vector>
+#include <stdexcept>
 #include <cassert>
 #include <ctime>
 #include <cmath>
@@ -12,14 +11,6 @@
 #include "tinymt64.h"
 
 using namespace std;
-
-void print_array(const double* arr, int n)
-{
-    for (int i = 0; i < n; ++i) {
-        cout << arr[i] << ", ";
-    }
-    cout << endl;
-}
 
 // Random number generator for uniform samples in the range [0,1]
 class RandomNumberGenerator {
@@ -52,7 +43,7 @@ private:
     double beta;
 };
 
-bool does_integer_step_function_cross(const double* steps, size_t num_steps, const vector<double>& g_steps, const vector<double>& h_steps)
+static bool does_integer_step_function_cross(const double* steps, size_t num_steps, const vector<double>& g_steps, const vector<double>& h_steps)
 {
     if ((num_steps < g_steps.size()) || (num_steps > h_steps.size())) {
         return true;
@@ -75,7 +66,7 @@ bool does_integer_step_function_cross(const double* steps, size_t num_steps, con
     return false;
 }
 
-double does_random_binomial_process_cross(RandomNumberGenerator& rng, vector<double>& tmp_buffer, const vector<double>& g_steps, const vector<double>& h_steps)
+static double does_random_binomial_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, RandomNumberGenerator& rng, vector<double>& tmp_buffer)
 {
     double last_x = 0.0;
     for (size_t i = 0; i < tmp_buffer.size(); ++i) {
@@ -89,26 +80,24 @@ double does_random_binomial_process_cross(RandomNumberGenerator& rng, vector<dou
     return does_integer_step_function_cross(&tmp_buffer[0], tmp_buffer.size(), g_steps, h_steps);
 }
 
-double binomial_process_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
+static double binomial_process_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
 {
-    if ((long)h_steps.size() < n) {
+    if (((long)h_steps.size() < n) ||  ((long)g_steps.size() > n)) {
         return 1.0;
     }
-    if ((long)g_steps.size() > n) {
-        return 1.0;
-    }
+
     RandomNumberGenerator rng(time(NULL) + (n<<20));
 
     vector<double> tmp_buffer(n);
     int count_crossings = 0;
     for (int reps = 0; reps < num_simulations; ++reps) {
-        count_crossings += does_random_binomial_process_cross(rng, tmp_buffer, g_steps, h_steps);
+        count_crossings += does_random_binomial_process_cross(g_steps, h_steps, rng, tmp_buffer);
     }
 
     return double(count_crossings) / num_simulations;
 }
 
-bool does_random_poisson_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, ExponentialRNG& exprng, vector<double>& tmp_buffer)
+static bool does_random_poisson_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, ExponentialRNG& exprng, vector<double>& tmp_buffer)
 {
     size_t max_steps = h_steps.size();
     assert(tmp_buffer.size() >= max_steps);
@@ -118,13 +107,9 @@ bool does_random_poisson_process_cross(const vector<double>& g_steps, const vect
     while (true) {
         last_x += exprng.generate();
         if (last_x > 1.0) {
-            //cout << "Calling does_integer_step_function_cross with buffer:" << endl;
-            //print_array(&tmp_buffer[0], num_steps);
             return does_integer_step_function_cross(&tmp_buffer[0], num_steps, g_steps, h_steps);
         }
         if (num_steps >= max_steps) {
-            //cout << "Buffer passed max_steps: (last_x=" << last_x << ")\n";
-            //print_array(&tmp_buffer[0], num_steps);
             return true;
         }
         tmp_buffer[num_steps] = last_x;
@@ -132,9 +117,14 @@ bool does_random_poisson_process_cross(const vector<double>& g_steps, const vect
     }
 }
 
-double poisson_process_crossing_probability_montecarlo(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
+static double poisson_process_crossing_probability_montecarlo(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
 {
+    if (h_steps.size() < g_steps.size()) {
+        return 1.0;
+    }
+
     ExponentialRNG exprng(time(NULL) + (int)(intensity*1000000.0), 1.0/intensity);
+
     vector<double> buffer(h_steps.size() + 1);
     int count_crossings = 0;
     for (int reps = 0; reps < num_simulations; ++reps) {
@@ -144,7 +134,7 @@ double poisson_process_crossing_probability_montecarlo(double intensity, const v
     return double(count_crossings) / num_simulations;
 }
 
-void print_usage()
+static void print_usage()
 {
     cout << "SYNOPSIS\n";
     cout << "    crossing_probability poisson <n> <boundary-functions-file> <num-simulations>\n";
@@ -183,7 +173,7 @@ void print_usage()
     cout << "        Number of Monte-Carlo simulation runs.\n";
 }
 
-int handle_command_line_arguments(int argc, char* argv[])
+static int handle_command_line_arguments(int argc, char* argv[])
 {
     if (argc != 5) {
         print_usage();

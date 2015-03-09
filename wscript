@@ -1,9 +1,7 @@
 #!/not/executable/python  # This line is only here so that text editors will use Python syntax highlighting.
 import os
-os.environ['CC'] = 'gcc-4.9'
-os.environ['CXX'] = 'g++-4.9'
-#os.environ['CC'] = 'gcc-4.7'
-#os.environ['CXX'] = 'g++-4.7'
+os.environ['CC'] = 'gcc'
+os.environ['CXX'] = 'g++'
 
 APPNAME = 'crossing-probability'
 VERSION = '1.0'
@@ -13,8 +11,6 @@ def configure(config):
     config.load('compiler_cxx')
     config.env.CFLAGS = ['-Wall', '-O3', '-std=c99']
     config.env.CXXFLAGS = ['-DNDEBUG', '-Wall', '-O3', '-D__STDC_CONSTANT_MACROS', '-std=c++98']
-    #config.env.CXXFLAGS = ['-pg', '-g', '-Wall', '-D__STDC_CONSTANT_MACROS', '-std=c++98']
-    #config.env.LINKFLAGS = ['-pg', '-g']
     config.env.INCLUDES = ['/home/amitmo/local/include', '/usr/local/include']
     config.env.LIB = ['fftw3', 'quadmath']
 

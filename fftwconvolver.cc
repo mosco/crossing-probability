@@ -3,7 +3,8 @@
 #include "fftw_wrappers.hh"
 #include "fftwconvolver.hh"
 
-// Constructing FFTW_R2C_1D_Executor objects for every input size takes a lot of time, so we round up the sizes.
+// Constructing FFTW_R2C_1D_Executor objects for every possible input size is expensive,
+// so we round up the sizes and construct an object for every N-th size.
 const int ROUNDING = 128;
 
 FFTWConvolver::FFTWConvolver(int maximum_input_size) :
