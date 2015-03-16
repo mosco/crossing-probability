@@ -48,6 +48,6 @@ If you installed FFTW3 on your system, the compilation should just work. If FFTW
 
 Feel free to ask any questions: moscovich@gmail.com
 
-If you would like to wrap this code for use as an R package, Python module, etc. That would be wonderful and I'd be happy to help.
+Would you like to wrap this code for use in R, Python, Matlab or any other language? That would be wonderful and I'd be happy to help.
 
 Amit Moscovich Eiger.
