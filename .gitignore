@@ -1,6 +1,8 @@
 *.o
 .*.swp
+*.pyc
 .DS_Store
 crossprob
 crossprob_mc
 build/*
+
