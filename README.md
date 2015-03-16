@@ -20,7 +20,7 @@ Currently, the main application of this code is the computation of p-values for 
 
 ## How to build
 
-* Simply run
+Simply run
  ```
  ./waf configure
  ./waf build
@@ -33,8 +33,6 @@ Currently, the main application of this code is the computation of p-values for 
 You may run the tests with
 ```./waf test```
 
-For usage instructions, just run **./crossprob** or **./crossprob_mc**.
-
 
 ## Build errors?
 
@@ -42,6 +40,11 @@ If you installed FFTW3 on your system, the compilation should just work. If FFTW
 * Build FFTW3.
 * Set the "FFTW3_INCLUDE_DIR_LOCATION" variable in the "wscript" file to wherever the file "fftw3.h" is at.
 * Add the directory containing libfftw3 to the path in the environment variable LD_LIBRARY_PATH.
+
+
+# Usage
+
+Just run **./crossprob** or **./crossprob_mc**. This will print usage instructions.
 
 
 # Contact
