@@ -26,7 +26,7 @@ def options(opt):
 
 def dist(ctx):
     ctx.algo = 'zip'
-    ctx.files = ctx.path.ant_glob(['src/*', 'wscript', 'waf', 'README.md'])
+    ctx.files = ctx.path.ant_glob(['src/*', 'tests/*.txt', 'tests/*.py', 'wscript', 'waf', 'README.md'])
     print ctx.files
 
 def make_cc_file_list(cc_files_string):

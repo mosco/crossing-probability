@@ -61,13 +61,13 @@ using namespace std;
     #error FLOAT_PRECISION_BITS must be 64, 80 or 128.
 #endif
 
-static string double_to_string(double x)
-{
-    stringstream ss;
-    ss.precision(17); // http://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout
-    ss << x;
-    return ss.str();
-}
+// static string double_to_string(double x)
+// {
+//     stringstream ss;
+//     ss.precision(17); // http://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout
+//     ss << x;
+//     return ss.str();
+// }
 
 static string long_double_to_string(long double x)
 {
@@ -152,13 +152,13 @@ void PolynomialTranslatedMonomials::ldexp_all_multiplicative_coefficients(int ex
     }
 }
 
-static void print_FLOAT_array(const FLOAT* arr, int n)
-{
-    for (int i = 0; i < n; ++i) {
-        cout << TO_STRING(arr[i]) << ", ";
-    }
-    cout << endl;
-}
+// static void print_FLOAT_array(const FLOAT* arr, int n)
+// {
+//     for (int i = 0; i < n; ++i) {
+//         cout << TO_STRING(arr[i]) << ", ";
+//     }
+//     cout << endl;
+// }
 
 ostream& operator<<(ostream& stream, const PolynomialTranslatedMonomials& poly)
 {
@@ -177,18 +177,18 @@ ostream& operator<<(ostream& stream, const PolynomialTranslatedMonomials& poly)
     return stream;
 }
 
-static FLOAT minimum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
-{
-    assert(p.degree >= 1);
-    FLOAT m = p.get_multiplicative_coefficient(0);
-    for (int i = 0; i < p.degree+1; ++i) {
-        FLOAT x = p.get_multiplicative_coefficient(i);
-        if (x < m) {
-            m = x;
-        }
-    }
-    return m;
-}
+// static FLOAT minimum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
+// {
+//     assert(p.degree >= 1);
+//     FLOAT m = p.get_multiplicative_coefficient(0);
+//     for (int i = 0; i < p.degree+1; ++i) {
+//         FLOAT x = p.get_multiplicative_coefficient(i);
+//         if (x < m) {
+//             m = x;
+//         }
+//     }
+//     return m;
+// }
 
 static FLOAT maximum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
 {
@@ -241,8 +241,8 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
         }
     }
     // cout << p << endl;
-    FLOAT max_coef = maximum_multiplicative_coefficient(p);
-    FLOAT min_coef = minimum_multiplicative_coefficient(p);
+    // FLOAT max_coef = maximum_multiplicative_coefficient(p);
+    // FLOAT min_coef = minimum_multiplicative_coefficient(p);
     // cout << "max_coef: " << TO_STRING(max_coef) << endl;
     // cout << "min_coef: " << TO_STRING(min_coef) << endl;
     FLOAT integral_result = p.evaluate(1);
