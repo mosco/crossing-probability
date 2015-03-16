@@ -1,6 +1,8 @@
 *.o
 .*.swp
 *.pyc
+.waf-*
+.lock-waf*
 .DS_Store
 crossprob
 crossprob_mc
