@@ -16,7 +16,7 @@ using namespace std;
 class RandomNumberGenerator {
 public:
     RandomNumberGenerator(uint64_t seed) {
-        cout << "Random seed: " << seed << endl;
+        // cout << "Random seed: " << seed << endl;
         tinymt64_init(&random_state, seed);
     }
     double generate_uniform01()
@@ -43,27 +43,46 @@ private:
     double beta;
 };
 
+
+static bool does_integer_step_function_cross_lower_boundary(const double* steps, size_t num_steps, const vector<double>& g_steps)
+{
+    if (num_steps < g_steps.size()) {
+        return true;
+    } else {
+        for (size_t i = 0; i < g_steps.size(); ++i) {
+            if (steps[i] > g_steps[i]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static bool does_integer_step_function_cross_upper_boundary(const double* steps, size_t num_steps, const vector<double>& h_steps)
+{
+    if (num_steps > h_steps.size()) {
+        return true;
+    } else {
+        for (size_t i = 0; i < num_steps; ++i) {
+            if (steps[i] < h_steps[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 static bool does_integer_step_function_cross(const double* steps, size_t num_steps, const vector<double>& g_steps, const vector<double>& h_steps)
 {
-    if ((num_steps < g_steps.size()) || (num_steps > h_steps.size())) {
-        return true;
-    }
-
-    assert(h_steps.size() >= g_steps.size());
-    assert(num_steps >= g_steps.size());
-    for (size_t i = 0; i < g_steps.size(); ++i) {
-        if ((steps[i] > g_steps[i]) || (steps[i] < h_steps[i])) {
+    if (h_steps.size() == 0) {
+        // Special case, no upper bound specified. Check lower bound crossings only.
+        return does_integer_step_function_cross_lower_boundary(steps, num_steps, g_steps);
+    } else {
+        if ((num_steps < g_steps.size()) || (num_steps > h_steps.size())) {
             return true;
         }
+        return does_integer_step_function_cross_lower_boundary(steps, num_steps, g_steps) || does_integer_step_function_cross_upper_boundary(steps, num_steps, h_steps);
     }
-    assert(h_steps.size() >= num_steps);
-    for (size_t i = g_steps.size(); i < num_steps; ++i) {
-        if (steps[i] < h_steps[i]) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 static double does_random_binomial_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, RandomNumberGenerator& rng, vector<double>& tmp_buffer)
@@ -82,7 +101,10 @@ static double does_random_binomial_process_cross(const vector<double>& g_steps, 
 
 static double binomial_process_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
 {
-    if (((long)h_steps.size() < n) ||  ((long)g_steps.size() > n)) {
+    if ((long)g_steps.size() > n) {
+        return 1.0;
+    }
+    if ((h_steps.size() > 0) && ((long)h_steps.size() < n)) {
         return 1.0;
     }
 
@@ -119,7 +141,7 @@ static bool does_random_poisson_process_cross(const vector<double>& g_steps, con
 
 static double poisson_process_crossing_probability_montecarlo(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
 {
-    if (h_steps.size() < g_steps.size()) {
+    if ((h_steps.size() > 0) && (h_steps.size() < g_steps.size())) {
         return 1.0;
     }
 
@@ -194,15 +216,17 @@ static int handle_command_line_arguments(int argc, char* argv[])
     }
 
     pair<vector<double>, vector<double> > bounds = read_boundaries_file(filename);
+    verify_boundary_is_valid(bounds.first);
+    verify_boundary_is_valid(bounds.second);
 
     if (command == "poisson") {
-        cout << "Running " << num_simulations << " simulations...\n";
+        // cout << "Running " << num_simulations << " simulations...\n";
         double crossprob = poisson_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
-        cout << "Crossing probability: " << crossprob << endl;
+        cout << crossprob << endl;
     } else if (command == "binomial") {
-        cout << "Running " << num_simulations << " simulations...\n";
+        // cout << "Running " << num_simulations << " simulations...\n";
         double crossprob = binomial_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
-        cout << "Crossing probability: " << crossprob << endl;
+        cout << crossprob << endl;
     } else {
         print_usage();
         throw runtime_error("Second command line argument must be 'binomial' or 'poisson'");

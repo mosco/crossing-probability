@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <numeric>
+#include <algorithm>
 #include "fftwconvolver.hh"
 
 using namespace std;
@@ -81,14 +82,32 @@ static void convolve_same_size(int size, const double* src0, const double* src1,
     }
 }
 
+static bool lower_and_upper_boundaries_cross(const vector<double>& g_steps, const vector<double>& h_steps)
+{
+    if (g_steps.size() > h_steps.size()) {
+        cout << "The lower and upper boundaries cross: g(1) > h(1).\n";
+        return true;
+    }
+    for (size_t i = 0; i < g_steps.size(); ++i) {
+        if (g_steps[i] < h_steps[i]) {
+            cout << "The lower and upper boundaries cross! i=" << i << ".\n";
+            return true;
+        }
+    }
+    return false;
+}
+
 double poisson_process_noncrossing_probability(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft, int endpoint)
 {
-    cout << "intensity: " << intensity << endl;
-    cout << "Computing..." << endl;
-    assert(g_steps.size() <= h_steps.size());
+    if (lower_and_upper_boundaries_cross(g_steps, h_steps)) {
+        return 0.0;
+    }
+
+    // cout << "intensity: " << intensity << endl;
+    // cout << "Computing..." << endl;
     assert((endpoint == -1) || ((endpoint >= (int)g_steps.size()) && (endpoint <= (int)h_steps.size())));
     vector<Bound> bounds = join_all_bounds(h_steps, g_steps);
-    cout << "Total boundary step count: " << bounds.size() << endl;
+    // cout << "Total boundary step count: " << bounds.size() << endl;
 
     int n = h_steps.size();
     vector<double> Qs0(n+1, -1);
@@ -164,27 +183,33 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     } else {
         nocross_prob = last_dest_buffer[endpoint];
     }
-    cout << "Poisson noncrossing probability: " << nocross_prob << endl;
+    // cout << "Poisson noncrossing probability: " << nocross_prob << endl;
     return nocross_prob;
 }
 
 double binomial_process_noncrossing_probability(int n, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
 {
-    assert(g_steps.size() <= h_steps.size());
-    if ((int)h_steps.size() < n) {
-        throw runtime_error("Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n.");
-    }
     if ((int)g_steps.size() > n) {
-        throw runtime_error("Binomial process b(t) must cross lower boundary g(t) since g(1) > n and b(t) = n.");
+        cout << "Binomial process b(t) must cross lower boundary g(t) since g(1) > n and b(t) = n." << endl;
+        return 0.0;
     }
-
-    // No sense in wasting cycles on the probability that a Poisson process will reach n+1, n+2, etc.
-    // When all we care about is the probability to reach n.
-    vector<double> truncated_h_steps(&h_steps[0], &h_steps[n]); 
-
-    double poisson_nocross_prob = poisson_process_noncrossing_probability(n, g_steps, truncated_h_steps, use_fft, n);
+    vector<double> processed_h_steps(n, 0.0);
+    if (h_steps.size() == 0) {
+        // Special case, only the lower bound is specified.
+        // We treat this as an implicit upper bound satisfying h(t) = n for all t.
+    } else {
+        if (lower_and_upper_boundaries_cross(g_steps, h_steps)) {
+            return 0.0;
+        }
+        if ((int)h_steps.size() < n) {
+            cout << "Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n." << endl;
+            return 0.0;
+        }
+        copy(h_steps.begin(), h_steps.begin() + n, processed_h_steps.begin());
+    }
+    double poisson_nocross_prob = poisson_process_noncrossing_probability(n, g_steps, processed_h_steps, use_fft, n);
     double binomial_nocross_prob = poisson_nocross_prob / poisson_pmf(n, n);
-    cout << "Binomial noncrossing probability: " << binomial_nocross_prob << endl;
+    // cout << "Binomial noncrossing probability: " << binomial_nocross_prob << endl;
     return binomial_nocross_prob;
 }
 

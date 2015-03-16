@@ -86,10 +86,15 @@ static int handle_command_line_arguments(int argc, char* argv[])
     const vector<double>& upper_bound_steps = bounds.second;
 
     if (command == "poisson2") {
-        verify_two_sided_boundaries_are_valid(lower_bound_steps, upper_bound_steps);
+        verify_boundary_is_valid(lower_bound_steps);
+        verify_boundary_is_valid(upper_bound_steps);
+        if (upper_bound_steps.size() == 0) {
+            throw runtime_error("Only a lower boundary is specified. The 'poisson2' command currently does not support using just a lower boundary. Sorry about that.");
+        }
         cout << 1.0 - poisson_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft, -1) << endl;
     } else if (command == "binomial2") {
-        verify_two_sided_boundaries_are_valid(lower_bound_steps, upper_bound_steps);
+        verify_boundary_is_valid(lower_bound_steps);
+        verify_boundary_is_valid(upper_bound_steps);
         cout <<  1.0 - binomial_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft) << endl;
     } else if (command == "binomial1") {
         if (use_fft == false) {
@@ -100,11 +105,11 @@ static int handle_command_line_arguments(int argc, char* argv[])
             throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'binomial1' command.\n");
         }
         if (upper_bound_steps.size() == 0) {
-            verify_one_sided_boundary_is_valid(lower_bound_steps);
+            verify_boundary_is_valid(lower_bound_steps);
             cout << 1.0 - binomial_process_lower_noncrossing_probability(n, lower_bound_steps) << endl;
         } else {
             assert(lower_bound_steps.size() == 0);
-            verify_one_sided_boundary_is_valid(upper_bound_steps);
+            verify_boundary_is_valid(upper_bound_steps);
             cout << 1.0 - binomial_process_upper_noncrossing_probability(n, upper_bound_steps) << endl;
         }
     } else {
