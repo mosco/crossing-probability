@@ -15,7 +15,7 @@ Currently, the main application of this code is the computation of p-values for 
 ## Prerequisites
 
 * GCC 4.6 or above. It will probably work with older versions of GCC and may even work with older compilers.
-* The [FFTW3](http://www.fftw.org/) library.
+* The [FFTW3](http://www.fftw.org/) library. [Download/installation instructions](http://www.fftw.org/download.html)
 
 
 ## How to build
