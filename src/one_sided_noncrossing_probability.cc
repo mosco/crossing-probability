@@ -215,6 +215,7 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
     const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 1;
 
     // cout << "Using translated polynomials! precision: " << FLOAT_PRECISION_BITS << endl;
+    // cout << "sizeof(FLOAT) = " << sizeof(FLOAT) << endl;
     if ((int)upper_bound_steps.size() < n) {
         throw runtime_error("Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n");
     }
@@ -240,18 +241,18 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
             }
         }
     }
-    // cout << p << endl;
-    // FLOAT max_coef = maximum_multiplicative_coefficient(p);
-    // FLOAT min_coef = minimum_multiplicative_coefficient(p);
-    // cout << "max_coef: " << TO_STRING(max_coef) << endl;
-    // cout << "min_coef: " << TO_STRING(min_coef) << endl;
+    //FLOAT max_coef = maximum_multiplicative_coefficient(p);
+    //FLOAT min_coef = minimum_multiplicative_coefficient(p);
     FLOAT integral_result = p.evaluate(1);
     FLOAT log_integral_result = LOG(integral_result);
+    FLOAT noncrossing_probability = EXP(LOG_GAMMA(n+1) + log_integral_result - total_exponent_delta*LOG(2));
+    // cout << p << endl;
+    // cout << "max_coef: " << TO_STRING(max_coef) << endl;
+    // cout << "min_coef: " << TO_STRING(min_coef) << endl;
     // cout << "Integral result: (no exponent fix) " << TO_STRING(integral_result) << endl;
     // cout << "Exponent delta: " << total_exponent_delta << endl;
     // cout << "LOG_GAMMA(n+1) == " << TO_STRING(LOG_GAMMA(n+1)) << endl;
     // cout << "log_integral_result (no exponent fix) == " << TO_STRING(log_integral_result) << endl;
-    FLOAT noncrossing_probability = EXP(LOG_GAMMA(n+1) + log_integral_result - total_exponent_delta*LOG(2));
     // cout << "Final result: " << TO_STRING(noncrossing_probability) << endl;
     return noncrossing_probability;
 }

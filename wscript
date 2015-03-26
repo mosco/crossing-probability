@@ -1,13 +1,13 @@
 #!/not/executable/python  # This line is only here so that text editors will use Python syntax highlighting.
 import os
 
-C_COMPILER = 'gcc-4.7'
-CPLUSPLUS_COMPILER = 'g++-4.7'
-FFTW3_INCLUDE_DIR_LOCATION = '/home/amitmo/local/include' 
-# Note: the libfftw3 file should be in a path contained in LD_LIBRARY_PATH.
 
-os.environ['CC'] = C_COMPILER
-os.environ['CXX'] = CPLUSPLUS_COMPILER
+# If the compiler cannot find the fftw3 include files, add a line like the following line to the configure() function:
+#     config.env.INCLUDES = ['/location/of/fftw3/include/directory']
+#
+# To override the selected compiler, uncomment the following lines and choose a compiler:
+#     os.environ['CC'] = 'gcc-4.9'
+#     os.environ['CXX'] = 'g++-4.9'
 
 APPNAME = 'crossing-probability'
 VERSION = '1.0'
@@ -16,8 +16,7 @@ def configure(config):
     config.load('compiler_c')
     config.load('compiler_cxx')
     config.env.CFLAGS = ['-Wall', '-O3', '-std=c99']
-    config.env.CXXFLAGS = ['-DNDEBUG', '-Wall', '-O3', '-D__STDC_CONSTANT_MACROS', '-std=c++98']
-    config.env.INCLUDES = [FFTW3_INCLUDE_DIR_LOCATION]
+    config.env.CXXFLAGS = ['-DNDEBUG', '-Wall', '-O3', '-D__STDC_CONSTANT_MACROS', '-std=c++11']
     config.env.LIB = ['fftw3']
 
 def options(opt):

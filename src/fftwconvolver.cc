@@ -3,6 +3,8 @@
 #include "fftw_wrappers.hh"
 #include "fftwconvolver.hh"
 
+using namespace std;
+
 // Constructing FFTW_R2C_1D_Executor objects for every possible input size is expensive,
 // so we round up the sizes and construct an object for every N-th size.
 const int ROUNDING = 128;
@@ -38,7 +40,7 @@ void FFTWConvolver::convolve_same_size(int input_buffers_size, const double* inp
     fft.set_input_zeropadded(input_buffer_0, input_buffers_size);
     fft.execute();
     assert(static_cast<int>(tmp.size()) >= fft.output_size);
-    std::memcpy(&tmp[0], fft.output_buffer, fft.output_size * sizeof(double complex));
+    std::memcpy(&tmp[0], fft.output_buffer, fft.output_size * sizeof(complex<double>));
 
     fft.set_input_zeropadded(input_buffer_1, input_buffers_size);
     fft.execute();
@@ -50,7 +52,7 @@ void FFTWConvolver::convolve_same_size(int input_buffers_size, const double* inp
     for (int i = 0; i < fft.output_size; ++i) {
         // FFTW returns unnormalized output. To normalize it one must divide each element
         // of the result by the number of elements.
-        ifft.input_buffer[i] = tmp[i] * fft.output_buffer[i] / padded_length;
+        ifft.input_buffer[i] = tmp[i] * fft.output_buffer[i] / double(padded_length);
     }
 
     ifft.execute();

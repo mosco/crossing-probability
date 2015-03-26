@@ -9,9 +9,9 @@ FFTW_R2C_1D_Executor::FFTW_R2C_1D_Executor(int n_real_samples) :
     input_size(n_real_samples),
     input_buffer(fftw_alloc_real(n_real_samples)),
     output_size(n_real_samples/2 + 1),
-    output_buffer(fftw_alloc_complex(n_real_samples/2 + 1))
+    output_buffer(reinterpret_cast<complex<double>*>(fftw_alloc_complex(n_real_samples/2 + 1)))
 {
-    plan = fftw_plan_dft_r2c_1d(n_real_samples, input_buffer, output_buffer, FFTW_ESTIMATE);
+    plan = fftw_plan_dft_r2c_1d(n_real_samples, input_buffer, reinterpret_cast<fftw_complex*>(output_buffer), FFTW_ESTIMATE);
 }
 
 FFTW_R2C_1D_Executor::~FFTW_R2C_1D_Executor()
@@ -38,11 +38,11 @@ void FFTW_R2C_1D_Executor::execute()
 
 FFTW_C2R_1D_Executor::FFTW_C2R_1D_Executor(int n_real_samples) : 
     input_size(n_real_samples/2 + 1),
-    input_buffer(fftw_alloc_complex(n_real_samples/2 + 1)),
+    input_buffer(reinterpret_cast<complex<double>*>(fftw_alloc_complex(n_real_samples/2 + 1))),
     output_size(n_real_samples),
     output_buffer(fftw_alloc_real(n_real_samples))
 {
-    plan = fftw_plan_dft_c2r_1d(n_real_samples, input_buffer, output_buffer, FFTW_ESTIMATE);
+    plan = fftw_plan_dft_c2r_1d(n_real_samples, reinterpret_cast<fftw_complex*>(input_buffer), output_buffer, FFTW_ESTIMATE);
 }
 
 FFTW_C2R_1D_Executor::~FFTW_C2R_1D_Executor()
@@ -52,11 +52,11 @@ FFTW_C2R_1D_Executor::~FFTW_C2R_1D_Executor()
     fftw_free(output_buffer);
 }
 
-void FFTW_C2R_1D_Executor::set_input_zeropadded(const double complex* buffer, int size)
+void FFTW_C2R_1D_Executor::set_input_zeropadded(const complex<double>* buffer, int size)
 {
     assert(size == input_size);
-    memcpy(input_buffer, buffer, sizeof(double complex)*size);
-    memset(&input_buffer[size], 0, sizeof(double complex)*(input_size - size));
+    memcpy(input_buffer, buffer, sizeof(complex<double>)*size);
+    memset(&input_buffer[size], 0, sizeof(complex<double>)*(input_size - size));
 }
 
 void FFTW_C2R_1D_Executor::execute()

@@ -2,7 +2,7 @@
 #define __fftwconvolver_hh__
 
 #include <vector>
-#include <complex.h>
+#include <complex>
 
 class FFTW_R2C_1D_Executor;
 class FFTW_C2R_1D_Executor;
@@ -16,7 +16,7 @@ private:
     int maximum_input_size;
     std::vector<FFTW_R2C_1D_Executor*> r2c_executors;
     std::vector<FFTW_C2R_1D_Executor*> c2r_executors;
-    std::vector<double complex> tmp;
+    std::vector<std::complex<double> > tmp;
 };
 
 #endif

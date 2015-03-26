@@ -9,7 +9,7 @@
 // 2. Compute a "plan" struct. This tells FFTW which algorithms to use when actually computing the FFT.
 // 3. Execute the FFT/IFFT operation on the buffers from step 1.
 
-#include <complex.h>
+#include <complex>
 #include <fftw3.h>
 
 // Usage:
@@ -32,7 +32,7 @@ public:
     double* const input_buffer;
 
     const int output_size;
-    double complex* const output_buffer;
+    std::complex<double>* const output_buffer;
 
 private:
     fftw_plan plan;
@@ -43,11 +43,11 @@ class FFTW_C2R_1D_Executor {
 public:
     FFTW_C2R_1D_Executor(int n_real_samples);
     ~FFTW_C2R_1D_Executor();
-    void set_input_zeropadded(const double complex* buffer, int size);
+    void set_input_zeropadded(const std::complex<double>* buffer, int size);
     void execute();
 
     const int input_size;
-    double complex* const input_buffer;
+    std::complex<double>* const input_buffer;
 
     const int output_size;
     double* const output_buffer;
