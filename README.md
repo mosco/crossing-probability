@@ -2,7 +2,7 @@ crossing-probability
 ====================
 
 Fast C++ programs for computing the boundary crossing probability of Poisson and Binomial stochastic processes.
-See the following paper for more details: TODO
+See the following paper for more details: [http://arxiv.org/abs/1503.04363](http://arxiv.org/abs/1503.04363)
 
 Currently, the main application of this code is the computation of p-values for continuous goodness-of-fit tests. But it also has applications in sequential analysis, change-point detection, diffusion and queuing theory.
 
@@ -15,12 +15,12 @@ Currently, the main application of this code is the computation of p-values for 
 ## Prerequisites
 
 * GCC 4.6 or above. It will probably work with older versions of GCC and may even work with older compilers.
-* The [FFTW3](http://www.fftw.org/) library.
+* The [FFTW3](http://www.fftw.org/) library. [Installation instructions](http://www.fftw.org/download.html).
 
 
 ## How to build
 
-* Simply run
+Simply run
  ```
  ./waf configure
  ./waf build
@@ -33,8 +33,6 @@ Currently, the main application of this code is the computation of p-values for 
 You may run the tests with
 ```./waf test```
 
-For usage instructions, just run **./crossprob** or **./crossprob_mc**.
-
 
 ## Build errors?
 
@@ -42,6 +40,11 @@ If you installed FFTW3 on your system, the compilation should just work. If FFTW
 * Build FFTW3.
 * Set the "FFTW3_INCLUDE_DIR_LOCATION" variable in the "wscript" file to wherever the file "fftw3.h" is at.
 * Add the directory containing libfftw3 to the path in the environment variable LD_LIBRARY_PATH.
+
+
+# Usage
+
+Just run **./crossprob** or **./crossprob_mc**. This will print usage instructions.
 
 
 # Contact
