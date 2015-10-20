@@ -2,9 +2,9 @@ crossing-probability
 ====================
 
 Fast C++ programs for computing the boundary crossing probability of Poisson and Binomial stochastic processes.
-More details are available at [my homepage](http://www.wisdom.weizmann.ac.il/~amitmo).
+The main application of this code is the computation of p-values for continuous goodness-of-fit tests. But it also has potential applications in sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.
 
-Currently, the main application of this code is the computation of p-values for continuous goodness-of-fit tests. But it also has potential applications in sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.
+More details are available at [my homepage](http://www.wisdom.weizmann.ac.il/~amitmo).
 
 # Building
 
