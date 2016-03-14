@@ -6,6 +6,7 @@
 #include <numeric>
 #include <algorithm>
 #include "fftwconvolver.hh"
+#include "aligned_mem.hh"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ static vector<Bound> join_all_bounds(const vector<double>& h_steps, const vector
     assert(h_steps.size() >= g_steps.size());
 
     vector<Bound> bounds;
+    bounds.reserve(h_steps.size()+g_steps.size()+1);
     Bound b;
 
     for (int i = 0; i < (int)h_steps.size(); ++i) {
@@ -63,14 +65,6 @@ static inline double poisson_pmf(double lambda, int k)
     return exp(log_pmf);
 }
 
-// static void print_array(const double* arr, int n)
-// {
-//     for (int i = 0; i < n; ++i) {
-//         cout << arr[i] << ", ";
-//     }
-//     cout << endl;
-// }
-
 static void convolve_same_size(int size, const double* src0, const double* src1, double* dest)
 {
     for (int j = 0; j < size; ++j) {
@@ -103,11 +97,14 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
         return 0.0;
     }
 
-    // cout << "intensity: " << intensity << endl;
-    // cout << "Computing..." << endl;
     assert((endpoint == -1) || ((endpoint >= (int)g_steps.size()) && (endpoint <= (int)h_steps.size())));
     vector<Bound> bounds = join_all_bounds(h_steps, g_steps);
     // cout << "Total boundary step count: " << bounds.size() << endl;
+
+    vector<double> lgamma_LUT(h_steps.size()+2);
+    for (int i = 0; i < (int)lgamma_LUT.size(); ++i) {
+        lgamma_LUT[i] = lgamma(i);
+    }
 
     int n = h_steps.size();
     vector<double> Qs0(n+1, -1);
@@ -121,7 +118,7 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     int g_step_count = 0;
 
     FFTWConvolver fftconvolver(n+1);
-    vector<double> pmf(n+1, 0.0);
+    double* pmf = allocate_aligned_doubles(n+1);
     for (unsigned int i = 0; i < bounds.size(); ++i) {
 
         const vector<double>& src_buffer = *buffers[i % 2];
@@ -130,31 +127,25 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
         double location = bounds[i].location;
 
         int cur_size = h_step_count - g_step_count + 1;
-        for (int j = 0; j < cur_size; ++j) {
-            pmf[j] = poisson_pmf(intensity*(location-prev_location), j);
-        }
 
-        // cout << "--------------------------------------------\n";
-        // cout << "Iteration " << i << endl;
-        // cout << "h_step_count: " << h_step_count << endl;
-        // cout << "g_step_count: " << g_step_count << endl;
-        // cout << "location: " << location << endl;
-        // cout << "Src: ";
-        // print_array(&src_buffer[0], n+1);
-        // cout << "pmf: ";
-        // print_array(&pmf[0], n+1);
-        // cout << "cur_size: " << cur_size << endl;
-        // cout << "dest_buffer before convolution: ";
-        // print_array(&dest_buffer[0], n+1);
-        
-        if (use_fft) {
-            fftconvolver.convolve_same_size(cur_size, &pmf[0], &src_buffer[g_step_count], &dest_buffer[g_step_count]);
+        double lambda = intensity*(location-prev_location);
+        // Set pmf to probability mass function of Poisson(lambda) distribution
+        if (lambda == 0) {
+            pmf[0] = 1.0;
+            for (int j = 1; j < cur_size; ++j) {
+                pmf[j] = 0.0;
+            }
         } else {
-            convolve_same_size(cur_size, &pmf[0], &src_buffer[g_step_count], &dest_buffer[g_step_count]);
+            for (int j = 0; j < cur_size; ++j) {
+                pmf[j] = exp(-lambda + j*log(lambda) - lgamma_LUT[j+1]);
+            }
         }
 
-        //cout << "dest_buffer after convolution: ";
-        //print_array(&dest_buffer[0], n+1);
+        if (use_fft) {
+            fftconvolver.convolve_same_size(cur_size, pmf, &src_buffer[g_step_count], &dest_buffer[g_step_count]);
+        } else {
+            convolve_same_size(cur_size, pmf, &src_buffer[g_step_count], &dest_buffer[g_step_count]);
+        }
 
         BoundType tag = bounds[i].tag;
         if (tag == H_STEP) {
@@ -171,9 +162,6 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
             assert(tag == END);
         }
         prev_location = location;
-        //cout << "Dest:";
-        //print_array(&dest_buffer[0], n+1);
-        //cout << endl;
     }
 
     vector<double>& last_dest_buffer = *buffers[bounds.size() % 2];
@@ -184,6 +172,7 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
         nocross_prob = last_dest_buffer[endpoint];
     }
     // cout << "Poisson noncrossing probability: " << nocross_prob << endl;
+    free_aligned_mem(pmf);
     return nocross_prob;
 }
 

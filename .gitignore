@@ -1,10 +1,7 @@
-*.o
-.*.swp
+*~
+.AppleDouble*
 *.pyc
-.waf-*
-.lock-waf*
-.DS_Store
-crossprob
-crossprob_mc
+*__pycache__*
 build/*
-
+.waf*
+*.swp

@@ -29,10 +29,10 @@ public:
     void execute();
 
     const int input_size;
-    double* const input_buffer;
+    double* input_buffer;
 
     const int output_size;
-    std::complex<double>* const output_buffer;
+    std::complex<double>* output_buffer;
 
 private:
     fftw_plan plan;
@@ -47,10 +47,10 @@ public:
     void execute();
 
     const int input_size;
-    std::complex<double>* const input_buffer;
+    std::complex<double>* input_buffer;
 
     const int output_size;
-    double* const output_buffer;
+    double* output_buffer;
 
 private:
     fftw_plan plan;
