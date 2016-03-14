@@ -13,8 +13,9 @@ More details are available at [my homepage](http://www.wisdom.weizmann.ac.il/~am
 
 ## Prerequisites
 
-* GCC 4.6 or above. It will probably work with older versions of GCC and may even work with older compilers.
+* GCC or clang compiler.
 * The [FFTW3](http://www.fftw.org/) library. [Installation instructions](http://www.fftw.org/download.html).
+* Python (for running the waf build system).
 
 
 ## How to build
@@ -26,7 +27,7 @@ Simply run
  ```
 
  This will build two programs in the ./build directory:
- * **crossprob** implements algorithms described in [Moscovich-Eiger and Nadler 2015](TODO add link to arxiv) for computing one-sided and two-sided crossing probabilities for the Poisson and Binomial process.
+ * **crossprob** implements algorithms described in [Moscovich-Eiger and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson and Binomial process.
  * **crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
  
 You may run the tests with
