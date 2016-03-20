@@ -15,8 +15,8 @@ Prerequisite: The [FFTW3](http://www.fftw.org/) library. [Installation instructi
 
 Simply run
 ```make```
+This will build two programs in the ./bin directory:
 
- This will build two programs in the ./bin directory:
  * **crossprob** implements algorithms described in [Moscovich-Eiger and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson and Binomial process.
  * **crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
  
