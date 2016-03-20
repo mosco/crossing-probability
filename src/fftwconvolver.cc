@@ -14,9 +14,9 @@ const int ROUNDING = 128;
 const int MINIMUM_SIZE_FOR_FFTW_CONVOLUTION = 80;
 
 FFTWConvolver::FFTWConvolver(int maximum_input_size) :
-    maximum_input_size(maximum_input_size+ROUNDING-1),
     r2c_executors(maximum_input_size+ROUNDING, NULL),
-    c2r_executors(maximum_input_size+ROUNDING, NULL)
+    c2r_executors(maximum_input_size+ROUNDING, NULL),
+    maximum_input_size(maximum_input_size+ROUNDING-1)
 {
     tmp_complex = allocate_aligned_complexes(maximum_input_size);
     tmp_double_0 = allocate_aligned_doubles(maximum_input_size);
