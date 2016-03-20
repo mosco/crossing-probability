@@ -14,21 +14,21 @@ I've tried to build the code on Linux and Mac OSX only. Building on Windows shou
 Prerequisite: The [FFTW3](http://www.fftw.org/) library. [Installation instructions](http://www.fftw.org/download.html).
 
 Simply run
-```make```
+`make`
 This will build two programs in the ./bin directory:
 
- * **crossprob** implements algorithms described in [Moscovich-Eiger and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson and Binomial process.
- * **crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
+* **bin/crossprob** implements algorithms described in [Moscovich-Eiger and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson and Binomial process.
+* **bin/crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
  
 You may run the tests with ```make test```.
 
 # Building the Python extension
 
-Simply run ```python setup.py install``` to build and install the python module ```crossprob``` into your site-packages directory. This uses the standard distutils system.
+Run ```python setup.py install``` to build and install the python module ```crossprob``` into your site-packages directory. This uses the standard distutils system.
 
 ## Build errors?
 
-If you installed FFTW3 on your system, the compilation should just work. If FFTW3 is not installed system-wide (e.g. because you do not have root privilieges) then before configuring&building you need to:
+If you installed FFTW3 on your system, the compilation should just work. If FFTW3 is not installed system-wide (e.g. because you do not have root privilieges) then before configuring and building you need to:
 * Build FFTW3.
 * Add -I<FFTW include dir location> (pointing to wherever "fftw3.h" is located) to CXXFLAGS in the Makefile.
 * Add the directory containing libfftw3 to the path in the environment variable LD_LIBRARY_PATH (on linux) or DYLD_LIBRARY_PATH (on OSX).
