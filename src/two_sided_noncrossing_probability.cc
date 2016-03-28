@@ -177,11 +177,11 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     return nocross_prob;
 }
 
-double binomial_process_noncrossing_probability(int n, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
+double ecdf_noncrossing_probability(int n, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
 {
     if ((int)g_steps.size() > n) {
         stringstream ss;
-        ss << "Binomial process b(t) must cross lower boundary g(t) since g(1)==" << g_steps.size() << " > n and b(1) = n." << endl;
+        ss << "Empirical CDF must cross lower boundary g(t) since g(1)==" << g_steps.size() << " > n and the number of samples is n." << endl;
         throw runtime_error(ss.str());
     }
     vector<double> processed_h_steps(n, 0.0);
@@ -194,7 +194,7 @@ double binomial_process_noncrossing_probability(int n, const vector<double>& g_s
         }
         if ((int)h_steps.size() < n) {
             stringstream ss;
-            ss << "Binomial process b(t) must cross upper boundary h(t) since h(1)==" << h_steps.size() << " < n and b(1) = n." << endl;
+            ss << "Empirical CDF must cross lower boundary g(t) since h(1)==" << h_steps.size() << " > n and the number of samples is n." << endl;
             ss << "h_steps: ";
             for (int i = 0; i < (int)h_steps.size(); ++i) {
                 ss << h_steps[i] << ", ";
@@ -205,9 +205,9 @@ double binomial_process_noncrossing_probability(int n, const vector<double>& g_s
         copy(h_steps.begin(), h_steps.begin() + n, processed_h_steps.begin());
     }
     double poisson_nocross_prob = poisson_process_noncrossing_probability(n, g_steps, processed_h_steps, use_fft, n);
-    double binomial_nocross_prob = poisson_nocross_prob / poisson_pmf(n, n);
-    // cout << "Binomial noncrossing probability: " << binomial_nocross_prob << endl;
-    return binomial_nocross_prob;
+    double ecdf_nocross_prob = poisson_nocross_prob / poisson_pmf(n, n);
+    // cout << "Empirical CDF noncrossing probability: " << ecdf_nocross_prob << endl;
+    return ecdf_nocross_prob;
 }
 
 

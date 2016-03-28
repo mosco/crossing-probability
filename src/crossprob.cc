@@ -14,47 +14,69 @@ using namespace std;
 static void print_usage()
 {
     cout << "SYNOPSIS\n";
-    cout << "    crossprob poisson2 <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "    crossprob binomial2 <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "    crossprob binomial1 <n> <one-sided-boundary-functions-file>\n";
+    cout << "    crossprob poisson <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "    crossprob ecdf <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "    crossprob ecdf_one_sided <n> <one-sided-boundary-functions-file>\n";
     cout << endl;
     cout << "DESCRIPTION\n";
-    cout << "    crossprob poisson2 <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "        Computes the probability that p(t) will exit the boundaries [g(t), h(t)] at some point t in [0,1]\n";
-    cout << "        Where p(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
+    cout << "    Let g(t), h(t):[0,1] -> R be two functions such that g(t) <= h(t). This program computes\n";
+    cout << "    the probability that a Poisson process or an empirical CDF will cross these boundaries.\n";
+    cout << "    For more details see https://github.com/mosco/crossing-probability\n";
     cout << endl;
-    cout << "    crossprob binomial2 <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "        Computes the probability that b(t) will exit the boundaries [g(t), h(t)] at some point t in [0,1]\n";
-    cout << "        where b(t) is a binomial process with n samples. This process is the result of drawing n\n";
-    cout << "        random variables X_1, ..., X_n uniformly from [0,1] setting b(t) := number of X_i <= t.\n";
+    cout << "    crossprob poisson <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "        Computes the probability that a homogeneous Poisson process p(t):[0,1]->{0,1,...} of\n";
+    cout << "        intensity n will cross the lower boundary g(t) or the upper boundary h(t) at some point t.\n";
     cout << endl;
-    cout << "    crossprob binomial1 <n> <one-sided-boundary-functions-file>\n";
-    cout << "        Computes the probability that a binomial process with n samples will cross a single boundary.\n";
-    cout << "        This works like the binomial2 command above, but using either a lower or upper boundary.\n";
+    cout << "    crossprob ecdf <n> <boundary-functions-file> [--no-fft]\n";
+    cout << "        Computes the probability that an empirical CDF F^(t) will cross either the lower\n";
+    cout << "        boundary g(t) or the upper boundary h(t) at some point t, where F^(t) is the\n";
+    cout << "        empirical CDF of n samples drawn uniformly from the interval [0,1].\n";
+    cout << "        i.e. Letting X_1, ..., X_n ~ U[0,1], we have F^(t) = (number of X_i <= t) / n";
+    cout << endl;
+    cout << "    crossprob ecdf_one_sided <n> <one-sided-boundary-functions-file>\n";
+    cout << "        Computes the probability that an empirical CDF will cross a single boundary.\n";
+    cout << "        This works like the ecdf command above, but using either a lower or upper boundary.\n";
     cout << endl; 
     cout << "OPTIONS\n";
     cout << "    <n>\n";
     cout << "        In the Poisson case, this is the intensity of the process (i.e. the expectation of p(1)).\n";
-    cout << "        In the Binomial case, this is the number of points drawn from [0,1], hence b(1) is always n.\n";
+    cout << "        In the empirical CDF case, this is the number of points drawn from [0,1].\n";
     cout << endl;
     cout << "    <boundary-functions-file>\n";
     cout << "        This file describes the boundary functions g(t) and h(t).\n";
-    cout << "        It must contain exactly 2 lines of monotone-increasing comma-separated numbers between 0 and 1\n";
-    cout << "        that are the integer-crossing points of the boundary functions.\n";
+    cout << "        It must contain 2 lines of monotone-increasing comma-separated numbers between 0 and 1\n";
     cout << endl;
+    cout << "        POISSON case - these the integer-crossing points of the boundary functions:\n";
     cout << "        Line 1: the i-th number in this list is inf{t in [0,1] : g(t) >= i}\n";
     cout << "        Line 2: the i-th number in this list is sup{t in [0,1] : h(t) <= i}\n";
+    cout << endl;
+    cout << "        ECDF case - these are the points at which the boundary functions cross i/n for some integer n.\n";
+    cout << "        Line 1: the i-th number in this list is inf{t in [0,1] : g(t) >= i/n}\n";
+    cout << "        Line 2: the i-th number in this list is sup{t in [0,1] : h(t) <= i/n}\n";
     cout << endl;
     cout << "        Example:\n";
     cout << "            0.3, 0.7, 0.9, 1\n";
     cout << "            0, 0, 0.15, 0.5, 0.8\n";
     cout << endl;
     cout << "    <one-sided-boundary-functions-file\n";
-    cout << "        This file is structured like <boundary-functions-file>, but one of the lines must be empty.\n";
+    cout << "        This file is structured like <boundary-functions-file>, but either the first or second line\n";
+    cout << "        must be empty.\n";
     cout << endl;
     cout << "    --no-fft\n";
-    cout << "        Do not perform convolution using the FFT algorithm.\n";
-    cout << "        This is typically faster for small values of n or when g(t) and h(t) are close to each other.\n";
+    cout << "        Revert to algorithm [2] instead of [1].\n";
+    cout << endl;
+    cout << "NOTES\n";
+    cout << "    The two-sided crossing commands poisson/ecdf implement the procedure described in [1] \n";
+    cout << "    unless the '--no-fft' flag is used, in which case the procedure of [2] is used instead.\n";
+    cout << "    For the ecdf_one_sided command, we use a different algorithm described in [3].\n";
+    cout << endl;
+    cout << "REFERENCES\n";
+    cout << "    [1] A. Moscovich, B. Nadler, Fast calculation of boundary crossing probabilities for\n";
+    cout << "        Poisson processes (2016), http://arxiv.org/abs/1503.04363\n";
+    cout << "    [2] E. Khmaladze, E. Shinjikashvili, Calculation of noncrossing probabilities for Poisson\n";
+    cout << "        processes and its corollaries, Adv. Appl. Probab. 33 (2001) 702–716, http://doi.org/10.1239/aap/\n";
+    cout << "    [3] A. Moscovich, B. Nadler, C. Spiegelman, On the exact Berk-Jones statistics and their\n";
+    cout << "        p-value calculation (2016), http://arxiv.org/abs/1311.3190\n\n";
 }
 
 static int handle_command_line_arguments(int argc, char* argv[])
@@ -85,36 +107,36 @@ static int handle_command_line_arguments(int argc, char* argv[])
     const vector<double>& lower_bound_steps = bounds.first;
     const vector<double>& upper_bound_steps = bounds.second;
 
-    if (command == "poisson2") {
+    if (command == "poisson") {
         verify_boundary_is_valid(lower_bound_steps);
         verify_boundary_is_valid(upper_bound_steps);
         if (upper_bound_steps.size() == 0) {
-            throw runtime_error("Only a lower boundary is specified. The 'poisson2' command currently does not support using just a lower boundary. Sorry about that.");
+            throw runtime_error("Only a lower boundary is specified. The 'poisson' command currently does not support using just a lower boundary. Sorry about that.");
         }
         cout << 1.0 - poisson_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft, -1) << endl;
-    } else if (command == "binomial2") {
+    } else if (command == "ecdf") {
         verify_boundary_is_valid(lower_bound_steps);
         verify_boundary_is_valid(upper_bound_steps);
-        cout <<  1.0 - binomial_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft) << endl;
-    } else if (command == "binomial1") {
+        cout <<  1.0 - ecdf_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft) << endl;
+    } else if (command == "ecdf_one_sided") {
         if (use_fft == false) {
-            cout << "Warning: --no-fft flag is superfluous when using the 'binomial1' command.\n";
+            cout << "Warning: --no-fft flag is superfluous when using the 'ecdf_one_sided' command.\n";
         }
         if ((lower_bound_steps.size() > 0) && (upper_bound_steps.size() > 0)) {
             print_usage();
-            throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'binomial1' command.\n");
+            throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf_one_sided' command.\n");
         }
         if (upper_bound_steps.size() == 0) {
             verify_boundary_is_valid(lower_bound_steps);
-            cout << 1.0 - binomial_process_lower_noncrossing_probability(n, lower_bound_steps) << endl;
+            cout << 1.0 - ecdf_lower_noncrossing_probability(n, lower_bound_steps) << endl;
         } else {
             assert(lower_bound_steps.size() == 0);
             verify_boundary_is_valid(upper_bound_steps);
-            cout << 1.0 - binomial_process_upper_noncrossing_probability(n, upper_bound_steps) << endl;
+            cout << 1.0 - ecdf_upper_noncrossing_probability(n, upper_bound_steps) << endl;
         }
     } else {
         print_usage();
-        throw runtime_error("Second command line argument must be 'binomial1', 'binomial2' or 'poisson2'");
+        throw runtime_error("Second command line argument must be 'poisson', 'ecdf' or 'ecdf_one_sided'");
     }
 
     return 0;

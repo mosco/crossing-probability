@@ -85,7 +85,7 @@ static bool does_integer_step_function_cross(const double* steps, size_t num_ste
     }
 }
 
-static double does_random_binomial_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, RandomNumberGenerator& rng, vector<double>& tmp_buffer)
+static double does_random_ecdf_cross(const vector<double>& g_steps, const vector<double>& h_steps, RandomNumberGenerator& rng, vector<double>& tmp_buffer)
 {
     double last_x = 0.0;
     for (size_t i = 0; i < tmp_buffer.size(); ++i) {
@@ -99,7 +99,7 @@ static double does_random_binomial_process_cross(const vector<double>& g_steps, 
     return does_integer_step_function_cross(&tmp_buffer[0], tmp_buffer.size(), g_steps, h_steps);
 }
 
-static double binomial_process_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
+static double ecdf_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
 {
     if ((long)g_steps.size() > n) {
         return 1.0;
@@ -113,7 +113,7 @@ static double binomial_process_crossing_probability_montecarlo(long n, const vec
     vector<double> tmp_buffer(n);
     int count_crossings = 0;
     for (int reps = 0; reps < num_simulations; ++reps) {
-        count_crossings += does_random_binomial_process_cross(g_steps, h_steps, rng, tmp_buffer);
+        count_crossings += does_random_ecdf_cross(g_steps, h_steps, rng, tmp_buffer);
     }
 
     return double(count_crossings) / num_simulations;
@@ -160,24 +160,22 @@ static void print_usage()
 {
     cout << "SYNOPSIS\n";
     cout << "    crossing_probability poisson <n> <boundary-functions-file> <num-simulations>\n";
-    cout << "    crossing_probability binomial <n> <boundary-functions-file> <num-simulations>\n";
+    cout << "    crossing_probability ecdf <n> <boundary-functions-file> <num-simulations>\n";
     cout << endl;
     cout << "DESCRIPTION\n";
     cout << "    crossing_probability poisson <n> <boundary-functions-file> <num-simulations>\n";
     cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < xi_n(t) < h(t) for all t in [0,1]\n";
     cout << "        where xi_n(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
     cout << endl;
-    cout << "    crossing_probability binomial <n> <boundary-functions-file> <num-simulations>\n";
-    cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < eta_n(t) < h(t) for all t in [0,1]\n";
-    cout << "        where eta_n(t) is the Binomial stochastic process with n samples.\n";
-    cout << "        This process is the result of drawing n random variables X_1, ..., X_n\n";
-    cout << "        uniformly from the interval [0,1] and constructing the cumulative count function\n";
-    cout << "            eta_n(t) = number of X_i < t.\n";
+    cout << "    crossing_probability ecdf <n> <boundary-functions-file> <num-simulations>\n";
+    cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < F_n(t) < h(t) for all t in [0,1]\n";
+    cout << "        where F_n(t) is the empirical CDF of n uniform samples in [0,1]. i.e.\n";
+    cout << "            F_n(t) = (number of X_i < t)/n  where X_1,...X_n ~ U[0,1].\n";
     cout << endl;
     cout << "OPTIONS\n";
     cout << "    <n>\n";
     cout << "        In the Poisson case, this is the intensity of the process (i.e. the expectation of xi_n(1)).\n";
-    cout << "        In the Binomial case, this is the number of points drawn from [0,1], hence eta_n(1) = 1.\n";
+    cout << "        In the empirical CDF case, this is the number of points drawn from [0,1].\n";
     cout << endl;
     cout << "    <boundary-functions-file>\n";
     cout << "        This file describes the boundary functions g(t) and h(t).\n";
@@ -223,13 +221,13 @@ static int handle_command_line_arguments(int argc, char* argv[])
         // cout << "Running " << num_simulations << " simulations...\n";
         double crossprob = poisson_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
         cout << crossprob << endl;
-    } else if (command == "binomial") {
+    } else if (command == "ecdf") {
         // cout << "Running " << num_simulations << " simulations...\n";
-        double crossprob = binomial_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
+        double crossprob = ecdf_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
         cout << crossprob << endl;
     } else {
         print_usage();
-        throw runtime_error("Second command line argument must be 'binomial' or 'poisson'");
+        throw runtime_error("Second command line argument must be 'ecdf' or 'poisson'");
     }
 
     return 0;

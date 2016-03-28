@@ -221,7 +221,7 @@ static int extract_exponent(FLOAT x)
     return exponent;
 }
 
-double binomial_process_upper_noncrossing_probability(int n, const vector<double>& upper_bound_steps)
+double ecdf_upper_noncrossing_probability(int n, const vector<double>& upper_bound_steps)
 {
     const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
 
@@ -229,7 +229,7 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
     // cout << "sizeof(FLOAT) = " << sizeof(FLOAT) << endl;
     if ((int)upper_bound_steps.size() < n) {
         stringstream ss;
-        ss << "Binomial process b(t) must cross upper boundary h(t) since h(1)==" << upper_bound_steps.size() << " < n and b(1) = n";
+        ss << "empirical CDF must cross upper boundary h(t) since h(1)==" << upper_bound_steps.size() << " < n and the number of samples is n.";
         throw runtime_error(ss.str());
     }
     PolynomialTranslatedMonomials p(n+1);
@@ -270,11 +270,11 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
     return noncrossing_probability;
 }
 
-double binomial_process_lower_noncrossing_probability(int n, const vector<double>& lower_bound_steps)
+double ecdf_lower_noncrossing_probability(int n, const vector<double>& lower_bound_steps)
 {
     if ((int)lower_bound_steps.size() > n) {
         stringstream ss;
-        ss << "Binomial process b(t) must cross lower boundary g(t) since g(1)==" << lower_bound_steps.size() << " > n and b(1) = n.";
+        ss << "Empirical CDF must cross lower boundary g(t) since g(1)==" << lower_bound_steps.size() << " > n and the number of samples is n.";
         throw runtime_error(ss.str());
         return 0;
     }
@@ -284,5 +284,5 @@ double binomial_process_lower_noncrossing_probability(int n, const vector<double
         symmetric_steps[i] = 1.0 - lower_bound_steps[lower_bound_steps.size() - 1 - i];
     }
 
-    return binomial_process_upper_noncrossing_probability(n, symmetric_steps);
+    return ecdf_upper_noncrossing_probability(n, symmetric_steps);
 }

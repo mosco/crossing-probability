@@ -33,13 +33,14 @@
 // 
 double poisson_process_noncrossing_probability(double intensity, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft, int endpoint);
 
-// Compute the probability that a Binomial process b(t) with n points in [0,1] will stay within lower and upper boundary functions:
-//     Pr[g(t) <= b(t) <= h(t) for all 0<=t<=1]
-// where b(t) is a binomial process with n samples. This process is the result of drawing n random variables
-// X_1, ..., X_n uniformly from [0,1] setting b(t) := number of X_i <= t.\n";
+// Compute the probability that an empirical CDF F^(t) with n points in [0,1] will stay within lower and upper boundary functions:
+//     Pr[g(t) <= F^(t) <= h(t) for all 0<=t<=1]
+//     where F^(t) is the empirical CDF of n uniform samples. i.e.
+//     F^(t) = (number of X_i <= t)/n   where X_1,...,X_n ~ U[0,1].
 //
 // n
-//     Number of steps in the binomial process. Hence b(1) = n
+//     Number of samples from which the empirical CDF is constructed.
+//
 // lower_bound_steps
 //     Times at which the lower boundary function crosses an integer for the first time.
 //     e.g. lower_bound_steps[3] is the first time in which the lower bound is >= 3.
@@ -54,6 +55,6 @@ double poisson_process_noncrossing_probability(double intensity, const std::vect
 //     Note In cases where the lower and upper boundary are close or have a small number of steps, the O(n^3)
 //     algorithm may be faster.
 //
-double binomial_process_noncrossing_probability(int n, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
+double ecdf_noncrossing_probability(int n, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
 
 #endif
