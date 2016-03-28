@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <numeric>
 #include <algorithm>
+#include <sstream>
 #include "fftwconvolver.hh"
 #include "aligned_mem.hh"
 
@@ -179,8 +180,9 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
 double binomial_process_noncrossing_probability(int n, const vector<double>& g_steps, const vector<double>& h_steps, bool use_fft)
 {
     if ((int)g_steps.size() > n) {
-        cout << "Binomial process b(t) must cross lower boundary g(t) since g(1) > n and b(t) = n." << endl;
-        return 0.0;
+        stringstream ss;
+        ss << "Binomial process b(t) must cross lower boundary g(t) since g(1)==" << g_steps.size() << " > n and b(1) = n." << endl;
+        throw runtime_error(ss.str());
     }
     vector<double> processed_h_steps(n, 0.0);
     if (h_steps.size() == 0) {
@@ -191,8 +193,14 @@ double binomial_process_noncrossing_probability(int n, const vector<double>& g_s
             return 0.0;
         }
         if ((int)h_steps.size() < n) {
-            cout << "Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n." << endl;
-            return 0.0;
+            stringstream ss;
+            ss << "Binomial process b(t) must cross upper boundary h(t) since h(1)==" << h_steps.size() << " < n and b(1) = n." << endl;
+            ss << "h_steps: ";
+            for (int i = 0; i < (int)h_steps.size(); ++i) {
+                ss << h_steps[i] << ", ";
+            }
+            ss << endl;
+            throw runtime_error(ss.str());
         }
         copy(h_steps.begin(), h_steps.begin() + n, processed_h_steps.begin());
     }
