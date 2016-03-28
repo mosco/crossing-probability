@@ -27,7 +27,7 @@ test:
 	python tests/test_crossprob.py
 
 swig:
-	swig -c++ -python  -o python_extension/crossprob_swig_wrap.cc src/crossprob.i
+	swig -c++ -python  -o python_extension/crossprob.cc src/crossprob.i
 
 depend:
 	makedepend src/*.cc python_extension/*.cc

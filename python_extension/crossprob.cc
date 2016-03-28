@@ -7559,7 +7559,7 @@ SWIGINTERN PyObject *VectorDouble_swigregister(PyObject *SWIGUNUSEDPARM(self), P
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_binomial_process_lower_noncrossing_probability(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf_lower_noncrossing_probability(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7570,24 +7570,24 @@ SWIGINTERN PyObject *_wrap_binomial_process_lower_noncrossing_probability(PyObje
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:binomial_process_lower_noncrossing_probability",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:ecdf_lower_noncrossing_probability",&obj0,&obj1)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "binomial_process_lower_noncrossing_probability" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf_lower_noncrossing_probability" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "binomial_process_lower_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf_lower_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "binomial_process_lower_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf_lower_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
-  result = (double)binomial_process_lower_noncrossing_probability(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+  result = (double)ecdf_lower_noncrossing_probability(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
   resultobj = SWIG_From_double(static_cast< double >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -7597,7 +7597,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_binomial_process_upper_noncrossing_probability(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf_upper_noncrossing_probability(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7608,24 +7608,24 @@ SWIGINTERN PyObject *_wrap_binomial_process_upper_noncrossing_probability(PyObje
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:binomial_process_upper_noncrossing_probability",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:ecdf_upper_noncrossing_probability",&obj0,&obj1)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "binomial_process_upper_noncrossing_probability" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf_upper_noncrossing_probability" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "binomial_process_upper_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf_upper_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "binomial_process_upper_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf_upper_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
-  result = (double)binomial_process_upper_noncrossing_probability(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+  result = (double)ecdf_upper_noncrossing_probability(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
   resultobj = SWIG_From_double(static_cast< double >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -7707,7 +7707,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_binomial_process_noncrossing_probability(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf_noncrossing_probability(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7725,20 +7725,20 @@ SWIGINTERN PyObject *_wrap_binomial_process_noncrossing_probability(PyObject *SW
   PyObject * obj3 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:binomial_process_noncrossing_probability",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:ecdf_noncrossing_probability",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "binomial_process_noncrossing_probability" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf_noncrossing_probability" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "binomial_process_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "binomial_process_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf_noncrossing_probability" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
@@ -7746,19 +7746,19 @@ SWIGINTERN PyObject *_wrap_binomial_process_noncrossing_probability(PyObject *SW
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res3 = swig::asptr(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "binomial_process_noncrossing_probability" "', argument " "3"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ecdf_noncrossing_probability" "', argument " "3"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "binomial_process_noncrossing_probability" "', argument " "3"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf_noncrossing_probability" "', argument " "3"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg3 = ptr;
   }
   ecode4 = SWIG_AsVal_bool(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "binomial_process_noncrossing_probability" "', argument " "4"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ecdf_noncrossing_probability" "', argument " "4"" of type '" "bool""'");
   } 
   arg4 = static_cast< bool >(val4);
-  result = (double)binomial_process_noncrossing_probability(arg1,(std::vector< double,std::allocator< double > > const &)*arg2,(std::vector< double,std::allocator< double > > const &)*arg3,arg4);
+  result = (double)ecdf_noncrossing_probability(arg1,(std::vector< double,std::allocator< double > > const &)*arg2,(std::vector< double,std::allocator< double > > const &)*arg3,arg4);
   resultobj = SWIG_From_double(static_cast< double >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -7824,10 +7824,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"VectorDouble_capacity", _wrap_VectorDouble_capacity, METH_VARARGS, NULL},
 	 { (char *)"delete_VectorDouble", _wrap_delete_VectorDouble, METH_VARARGS, NULL},
 	 { (char *)"VectorDouble_swigregister", VectorDouble_swigregister, METH_VARARGS, NULL},
-	 { (char *)"binomial_process_lower_noncrossing_probability", _wrap_binomial_process_lower_noncrossing_probability, METH_VARARGS, NULL},
-	 { (char *)"binomial_process_upper_noncrossing_probability", _wrap_binomial_process_upper_noncrossing_probability, METH_VARARGS, NULL},
+	 { (char *)"ecdf_lower_noncrossing_probability", _wrap_ecdf_lower_noncrossing_probability, METH_VARARGS, NULL},
+	 { (char *)"ecdf_upper_noncrossing_probability", _wrap_ecdf_upper_noncrossing_probability, METH_VARARGS, NULL},
 	 { (char *)"poisson_process_noncrossing_probability", _wrap_poisson_process_noncrossing_probability, METH_VARARGS, NULL},
-	 { (char *)"binomial_process_noncrossing_probability", _wrap_binomial_process_noncrossing_probability, METH_VARARGS, NULL},
+	 { (char *)"ecdf_noncrossing_probability", _wrap_ecdf_noncrossing_probability, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 

@@ -268,21 +268,21 @@ VectorDouble_swigregister = _crossprob.VectorDouble_swigregister
 VectorDouble_swigregister(VectorDouble)
 
 
-def binomial_process_lower_noncrossing_probability(n, lower_bound_steps):
-    return _crossprob.binomial_process_lower_noncrossing_probability(n, lower_bound_steps)
-binomial_process_lower_noncrossing_probability = _crossprob.binomial_process_lower_noncrossing_probability
+def ecdf_lower_noncrossing_probability(n, lower_bound_steps):
+    return _crossprob.ecdf_lower_noncrossing_probability(n, lower_bound_steps)
+ecdf_lower_noncrossing_probability = _crossprob.ecdf_lower_noncrossing_probability
 
-def binomial_process_upper_noncrossing_probability(n, upper_bound_steps):
-    return _crossprob.binomial_process_upper_noncrossing_probability(n, upper_bound_steps)
-binomial_process_upper_noncrossing_probability = _crossprob.binomial_process_upper_noncrossing_probability
+def ecdf_upper_noncrossing_probability(n, upper_bound_steps):
+    return _crossprob.ecdf_upper_noncrossing_probability(n, upper_bound_steps)
+ecdf_upper_noncrossing_probability = _crossprob.ecdf_upper_noncrossing_probability
 
 def poisson_process_noncrossing_probability(intensity, lower_bound_steps, upper_bound_steps, use_fft, endpoint):
     return _crossprob.poisson_process_noncrossing_probability(intensity, lower_bound_steps, upper_bound_steps, use_fft, endpoint)
 poisson_process_noncrossing_probability = _crossprob.poisson_process_noncrossing_probability
 
-def binomial_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft):
-    return _crossprob.binomial_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft)
-binomial_process_noncrossing_probability = _crossprob.binomial_process_noncrossing_probability
+def ecdf_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft):
+    return _crossprob.ecdf_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft)
+ecdf_noncrossing_probability = _crossprob.ecdf_noncrossing_probability
 # This file is compatible with both classic and new-style classes.
 
 
