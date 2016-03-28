@@ -22,6 +22,8 @@ crossprob_mc: build bin $(CROSSPROB_MC_OBJECTS)
 clean:
 	rm -rf build
 	rm -rf bin
+	rm -rf tests/__pycache__
+	rm -rf tests/*.pyc
 
 test:
 	python tests/test_crossprob.py
