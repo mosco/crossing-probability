@@ -10,7 +10,7 @@ module1 = Extension(
         'src/fftwconvolver.cc',
         'python_extension/crossprob_swig_wrap.cc'
     ],
-    extra_compile_args = ['-ffast-math'],
+    extra_compile_args = ['-Wall', '-std=c++11', '-O3', '-march=native', '-ffast-math'],
     extra_link_args = ['-lfftw3']
 )
 
