@@ -18,10 +18,8 @@ FFTWConvolver::FFTWConvolver(int maximum_input_size) :
     c2r_executors(maximum_input_size+ROUNDING, NULL),
     maximum_input_size(maximum_input_size+ROUNDING-1)
 {
-    tmp_complex = allocate_aligned_complexes(maximum_input_size);
-    tmp_double_0 = allocate_aligned_doubles(maximum_input_size);
-    tmp_double_1 = allocate_aligned_doubles(maximum_input_size);
-    tmp_double_2 = allocate_aligned_doubles(maximum_input_size);
+    int maximum_padded_input_size = (2*maximum_input_size+ROUNDING-1);
+    tmp_complex = allocate_aligned_complexes(maximum_padded_input_size);
 }
 
 void convolve_same_size_naive(int size, const double* __restrict__ src0, const double* __restrict__ src1, double* __restrict__ dest)
@@ -42,14 +40,11 @@ void elementwise_complex_product(int size, const complex<double>* __restrict__ s
     }
 }
 
-void FFTWConvolver::convolve_same_size(int input_buffers_size, const double* input_buffer_0, const double* input_buffer_1, double* output_buffer)
+void FFTWConvolver::convolve_same_size(int input_buffers_size, const double* __restrict__ input_buffer_0, const double* __restrict__ input_buffer_1, double* __restrict__ output_buffer)
 {
     assert(input_buffers_size <= maximum_input_size);
     if (input_buffers_size < MINIMUM_SIZE_FOR_FFTW_CONVOLUTION) {
-        memcpy(tmp_double_0, input_buffer_0, input_buffers_size*sizeof(double));
-        memcpy(tmp_double_1, input_buffer_1, input_buffers_size*sizeof(double));
-        convolve_same_size_naive(input_buffers_size, tmp_double_0, tmp_double_1, tmp_double_2);
-        memcpy(output_buffer, tmp_double_2, input_buffers_size*sizeof(double));
+        convolve_same_size_naive(input_buffers_size, input_buffer_0, input_buffer_1, output_buffer);
         return;
     }
     int padded_length = ((2*input_buffers_size+ROUNDING-1)/ROUNDING)*ROUNDING;
@@ -99,8 +94,5 @@ FFTWConvolver::~FFTWConvolver()
             delete c2r_executors[i];
         }
     }
-    free_aligned_mem(tmp_double_0);
-    free_aligned_mem(tmp_double_1);
-    free_aligned_mem(tmp_double_2);
     free_aligned_mem(tmp_complex);
 }

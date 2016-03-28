@@ -17,9 +17,6 @@ private:
     std::vector<FFTW_C2R_1D_Executor*> c2r_executors;
 
     std::complex<double>* tmp_complex;
-    double* tmp_double_0;
-    double* tmp_double_1;
-    double* tmp_double_2;
 
     int maximum_input_size;
 };

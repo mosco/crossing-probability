@@ -5,3 +5,8 @@
 build/*
 .waf*
 *.swp
+
+bin/crossprob
+bin/crossprob_mc
+gmon.out
+*.bak
