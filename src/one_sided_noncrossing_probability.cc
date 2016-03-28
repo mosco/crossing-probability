@@ -1,8 +1,10 @@
 #include <vector>
 #include <stdexcept>
-#include <cassert>
 #include <iostream>
 #include <sstream>
+#include <cstring>
+#include <cassert>
+#include "mm_malloc.h"
 
 #include "one_sided_noncrossing_probability.hh"
 
@@ -80,6 +82,7 @@ static string long_double_to_string(long double x)
 class PolynomialTranslatedMonomials {
 public:
     PolynomialTranslatedMonomials(int max_degree);
+    ~PolynomialTranslatedMonomials();
     FLOAT get_multiplicative_coefficient(int degree) const;
     void set_multiplicative_coefficient(int degree, FLOAT multiplicative_coefficient);
     void set_additive_coefficient(int degree, FLOAT additive_coefficient);
@@ -87,17 +90,26 @@ public:
     void integrate();
     void ldexp_all_multiplicative_coefficients(int exp);
     friend ostream& operator<<(ostream& stream, const PolynomialTranslatedMonomials& poly);
-    vector<FLOAT> multiplicative_coefficients;
-    vector<FLOAT> additive_coefficients;
     int degree;
+private:
+    FLOAT* __restrict__ multiplicative_coefficients;
+    FLOAT* __restrict__ additive_coefficients;
 };
 
 PolynomialTranslatedMonomials::PolynomialTranslatedMonomials(int max_degree) :
-    multiplicative_coefficients(max_degree+1, 0.0),
-    additive_coefficients(max_degree+1, 0.0),
     degree(0)
 {
     assert(max_degree >= 0);
+    multiplicative_coefficients = (FLOAT*)_mm_malloc(sizeof(FLOAT)*(max_degree+1), 32);
+    additive_coefficients = (FLOAT*)_mm_malloc(sizeof(FLOAT)*(max_degree+1), 32);
+    memset(multiplicative_coefficients, 0, sizeof(FLOAT)*(max_degree+1));
+    memset(additive_coefficients, 0, sizeof(FLOAT)*(max_degree+1));
+}
+
+PolynomialTranslatedMonomials::~PolynomialTranslatedMonomials()
+{
+    _mm_free(multiplicative_coefficients);
+    _mm_free(additive_coefficients);
 }
 
 FLOAT PolynomialTranslatedMonomials::get_multiplicative_coefficient(int degree) const
@@ -134,7 +146,6 @@ FLOAT PolynomialTranslatedMonomials::evaluate(FLOAT x) const
 
 void PolynomialTranslatedMonomials::integrate()
 {
-    assert(degree <= (int)multiplicative_coefficients.size());
     for (int i = degree+1; i >= 1; --i) {
         multiplicative_coefficients[i] = multiplicative_coefficients[i-1] / FLOAT(i);
         additive_coefficients[i] = additive_coefficients[i-1];
@@ -212,12 +223,14 @@ static int extract_exponent(FLOAT x)
 
 double binomial_process_upper_noncrossing_probability(int n, const vector<double>& upper_bound_steps)
 {
-    const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 1;
+    const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
 
     // cout << "Using translated polynomials! precision: " << FLOAT_PRECISION_BITS << endl;
     // cout << "sizeof(FLOAT) = " << sizeof(FLOAT) << endl;
     if ((int)upper_bound_steps.size() < n) {
-        throw runtime_error("Binomial process b(t) must cross upper boundary h(t) since h(1) < n and b(t) = n");
+        stringstream ss;
+        ss << "Binomial process b(t) must cross upper boundary h(t) since h(1)==" << upper_bound_steps.size() << " < n and b(1) = n";
+        throw runtime_error(ss.str());
     }
     PolynomialTranslatedMonomials p(n+1);
     p.set_multiplicative_coefficient(0, 1.0);
@@ -260,7 +273,9 @@ double binomial_process_upper_noncrossing_probability(int n, const vector<double
 double binomial_process_lower_noncrossing_probability(int n, const vector<double>& lower_bound_steps)
 {
     if ((int)lower_bound_steps.size() > n) {
-        throw runtime_error("Binomial process b(t) must cross lower boundary g(t) since g(1) > n and b(t) = n.");
+        stringstream ss;
+        ss << "Binomial process b(t) must cross lower boundary g(t) since g(1)==" << lower_bound_steps.size() << " > n and b(1) = n.";
+        throw runtime_error(ss.str());
         return 0;
     }
 
