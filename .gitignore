@@ -3,10 +3,8 @@
 *.pyc
 *__pycache__*
 build/*
+bin/*
 .waf*
 *.swp
-
-bin/crossprob
-bin/crossprob_mc
 gmon.out
 *.bak
