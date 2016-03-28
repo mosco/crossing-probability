@@ -1,7 +1,7 @@
 crossing-probability
 ====================
 
-Fast C++ programs (with Python interface) for computing the boundary crossing probability of Poisson and Binomial stochastic processes.
+Fast C++ programs (with Python interface) for computing the boundary crossing probability of Poisson processes and empirical CDFs.
 
 Currently, the main application of this code is to compute p-values for continuous goodness-of-fit tests such as Kolmogorov-Smirnov and their power for detecting specific distributions. These code may be applied to other problems in the fields of sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.  
 
@@ -17,7 +17,7 @@ Simply run
 `make`
 This will build two programs in the ./bin directory:
 
-* **bin/crossprob** implements algorithms described in [Moscovich-Eiger and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson and Binomial process.
+* **bin/crossprob** implements algorithms described in [Moscovich and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson process and empirical CDF.
 * **bin/crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
  
 You may run the tests with ```make test```.
