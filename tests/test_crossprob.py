@@ -12,32 +12,32 @@ def run(s):
     print 'Output: %s' % output.strip()
     return output
 
-def test_binomial2():
-    assert run('./bin/crossprob binomial2 2 tests/bounds2.txt').strip() == '0.25'
-    assert run('./bin/crossprob binomial2 8 tests/bounds8.txt').strip() == '0.159471'
-    assert run('./bin/crossprob binomial2 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
-    assert run('./bin/crossprob binomial2 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
+def test_ecdf():
+    assert run('./bin/crossprob ecdf 2 tests/bounds2.txt').strip() == '0.25'
+    assert run('./bin/crossprob ecdf 8 tests/bounds8.txt').strip() == '0.159471'
+    assert run('./bin/crossprob ecdf 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
+    assert run('./bin/crossprob ecdf 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
     
-def test_poisson2():
-    assert run('./bin/crossprob poisson2 2 tests/bounds2.txt').strip() == '0.661662'
-    assert run('./bin/crossprob poisson2 10 tests/bounds8.txt').strip() == '0.905357'
-    assert run('./bin/crossprob poisson2 7 tests/bounds_cksplus_10.txt').strip() ==  '0.231013'
+def test_poisson():
+    assert run('./bin/crossprob poisson 2 tests/bounds2.txt').strip() == '0.661662'
+    assert run('./bin/crossprob poisson 10 tests/bounds8.txt').strip() == '0.905357'
+    assert run('./bin/crossprob poisson 7 tests/bounds_cksplus_10.txt').strip() ==  '0.231013'
 
-def test_binomial1():
-    assert run('./bin/crossprob binomial1 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
-    assert run('./bin/crossprob binomial1 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
+def test_ecdf_one_sided():
+    assert run('./bin/crossprob ecdf_one_sided 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
+    assert run('./bin/crossprob ecdf_one_sided 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
 
 def test_crossprob_mc_binomial():
-    binomial_bounds2 = float(run('./bin/crossprob_mc binomial 2 tests/bounds2.txt 1000000'))
+    binomial_bounds2 = float(run('./bin/crossprob_mc ecdf 2 tests/bounds2.txt 1000000'))
     assert abs(binomial_bounds2 - 0.25) < EPSILON
 
-    binomial_bounds8 = float(run('./bin/crossprob_mc binomial 8 tests/bounds8.txt 1000000'))
+    binomial_bounds8 = float(run('./bin/crossprob_mc ecdf 8 tests/bounds8.txt 1000000'))
     assert abs(binomial_bounds8 - 0.159471) < EPSILON
 
-    binomial_cksplus_10 = float(run('./bin/crossprob_mc binomial 10 tests/bounds_cksplus_10.txt 1000000'))
+    binomial_cksplus_10 = float(run('./bin/crossprob_mc ecdf 10 tests/bounds_cksplus_10.txt 1000000'))
     assert abs(binomial_cksplus_10 - 0.391076) < EPSILON
 
-    binomial_cksminus_10 = float(run('./bin/crossprob_mc binomial 10 tests/bounds_cksminus_10.txt 1000000'))
+    binomial_cksminus_10 = float(run('./bin/crossprob_mc ecdf 10 tests/bounds_cksminus_10.txt 1000000'))
     assert abs(binomial_cksminus_10 - 0.391076) < EPSILON
 
 def test_crossprob_mc_poisson():
@@ -47,7 +47,7 @@ def test_crossprob_mc_poisson():
     poisson_bounds8 = float(run('./bin/crossprob_mc poisson 10 tests/bounds8.txt 1000000'))
     assert abs(poisson_bounds8 - 0.905357) < EPSILON
 
-    poisson_cksplus_10 = float(run('./bin/crossprob poisson2 7 tests/bounds_cksplus_10.txt'))
+    poisson_cksplus_10 = float(run('./bin/crossprob poisson 7 tests/bounds_cksplus_10.txt'))
     assert abs(poisson_cksplus_10 - 0.231013) < EPSILON
 
 
