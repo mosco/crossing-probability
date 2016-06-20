@@ -7,9 +7,10 @@
 CXXFLAGS = -Wall -std=c++11 -O3 -march=native -ffast-math
 LDFLAGS = -lfftw3 
 
-CROSSPROB_OBJECTS = build/crossprob.o build/one_sided_noncrossing_probability.o build/two_sided_noncrossing_probability.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o
+CROSSPROB_OBJECTS = build/crossprob.o build/one_sided_noncrossing_probability.o build/one_sided_noncrossing_probability_new.o build/two_sided_noncrossing_probability.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o
 
 CROSSPROB_MC_OBJECTS = build/crossprob_mc.o build/string_utils.o build/read_boundaries_file.o build/tinymt64.o
+
 
 all: crossprob crossprob_mc
 

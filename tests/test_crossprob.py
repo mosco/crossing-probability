@@ -27,6 +27,10 @@ def test_ecdf_one_sided():
     assert run('./bin/crossprob ecdf_one_sided 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
     assert run('./bin/crossprob ecdf_one_sided 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
 
+def test_ecdf_one_sided_new():
+    assert run('./bin/crossprob ecdf_one_sided_new 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
+    assert run('./bin/crossprob ecdf_one_sided_new 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
+
 def test_crossprob_mc_binomial():
     binomial_bounds2 = float(run('./bin/crossprob_mc ecdf 2 tests/bounds2.txt 1000000'))
     assert abs(binomial_bounds2 - 0.25) < EPSILON

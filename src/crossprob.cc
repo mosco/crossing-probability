@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include "one_sided_noncrossing_probability.hh"
+#include "one_sided_noncrossing_probability_new.hh"
 #include "two_sided_noncrossing_probability.hh"
 #include "read_boundaries_file.hh"
 #include "string_utils.hh"
@@ -37,6 +38,9 @@ static void print_usage()
     cout << "        Computes the probability that an empirical CDF will cross a single boundary.\n";
     cout << "        This works like the ecdf command above, but using either a lower or upper boundary.\n";
     cout << endl; 
+    cout << "    crossprob ecdf_one_sided_new <n> <one-sided-boundary-functions-file>\n";
+    cout << "        New one-sided O(n^2) algorithm.\n";
+    cout << endl; 
     cout << "OPTIONS\n";
     cout << "    <n>\n";
     cout << "        In the Poisson case, this is the intensity of the process (i.e. the expectation of p(1)).\n";
@@ -66,8 +70,8 @@ static void print_usage()
     cout << "        Revert to algorithm [2] instead of [1].\n";
     cout << endl;
     cout << "NOTES\n";
-    cout << "    The two-sided crossing commands poisson/ecdf implement the procedure described in [1] \n";
-    cout << "    unless the '--no-fft' flag is used, in which case the procedure of [2] is used instead.\n";
+    cout << "    The two-sided crossing commands poisson/ecdf implement the O(n^2 log n) procedure described in [1] \n";
+    cout << "    unless the '--no-fft' flag is used, in which case the O(n^3) procedure of [2] is used instead.\n";
     cout << "    For the ecdf_one_sided command, we use a different algorithm described in [3].\n";
     cout << endl;
     cout << "REFERENCES\n";
@@ -133,6 +137,22 @@ static int handle_command_line_arguments(int argc, char* argv[])
             assert(lower_bound_steps.size() == 0);
             verify_boundary_is_valid(upper_bound_steps);
             cout << 1.0 - ecdf_upper_noncrossing_probability(n, upper_bound_steps) << endl;
+        }
+    } else if (command == "ecdf_one_sided_new") {
+        if (use_fft == false) {
+            cout << "Warning: --no-fft flag is superfluous when using the 'ecdf_one_sided_new' command.\n";
+        }
+        if ((lower_bound_steps.size() > 0) && (upper_bound_steps.size() > 0)) {
+            print_usage();
+            throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf_one_sided_new' command.\n");
+        }
+        if (upper_bound_steps.size() == 0) {
+            verify_boundary_is_valid(lower_bound_steps);
+            cout << 1.0 - ecdf_lower_noncrossing_probability_new(n, lower_bound_steps) << endl;
+        } else {
+            assert(lower_bound_steps.size() == 0);
+            verify_boundary_is_valid(upper_bound_steps);
+            cout << 1.0 - ecdf_upper_noncrossing_probability_new(n, upper_bound_steps) << endl;
         }
     } else {
         print_usage();

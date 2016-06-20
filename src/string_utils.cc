@@ -5,6 +5,7 @@
 #include <cerrno>
 #include <cstring>
 #include <climits>
+#include <sstream>
 
 #include "string_utils.hh"
 
@@ -85,4 +86,17 @@ vector<double> read_comma_delimited_doubles(const string& line)
     vector<double> numbers(substrings.size());
     transform(substrings.begin(), substrings.end(), numbers.begin(), string_to_double);
     return numbers;
+}
+
+string vector_to_string(const vector<double>& v)
+{
+    stringstream ss;
+    for (int i = 0; i < (int)v.size(); ++i) {
+        ss << v[i];
+        if (i != int(v.size())-1) {
+            ss << ", ";
+        }
+    }
+    ss << endl;
+    return ss.str();
 }

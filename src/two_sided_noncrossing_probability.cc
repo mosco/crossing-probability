@@ -8,6 +8,9 @@
 #include <sstream>
 #include "fftwconvolver.hh"
 #include "aligned_mem.hh"
+#include "common.hh"
+#include "poisson_pmf.hh"
+#include "string_utils.hh"
 
 using namespace std;
 
@@ -52,31 +55,6 @@ static vector<Bound> join_all_bounds(const vector<double>& h_steps, const vector
     return bounds;
 }
 
-// Computes the probability of a Poisson random variable with intensity lambda:
-// Pr[Pois(lambda)=k] = e^-lambda * lambda^k / k!
-static inline double poisson_pmf(double lambda, int k)
-{
-    assert(k >= 0);
-    assert(lambda >= 0.0);
-
-    if (lambda == 0.0) {
-        return k == 0 ? 1.0 : 0.0;
-    }
-    double log_pmf = -lambda + k*log(lambda) - lgamma(k+1);
-    return exp(log_pmf);
-}
-
-static void convolve_same_size(int size, const double* src0, const double* src1, double* dest)
-{
-    for (int j = 0; j < size; ++j) {
-        double convolution_at_j = 0.0;
-        for (int k = 0; k <= j; ++k) {
-            convolution_at_j += src0[k] * src1[j-k];
-        }
-        dest[j] = convolution_at_j;
-    }
-}
-
 static bool lower_and_upper_boundaries_cross(const vector<double>& g_steps, const vector<double>& h_steps)
 {
     if (g_steps.size() > h_steps.size()) {
@@ -111,9 +89,7 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
     vector<double> Qs0(n+1, -1);
     vector<double> Qs1(n+1, -1);
     Qs0[0] = 1.0;
-
     vector<double>* buffers[] = {&Qs0, &Qs1};
-
     double prev_location = 0.0;
     int h_step_count = 0;
     int g_step_count = 0;
@@ -147,6 +123,8 @@ double poisson_process_noncrossing_probability(double intensity, const vector<do
         } else {
             convolve_same_size(cur_size, pmf, &src_buffer[g_step_count], &dest_buffer[g_step_count]);
         }
+
+        //cout << "i: " << i << " dest: " << vector_to_string(dest_buffer);
 
         BoundType tag = bounds[i].tag;
         if (tag == H_STEP) {
@@ -194,13 +172,8 @@ double ecdf_noncrossing_probability(int n, const vector<double>& g_steps, const 
         }
         if ((int)h_steps.size() < n) {
             stringstream ss;
-            ss << "Empirical CDF must cross lower boundary g(t) since h(1)==" << h_steps.size() << " > n and the number of samples is n." << endl;
-            ss << "h_steps: ";
-            for (int i = 0; i < (int)h_steps.size(); ++i) {
-                ss << h_steps[i] << ", ";
-            }
-            ss << endl;
-            throw runtime_error(ss.str());
+            ss << "Empirical CDF must cross lower boundary g(t) since h(1)==" << h_steps.size() << " > n and the number of samples is n. h_steps:" << endl;
+            throw runtime_error(ss.str() + vector_to_string(h_steps));
         }
         copy(h_steps.begin(), h_steps.begin() + n, processed_h_steps.begin());
     }
