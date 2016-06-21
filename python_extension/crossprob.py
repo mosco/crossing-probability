@@ -283,6 +283,14 @@ poisson_process_noncrossing_probability = _crossprob.poisson_process_noncrossing
 def ecdf_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft):
     return _crossprob.ecdf_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft)
 ecdf_noncrossing_probability = _crossprob.ecdf_noncrossing_probability
+
+def ecdf_lower_noncrossing_probability_new(n, lower_bound_steps):
+    return _crossprob.ecdf_lower_noncrossing_probability_new(n, lower_bound_steps)
+ecdf_lower_noncrossing_probability_new = _crossprob.ecdf_lower_noncrossing_probability_new
+
+def ecdf_upper_noncrossing_probability_new(n, upper_bound_steps):
+    return _crossprob.ecdf_upper_noncrossing_probability_new(n, upper_bound_steps)
+ecdf_upper_noncrossing_probability_new = _crossprob.ecdf_upper_noncrossing_probability_new
 # This file is compatible with both classic and new-style classes.
 
 

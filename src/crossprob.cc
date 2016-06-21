@@ -17,7 +17,8 @@ static void print_usage()
     cout << "SYNOPSIS\n";
     cout << "    crossprob poisson <n> <boundary-functions-file> [--no-fft]\n";
     cout << "    crossprob ecdf <n> <boundary-functions-file> [--no-fft]\n";
-    cout << "    crossprob ecdf_one_sided <n> <one-sided-boundary-functions-file>\n";
+    cout << "    crossprob ecdf1n2 <n> <one-sided-boundary-functions-file>\n";
+    cout << "    crossprob ecdf1n2logn <n> <one-sided-boundary-functions-file>\n";
     cout << endl;
     cout << "DESCRIPTION\n";
     cout << "    Let g(t), h(t):[0,1] -> R be two functions such that g(t) <= h(t). This program computes\n";
@@ -34,12 +35,12 @@ static void print_usage()
     cout << "        empirical CDF of n samples drawn uniformly from the interval [0,1].\n";
     cout << "        i.e. Letting X_1, ..., X_n ~ U[0,1], we have F^(t) = (number of X_i <= t) / n";
     cout << endl;
-    cout << "    crossprob ecdf_one_sided <n> <one-sided-boundary-functions-file>\n";
+    cout << "    crossprob ecdf1n2 <n> <one-sided-boundary-functions-file>\n";
     cout << "        Computes the probability that an empirical CDF will cross a single boundary.\n";
     cout << "        This works like the ecdf command above, but using either a lower or upper boundary.\n";
     cout << endl; 
-    cout << "    crossprob ecdf_one_sided_new <n> <one-sided-boundary-functions-file>\n";
-    cout << "        New one-sided O(n^2) algorithm.\n";
+    cout << "    crossprob ecdf1n2logn <n> <one-sided-boundary-functions-file>\n";
+    cout << "        One-sided computation based on O(n^2 logn) two-sided poisson crossing method.\n";
     cout << endl; 
     cout << "OPTIONS\n";
     cout << "    <n>\n";
@@ -122,7 +123,7 @@ static int handle_command_line_arguments(int argc, char* argv[])
         verify_boundary_is_valid(lower_bound_steps);
         verify_boundary_is_valid(upper_bound_steps);
         cout <<  1.0 - ecdf_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft) << endl;
-    } else if (command == "ecdf_one_sided") {
+    } else if (command == "ecdf1n2") {
         if (use_fft == false) {
             cout << "Warning: --no-fft flag is superfluous when using the 'ecdf_one_sided' command.\n";
         }
@@ -138,7 +139,7 @@ static int handle_command_line_arguments(int argc, char* argv[])
             verify_boundary_is_valid(upper_bound_steps);
             cout << 1.0 - ecdf_upper_noncrossing_probability(n, upper_bound_steps) << endl;
         }
-    } else if (command == "ecdf_one_sided_new") {
+    } else if (command == "ecdf1n2logn") {
         if (use_fft == false) {
             cout << "Warning: --no-fft flag is superfluous when using the 'ecdf_one_sided_new' command.\n";
         }

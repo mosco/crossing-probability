@@ -5,9 +5,12 @@ module1 = Extension(
     '_crossprob',
     sources = [
         'src/one_sided_noncrossing_probability.cc',
+        'src/one_sided_noncrossing_probability_n2logn.cc',
         'src/two_sided_noncrossing_probability.cc',
         'src/fftw_wrappers.cc',
         'src/fftwconvolver.cc',
+        'src/string_utils.cc',
+        'src/poisson_pmf.cc',
         'python_extension/crossprob.cc'
     ],
     extra_compile_args = ['-Wall', '-std=c++11', '-O3', '-march=native', '-ffast-math'],

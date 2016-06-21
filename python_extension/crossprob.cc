@@ -4747,6 +4747,7 @@ SWIGINTERN void std_vector_Sl_double_Sg__insert__SWIG_1(std::vector< double > *s
 
 #include "../src/two_sided_noncrossing_probability.hh"
 #include "../src/one_sided_noncrossing_probability.hh"
+#include "../src/one_sided_noncrossing_probability_n2logn.hh"
 
 
 #include <limits.h>
@@ -7770,6 +7771,82 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_ecdf_lower_noncrossing_probability_new(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  std::vector< double,std::allocator< double > > *arg2 = 0 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ecdf_lower_noncrossing_probability_new",&obj0,&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf_lower_noncrossing_probability_new" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
+    res2 = swig::asptr(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf_lower_noncrossing_probability_new" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf_lower_noncrossing_probability_new" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (double)ecdf_lower_noncrossing_probability_new(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ecdf_upper_noncrossing_probability_new(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  std::vector< double,std::allocator< double > > *arg2 = 0 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ecdf_upper_noncrossing_probability_new",&obj0,&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf_upper_noncrossing_probability_new" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
+    res2 = swig::asptr(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf_upper_noncrossing_probability_new" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf_upper_noncrossing_probability_new" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (double)ecdf_upper_noncrossing_probability_new(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_VARARGS, NULL},
@@ -7828,6 +7905,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"ecdf_upper_noncrossing_probability", _wrap_ecdf_upper_noncrossing_probability, METH_VARARGS, NULL},
 	 { (char *)"poisson_process_noncrossing_probability", _wrap_poisson_process_noncrossing_probability, METH_VARARGS, NULL},
 	 { (char *)"ecdf_noncrossing_probability", _wrap_ecdf_noncrossing_probability, METH_VARARGS, NULL},
+	 { (char *)"ecdf_lower_noncrossing_probability_new", _wrap_ecdf_lower_noncrossing_probability_new, METH_VARARGS, NULL},
+	 { (char *)"ecdf_upper_noncrossing_probability_new", _wrap_ecdf_upper_noncrossing_probability_new, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
