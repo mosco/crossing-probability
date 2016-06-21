@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "one_sided_noncrossing_probability_new.hh"
+#include "one_sided_noncrossing_probability_n2logn.hh"
 #include "common.hh"
 #include "poisson_pmf.hh"
 #include "fftwconvolver.hh"
@@ -27,10 +27,10 @@ vector<double> poisson_lower_noncrossing_probability_new(int n, double intensity
 
     for (unsigned int i = 0; i < lower_bound_steps.size(); ++i) {
         pmfgen.compute_pmf(n-step_count+1, intensity*(lower_bound_steps[i]-prev_step_location), pmf);
-        vector<double> tmp(pmf, pmf+n+1);
         fftconvolver.convolve_same_size(n-step_count+1, pmf, &buffers.get_src()[step_count], &buffers.get_dest()[step_count]);
         //cout << "==== i: " << i << " ==================================\n";
         //cout << "src: " << vector_to_string(buffers.get_src());
+        //vector<double> tmp(pmf, pmf+n+1);
         //cout << "pmf: " << vector_to_string(tmp);
         //cout << "dest: " << vector_to_string(buffers.get_dest());
 

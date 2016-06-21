@@ -5,7 +5,7 @@
 #include <cassert>
 
 #include "one_sided_noncrossing_probability.hh"
-#include "one_sided_noncrossing_probability_new.hh"
+#include "one_sided_noncrossing_probability_n2logn.hh"
 #include "two_sided_noncrossing_probability.hh"
 #include "read_boundaries_file.hh"
 #include "string_utils.hh"
