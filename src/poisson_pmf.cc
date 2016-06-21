@@ -15,6 +15,11 @@ PoissonPMFGenerator::PoissonPMFGenerator(int max_n)
     }
 }
 
+PoissonPMFGenerator::~PoissonPMFGenerator()
+{
+    free_aligned_mem(log_gamma_LUT);
+}
+
 void PoissonPMFGenerator::compute_pmf(int n, double lambda, double* buffer)
 {
     assert(n <= max_n);

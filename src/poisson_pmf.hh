@@ -21,6 +21,7 @@ inline double poisson_pmf(double lambda, int k)
 class PoissonPMFGenerator {
 public:
     PoissonPMFGenerator(int max_n);
+    ~PoissonPMFGenerator();
     void compute_pmf(int n, double lambda, double* buffer);
 private:
     int max_n;
