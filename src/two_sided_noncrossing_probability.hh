@@ -23,15 +23,9 @@
 //     Note In cases where the lower and upper boundary are close or have a small number of steps, the O(n^3)
 //     algorithm may be faster.
 //
-// endpoint
-//     If endpoint is -1, this procedure will compute the noncrossing probability Pr[ g(t) <= p(t) <= h(t) for all 0<=t<=1]
-//     where g(t) is specified by lower_bound_steps, h(t) by upper_bound_steps and p(t) is the poisson process.
-//
-//     If endpoint is >= 0, the following probability is computed instead:
-//         Pr[ g(t) <= p(t) <= h(t) for all t and p(t) == endpoint]
-//     i.e. The probability that the process will not cross the boundaries, and finish at the given endpoint.
-// 
-double poisson_process_noncrossing_probability(double intensity, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft, int endpoint);
+// Return value
+//     The vector of probabilities that the process will end at 0, 1, ... n without crossing any of the borders.
+std::vector<double> poisson_process_noncrossing_probability(double intensity, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
 
 // Compute the probability that an empirical CDF F^(t) with n points in [0,1] will stay within lower and upper boundary functions:
 //     Pr[g(t) <= F^(t) <= h(t) for all 0<=t<=1]
