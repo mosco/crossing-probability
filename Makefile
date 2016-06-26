@@ -5,9 +5,9 @@
 # and add the path of libfftw3.la to the environment variable LIBRARY_PATH.
 
 CXXFLAGS = -Wall -std=c++11 -O3 -march=native -ffast-math
-LDFLAGS = -lfftw3 
+LDFLAGS = -lfftw3
 
-CROSSPROB_OBJECTS = build/crossprob.o build/one_sided_noncrossing_probability.o build/one_sided_noncrossing_probability_n2logn.o build/two_sided_noncrossing_probability.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o
+CROSSPROB_OBJECTS = build/crossprob.o build/one_sided_noncrossing_probability.o build/one_sided_noncrossing_probability_n2logn.o build/one_sided_noncrossing_probability_n2.o build/two_sided_noncrossing_probability.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o
 
 CROSSPROB_MC_OBJECTS = build/crossprob_mc.o build/string_utils.o build/read_boundaries_file.o build/tinymt64.o
 
@@ -49,6 +49,7 @@ bin:
 
 src/crossprob.o: src/one_sided_noncrossing_probability.hh
 src/crossprob.o: src/one_sided_noncrossing_probability_n2logn.hh
+src/crossprob.o: src/one_sided_noncrossing_probability_n2.hh
 src/crossprob.o: src/two_sided_noncrossing_probability.hh
 src/crossprob.o: src/read_boundaries_file.hh src/string_utils.hh
 src/crossprob_mc.o: src/string_utils.hh src/read_boundaries_file.hh
@@ -66,6 +67,11 @@ src/fftwconvolver.o: /usr/include/stdc-predef.h /usr/include/libio.h
 src/fftwconvolver.o: /usr/include/_G_config.h /usr/include/wchar.h
 src/fftwconvolver.o: src/fftwconvolver.hh src/aligned_mem.hh
 src/one_sided_noncrossing_probability.o: src/one_sided_noncrossing_probability.hh
+src/one_sided_noncrossing_probability_n2.o: src/one_sided_noncrossing_probability_n2.hh
+src/one_sided_noncrossing_probability_n2.o: src/common.hh src/poisson_pmf.hh
+src/one_sided_noncrossing_probability_n2.o: src/fftwconvolver.hh
+src/one_sided_noncrossing_probability_n2.o: src/aligned_mem.hh
+src/one_sided_noncrossing_probability_n2.o: src/string_utils.hh
 src/one_sided_noncrossing_probability_n2logn.o: src/one_sided_noncrossing_probability_n2logn.hh
 src/one_sided_noncrossing_probability_n2logn.o: src/common.hh
 src/one_sided_noncrossing_probability_n2logn.o: src/poisson_pmf.hh
@@ -87,4 +93,5 @@ python_extension/crossprob.o: /usr/include/xlocale.h /usr/include/math.h
 python_extension/crossprob.o: src/two_sided_noncrossing_probability.hh
 python_extension/crossprob.o: src/one_sided_noncrossing_probability.hh
 python_extension/crossprob.o: src/one_sided_noncrossing_probability_n2logn.hh
+python_extension/crossprob.o: src/one_sided_noncrossing_probability_n2.hh
 python_extension/crossprob.o: /usr/include/limits.h

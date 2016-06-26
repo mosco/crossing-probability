@@ -13,10 +13,12 @@ namespace std {
 #include "../src/two_sided_noncrossing_probability.hh"
 #include "../src/one_sided_noncrossing_probability.hh"
 #include "../src/one_sided_noncrossing_probability_n2logn.hh"
+#include "../src/one_sided_noncrossing_probability_n2.hh"
 %}
 
 %include "../src/one_sided_noncrossing_probability.hh"
 %include "../src/two_sided_noncrossing_probability.hh"
 %include "../src/one_sided_noncrossing_probability_n2logn.hh"
+%include "../src/one_sided_noncrossing_probability_n2.hh"
 
 

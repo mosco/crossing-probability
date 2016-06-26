@@ -23,13 +23,17 @@ def test_poisson():
     assert run('./bin/crossprob poisson 10 tests/bounds8.txt').strip() == '0.905357'
     assert run('./bin/crossprob poisson 7 tests/bounds_cksplus_10.txt').strip() ==  '0.231013'
 
-def test_ecdf_one_sided():
+def test_ecdf1n2():
     assert run('./bin/crossprob ecdf1n2 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
     assert run('./bin/crossprob ecdf1n2 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
 
-def test_ecdf_one_sided_new():
+def test_ecdf1n2logn():
     assert run('./bin/crossprob ecdf1n2logn 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
     assert run('./bin/crossprob ecdf1n2logn 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
+
+def test_ecdf1n2new():
+    assert run('./bin/crossprob ecdf1n2new 10 tests/bounds_cksminus_10.txt').strip() ==  '0.391076'
+    assert run('./bin/crossprob ecdf1n2new 10 tests/bounds_cksplus_10.txt').strip() ==  '0.391076'
 
 def test_crossprob_mc_binomial():
     binomial_bounds2 = float(run('./bin/crossprob_mc ecdf 2 tests/bounds2.txt 1000000'))

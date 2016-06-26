@@ -6,6 +6,7 @@ module1 = Extension(
     sources = [
         'src/one_sided_noncrossing_probability.cc',
         'src/one_sided_noncrossing_probability_n2logn.cc',
+        'src/one_sided_noncrossing_probability_n2.cc',
         'src/two_sided_noncrossing_probability.cc',
         'src/fftw_wrappers.cc',
         'src/fftwconvolver.cc',

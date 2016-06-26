@@ -35,19 +35,19 @@ DoubleBuffer<T>::DoubleBuffer(int n, T value) :
 }
 
 template<class T>
-std::vector<T>& DoubleBuffer<T>::get_src()
+inline std::vector<T>& DoubleBuffer<T>::get_src()
 {
     return buf0_is_src ? buf0 : buf1;
 }
 
 template<class T>
-std::vector<T>& DoubleBuffer<T>::get_dest()
+inline std::vector<T>& DoubleBuffer<T>::get_dest()
 {
     return buf0_is_src ? buf1 : buf0;
 }
 
 template<class T>
-void DoubleBuffer<T>::flip()
+inline void DoubleBuffer<T>::flip()
 {
     buf0_is_src = !buf0_is_src;
 }

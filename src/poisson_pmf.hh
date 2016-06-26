@@ -23,6 +23,7 @@ public:
     PoissonPMFGenerator(int max_n);
     ~PoissonPMFGenerator();
     void compute_pmf(int n, double lambda, double* buffer);
+    double evaluate_pmf(double lambda, int k);
 private:
     int max_n;
     double* log_gamma_LUT;
