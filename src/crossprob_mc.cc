@@ -238,12 +238,12 @@ int main(int argc, char* argv[])
     try {
         handle_command_line_arguments(argc, argv);
         return 0;
-    } catch (runtime_error& e) {
-        cout << "runtime_error exception caught:" << endl;
-        cout << e.what() << endl;
-        return 1;
     } catch (ifstream::failure& e) {
         cout << "ifstream::failure exception caught:" << endl;
+        cout << e.what() << endl;
+        return 1;
+    } catch (runtime_error& e) {
+        cout << "runtime_error exception caught:" << endl;
         cout << e.what() << endl;
         return 2;
     }

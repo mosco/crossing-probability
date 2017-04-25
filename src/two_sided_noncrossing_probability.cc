@@ -6,6 +6,7 @@
 #include <numeric>
 #include <algorithm>
 #include <sstream>
+#include <ctime>
 #include "fftwconvolver.hh"
 #include "aligned_mem.hh"
 #include "common.hh"
@@ -142,7 +143,10 @@ double ecdf_noncrossing_probability(int n, const vector<double>& g_steps, const 
         }
         copy(h_steps.begin(), h_steps.begin() + n, processed_h_steps.begin());
     }
+    clock_t start_clock = clock();
     vector<double> poisson_nocross_probs = poisson_process_noncrossing_probability(n, g_steps, processed_h_steps, use_fft);
+    clock_t end_clock = clock();
+    cout << "Elapsed clock: " << (end_clock-start_clock)/double(CLOCKS_PER_SEC) << endl;
     return poisson_nocross_probs[n] / poisson_pmf(n, n);
 }
 

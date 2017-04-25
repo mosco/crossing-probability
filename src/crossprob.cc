@@ -4,7 +4,6 @@
 #include <stdexcept>
 #include <cassert>
 #include <algorithm>
-
 #include "one_sided_noncrossing_probability.hh"
 #include "one_sided_noncrossing_probability_n2logn.hh"
 #include "one_sided_noncrossing_probability_n2.hh"
@@ -124,7 +123,10 @@ static int handle_command_line_arguments(int argc, char* argv[])
             throw runtime_error("Only a lower boundary is specified. The 'poisson' command currently does not support using just a lower boundary. Sorry about that.");
         }
         vector<double> nocross_probabilities = poisson_process_noncrossing_probability(n, lower_bound_steps, upper_bound_steps, use_fft);
-        double total_nocross_probability = accumulate(&nocross_probabilities[lower_bound_steps.size()], &nocross_probabilities[upper_bound_steps.size()+1], 0.0);
+        double total_nocross_probability = 0;
+        for (int i = lower_bound_steps.size(); i < upper_bound_steps.size()+1; ++i) {
+            total_nocross_probability += nocross_probabilities[i];
+        }
         cout << 1.0 - total_nocross_probability << endl;
     } else if (command == "ecdf") {
         verify_boundary_is_valid(lower_bound_steps);
@@ -191,12 +193,12 @@ int main(int argc, char* argv[])
     try {
         handle_command_line_arguments(argc, argv);
         return 0;
-    } catch (runtime_error& e) {
-        cout << "runtime_error exception caught:" << endl;
-        cout << e.what() << endl;
-        return 1;
     } catch (ifstream::failure& e) {
         cout << "ifstream::failure exception caught:" << endl;
+        cout << e.what() << endl;
+        return 1;
+    } catch (runtime_error& e) {
+        cout << "runtime_error exception caught:" << endl;
         cout << e.what() << endl;
         return 2;
     }

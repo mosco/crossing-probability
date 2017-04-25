@@ -4,8 +4,8 @@
 # If this is not the case then you need to add the flag -I/wherever/fftw.h/is/located/at to CXXFLAGS
 # and add the path of libfftw3.la to the environment variable LIBRARY_PATH.
 
-CXXFLAGS = -Wall -std=c++11 -O3 -march=native -ffast-math
-LDFLAGS = -lfftw3
+CXXFLAGS = -Wall -std=c++11 -O3 -march=native -ffast-math -DNDEBUG
+LDFLAGS = -lfftw3 -ffast-math
 
 CROSSPROB_OBJECTS = build/crossprob.o build/one_sided_noncrossing_probability.o build/one_sided_noncrossing_probability_n2logn.o build/one_sided_noncrossing_probability_n2.o build/two_sided_noncrossing_probability.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o
 
