@@ -5,7 +5,7 @@ Fast C++ programs (with Python interface) for computing the boundary crossing pr
 
 Currently, the main application of this code is to compute p-values for continuous goodness-of-fit tests such as Kolmogorov-Smirnov and their power for detecting specific distributions. These code may be applied to other problems in the fields of sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.  
 
-More details are available at [my homepage](http://www.wisdom.weizmann.ac.il/~amitmo).
+More details are available at [my homepage](https://mosco.github.io/#crossprob).
 
 # Building the binaries
 
@@ -17,7 +17,7 @@ Simply run
 `make`
 This will build two programs in the ./bin directory:
 
-* **bin/crossprob** implements algorithms described in [Moscovich and Nadler 2015](http://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson process and empirical CDF.
+* **bin/crossprob** implements algorithms described in [Moscovich and Nadler 2017](https://www.sciencedirect.com/science/article/pii/S0167715216302802) [(preprint)](https://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson process and empirical CDF.
 * **bin/crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
  
 You may run the tests with ```make test```.
