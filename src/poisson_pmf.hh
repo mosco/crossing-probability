@@ -20,13 +20,15 @@ inline double poisson_pmf(double lambda, int k)
 
 class PoissonPMFGenerator {
 public:
-    PoissonPMFGenerator(int max_n);
+    PoissonPMFGenerator(int max_k);
     ~PoissonPMFGenerator();
-    void compute_pmf(int n, double lambda, double* buffer);
-    double evaluate_pmf(double lambda, int k);
+    double evaluate_pmf(double lambda, int k) const;
+    void compute_array(int k, double lambda); // Computes Pr[Pois(lambda) = 0], ..., Pr[Pois(lambda) = k]
+    const double* get_array() const {return pmf_array_ptr;}
 private:
-    int max_n;
+    int max_k;
     double* log_gamma_LUT;
+    double* pmf_array_ptr;
 };
 
 #endif
