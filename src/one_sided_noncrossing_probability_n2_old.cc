@@ -6,7 +6,7 @@
 #include <cassert>
 #include "mm_malloc.h"
 
-#include "one_sided_noncrossing_probability.hh"
+#include "one_sided_noncrossing_probability_n2_old.hh"
 
 using namespace std;
 
@@ -221,7 +221,7 @@ static int extract_exponent(FLOAT x)
     return exponent;
 }
 
-double ecdf_upper_noncrossing_probability(int n, const vector<double>& upper_bound_steps)
+double ecdf_upper_noncrossing_probability_n2_old(int n, const vector<double>& upper_bound_steps)
 {
     const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
 
@@ -270,7 +270,7 @@ double ecdf_upper_noncrossing_probability(int n, const vector<double>& upper_bou
     return noncrossing_probability;
 }
 
-double ecdf_lower_noncrossing_probability(int n, const vector<double>& lower_bound_steps)
+double ecdf_lower_noncrossing_probability_n2_old(int n, const vector<double>& lower_bound_steps)
 {
     if ((int)lower_bound_steps.size() > n) {
         stringstream ss;
@@ -284,5 +284,5 @@ double ecdf_lower_noncrossing_probability(int n, const vector<double>& lower_bou
         symmetric_steps[i] = 1.0 - lower_bound_steps[lower_bound_steps.size() - 1 - i];
     }
 
-    return ecdf_upper_noncrossing_probability(n, symmetric_steps);
+    return ecdf_upper_noncrossing_probability_n2_old(n, symmetric_steps);
 }

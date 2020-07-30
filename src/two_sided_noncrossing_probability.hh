@@ -26,6 +26,7 @@
 // Return value
 //     The vector of probabilities that the process will end at 0, 1, ... n without crossing any of the borders.
 std::vector<double> poisson_process_noncrossing_probability(double intensity, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
+std::vector<double> poisson_process_noncrossing_probability_n2(double intensity, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
 
 // Compute the probability that an empirical CDF F^(t) with n points in [0,1] will stay within lower and upper boundary functions:
 //     Pr[g(t) <= F^(t) <= h(t) for all 0<=t<=1]
@@ -46,9 +47,10 @@ std::vector<double> poisson_process_noncrossing_probability(double intensity, co
 // use_fft
 //     If true, use the fast O(n^2 log n) algorithm based on the Fast Fourier Transform.
 //     If false, the asymptotically slower O(n^3) algorithm by Khmaladze&Shinjikashvili [2001] is used.
-//     Note In cases where the lower and upper boundary are close or have a small number of steps, the O(n^3)
-//     algorithm may be faster.
+//     Note In cases where the lower and upper boundary are close or have a small number of steps,
+//     the O(n^3) algorithm may be faster.
 //
 double ecdf_noncrossing_probability(int n, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
+//double ecdf_noncrossing_probability_n2(int n, const std::vector<double>& lower_bound_steps, const std::vector<double>& upper_bound_steps, bool use_fft);
 
 #endif
