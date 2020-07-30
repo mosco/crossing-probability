@@ -31,16 +31,16 @@ vector<double> poisson_lower_noncrossing_probability_n2(int n, double intensity,
     int I = I_prev+jump_size;
     while (true) {
         // cout << "I: " << I << " I_prev: " << I_prev << endl;
-        pmfgen.compute_pmf(n-I_prev, intensity*(lower_bound_steps[I]-I_prev_location), pmf);
-        fftconvolver.convolve_same_size(n-I_prev, pmf, &buffers.get_src()[I_prev+1], tmp);
+        pmfgen.compute_array(n-I_prev, intensity*(lower_bound_steps[I]-I_prev_location));
+        fftconvolver.convolve_same_size(n-I_prev, pmfgen.get_array(), &buffers.get_src()[I_prev+1], tmp);
         fill(&buffers.get_dest()[0], &buffers.get_dest()[I+1], 0.0);
         copy(&tmp[I-I_prev], &tmp[n-I_prev], &buffers.get_dest()[I+1]);
 
         copy(&buffers.get_src()[I_prev+1], &buffers.get_src()[I+1], &minibuffers.get_src()[0]);
         double i_prev_location = I_prev_location;
         for (int i = I_prev+1; i < I; i++) {
-            pmfgen.compute_pmf(I-i+1, intensity*(lower_bound_steps[i]-i_prev_location), pmf);
-            fftconvolver.convolve_same_size(I-i+1, pmf, &minibuffers.get_src()[i-I_prev-1], &minibuffers.get_dest()[i-I_prev-1]);
+            pmfgen.compute_array(I-i+1, intensity*(lower_bound_steps[i]-i_prev_location));
+            fftconvolver.convolve_same_size(I-i+1, pmfgen.get_array(), &minibuffers.get_src()[i-I_prev-1], &minibuffers.get_dest()[i-I_prev-1]);
 
             double prob_exit_now = minibuffers.get_dest()[i-I_prev-1];
             double lambda = intensity*(lower_bound_steps[I]- lower_bound_steps[i]);
@@ -66,8 +66,8 @@ vector<double> poisson_lower_noncrossing_probability_n2(int n, double intensity,
         I = min(I+jump_size, n_steps-1);
         // cout << "I: " << I << " I_prev: " << I_prev << endl;
     }
-    pmfgen.compute_pmf(n-n_steps+1, intensity*(1.0-I_prev_location), pmf);
-    fftconvolver.convolve_same_size(n-n_steps+1, pmf, &buffers.get_src()[n_steps], &buffers.get_dest()[n_steps]);
+    pmfgen.compute_array(n-n_steps+1, intensity*(1.0-I_prev_location));
+    fftconvolver.convolve_same_size(n-n_steps+1, pmfgen.get_array(), &buffers.get_src()[n_steps], &buffers.get_dest()[n_steps]);
     fill(&buffers.get_dest()[0], &buffers.get_dest()[n_steps], 0.0);
 
     free_aligned_mem(tmp);

@@ -26,8 +26,8 @@ vector<double> poisson_lower_noncrossing_probability_n2logn(int n, double intens
     double prev_step_location = 0.0;
 
     for (int i = 0; i < n_steps; ++i) {
-        pmfgen.compute_pmf(n-i+1, intensity*(lower_bound_steps[i]-prev_step_location), pmf);
-        fftconvolver.convolve_same_size(n-i+1, pmf, &buffers.get_src()[i], &buffers.get_dest()[i]);
+        pmfgen.compute_array(n-i+1, intensity*(lower_bound_steps[i]-prev_step_location));
+        fftconvolver.convolve_same_size(n-i+1, pmfgen.get_array(), &buffers.get_src()[i], &buffers.get_dest()[i]);
         //cout << "==== i: " << i << " ==================================\n";
         //cout << "src: " << vector_to_string(buffers.get_src());
         //vector<double> tmp(pmf, pmf+n+1);
@@ -39,8 +39,8 @@ vector<double> poisson_lower_noncrossing_probability_n2logn(int n, double intens
         prev_step_location = lower_bound_steps[i];
         buffers.flip();
     }
-    pmfgen.compute_pmf(n-n_steps+1, intensity*(1.0-prev_step_location), pmf);
-    fftconvolver.convolve_same_size(n+1-n_steps, pmf, &buffers.get_src()[n_steps], &buffers.get_dest()[n_steps]);
+    pmfgen.compute_array(n-n_steps+1, intensity*(1.0-prev_step_location));
+    fftconvolver.convolve_same_size(n+1-n_steps, pmfgen.get_array(), &buffers.get_src()[n_steps], &buffers.get_dest()[n_steps]);
 
     free_aligned_mem(pmf);
     return buffers.get_dest();
