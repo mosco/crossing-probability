@@ -122,10 +122,10 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
 
 double ecdf_noncrossing_probability(int n, const vector<double>& b, const vector<double>& B, bool use_fft)
 {
-    if (b.size() != n) {
+    if (int(b.size()) != n) {
         throw runtime_error("Expecting exactly n bounds: b_1, ..., b_n");
     }
-    if (B.size() != n) {
+    if (int(B.size()) != n) {
         throw runtime_error("Expecting exactly n bounds: B_1, ..., B_n");
     }
 

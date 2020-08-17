@@ -29,12 +29,14 @@ clean:
 	rm -rf bin
 	rm -rf tests/__pycache__
 	rm -rf tests/*.pyc
+	rm python_extension/crossprob.{cc,py}
 
 test: # Running "py.test" also works.
 	python tests/test_crossprob.py
 
-swig:
-	swig -c++ -python  -o python_extension/crossprob.cc src/crossprob.i
+python:
+	swig -c++ -o python_extension/crossprob.cc -python src/crossprob.i
+	python setup.py build
 
 depend:
 	makedepend src/*.cc python_extension/*.cc
