@@ -159,24 +159,20 @@ static double poisson_process_crossing_probability_montecarlo(double intensity, 
 static void print_usage()
 {
     cout << "SYNOPSIS\n";
-    cout << "    crossing_probability poisson <n> <boundary-functions-file> <num-simulations>\n";
-    cout << "    crossing_probability ecdf <n> <boundary-functions-file> <num-simulations>\n";
+    cout << "    crossing_probability poisson <boundary-functions-file> <num-simulations>\n";
+    cout << "    crossing_probability ecdf <boundary-functions-file> <num-simulations>\n";
     cout << endl;
     cout << "DESCRIPTION\n";
-    cout << "    crossing_probability poisson <n> <boundary-functions-file> <num-simulations>\n";
+    cout << "    crossing_probability poisson <boundary-functions-file> <num-simulations>\n";
     cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < xi_n(t) < h(t) for all t in [0,1]\n";
     cout << "        where xi_n(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
     cout << endl;
-    cout << "    crossing_probability ecdf <n> <boundary-functions-file> <num-simulations>\n";
+    cout << "    crossing_probability ecdf <boundary-functions-file> <num-simulations>\n";
     cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < F_n(t) < h(t) for all t in [0,1]\n";
     cout << "        where F_n(t) is the empirical CDF of n uniform samples in [0,1]. i.e.\n";
     cout << "            F_n(t) = (number of X_i < t)/n  where X_1,...X_n ~ U[0,1].\n";
     cout << endl;
     cout << "OPTIONS\n";
-    cout << "    <n>\n";
-    cout << "        In the Poisson case, this is the intensity of the process (i.e. the expectation of xi_n(1)).\n";
-    cout << "        In the empirical CDF case, this is the number of points drawn from [0,1].\n";
-    cout << endl;
     cout << "    <boundary-functions-file>\n";
     cout << "        This file describes the boundary functions g(t) and h(t).\n";
     cout << "        It must contain exactly 2 lines of monotone-increasing comma-separated numbers between 0 and 1\n";
@@ -195,19 +191,15 @@ static void print_usage()
 
 static int handle_command_line_arguments(int argc, char* argv[])
 {
-    if (argc != 5) {
+    if (argc != 4) {
         print_usage();
-        throw runtime_error("Expecting 4 command line arguments!");
+        throw runtime_error("Expecting 3 command line arguments!");
     }
 
     string command = string(argv[1]);
-    long n = string_to_long(argv[2]);
-    if (n < 0) {
-        print_usage();
-        throw runtime_error("n must be non-negative!");
-    }
-    string filename = string(argv[3]);
-    long num_simulations = string_to_long(argv[4]);
+
+    string filename = string(argv[2]);
+    long num_simulations = string_to_long(argv[3]);
     if (num_simulations < 0) {
         print_usage();
         throw runtime_error("num-simulations must be non-negative!");
@@ -216,6 +208,7 @@ static int handle_command_line_arguments(int argc, char* argv[])
     pair<vector<double>, vector<double> > bounds = read_and_check_boundaries_file(filename);
     const vector<double>& b = bounds.first;
     const vector<double>& B = bounds.second;
+    int n = max(b.size(), B.size());
 
     if (command == "poisson") {
         // cout << "Running " << num_simulations << " simulations...\n";

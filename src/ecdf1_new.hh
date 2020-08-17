@@ -4,7 +4,7 @@
 
 #include <vector>
 
-double ecdf1_new_B(int n, const std::vector<double>& B);
-double ecdf1_new_b(int n, const std::vector<double>& b);
+double ecdf1_new_B(const std::vector<double>& B);
+double ecdf1_new_b(const std::vector<double>& b);
 
 #endif

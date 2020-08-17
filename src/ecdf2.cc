@@ -14,6 +14,7 @@
 #include "common.hh"
 #include "poisson_pmf.hh"
 #include "string_utils.hh"
+#include "read_boundaries_file.hh"
 
 using namespace std;
 
@@ -118,17 +119,11 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
     return buffers.get_src();
 }
 
-double ecdf2(int n, const vector<double>& b, const vector<double>& B, bool use_fft)
+double ecdf2(const vector<double>& b, const vector<double>& B, bool use_fft)
 {
-    //TODO: Check that the boundaries are valid here!
-    //Python extensions call this function directly.
-
-    if (int(b.size()) != n) {
-        throw runtime_error("Expecting exactly n bounds: b_1, ..., b_n");
-    }
-    if (int(B.size()) != n) {
-        throw runtime_error("Expecting exactly n bounds: B_1, ..., B_n");
-    }
+    int n = b.size();
+    check_boundary_vector("b", n, b);
+    check_boundary_vector("B", n, B);
 
     vector<double> poisson_nocross_probs = poisson_process_noncrossing_probability(n, n, b, B, use_fft);
 

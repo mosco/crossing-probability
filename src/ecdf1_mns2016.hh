@@ -3,7 +3,7 @@
 
 #include <vector>
 
-double ecdf1_mns2016_B(int n, const std::vector<double>& B);
-double ecdf1_mns2016_b(int n, const std::vector<double>& b);
+double ecdf1_mns2016_B(const std::vector<double>& B);
+double ecdf1_mns2016_b(const std::vector<double>& b);
 
 #endif

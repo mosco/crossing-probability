@@ -75,34 +75,30 @@ vector<double> poisson_B_noncrossing_probability_n2(int n, double intensity, con
     return buffers.get_dest();
 }
 
-double ecdf1_new_B(int n, const vector<double>& B)
+double ecdf1_new_B(const vector<double>& B)
 {
-    if ((int)B.size() != n) {
-        stringstream ss;
-        ss << "Expecting exactly " << n << "bounds. " << "Got " << B.size() << ".";
-        throw runtime_error(ss.str() + vector_to_string(B));
-    }
+    int n = B.size();
+    check_boundary_vector("B", n, B);
+
     // Asymptotically any k in the range [logn, n/logn] should give optimal results as n goes to infinity.
     // Setting k=c*sqrt(n) and minimizing the asymptotic runtime, we obtain k=sqrt(2*n),
     // however, empirically 5*sqrt(n) gives better results.
     int k = min(5*sqrt(n),n/log2(n));
+
     vector<double> poisson_nocross_probabilities = poisson_B_noncrossing_probability_n2(n, n, B, k);
     return poisson_nocross_probabilities[n] / poisson_pmf(n, n);
 }
 // For n=10000, best results k=400...600
 
-double ecdf1_new_b(int n, const vector<double>& b)
+double ecdf1_new_b(const vector<double>& b)
 {
-    if ((int)b.size() != n) {
-        stringstream ss;
-        ss << "Expecting exactly " << n << "bounds. " << "Got " << b.size() << ".";
-        throw runtime_error(ss.str());
-    }
+    int n = b.size();
+    check_boundary_vector("b", n, b);
 
     vector<double> symmetric_steps(n, 0.0);
     for (int i = n-b.size(); i < n; ++i) {
         symmetric_steps[i] = 1.0 - b[b.size() - 1 - i];
     }
 
-    return ecdf1_new_B(n, symmetric_steps);
+    return ecdf1_new_B(symmetric_steps);
 }

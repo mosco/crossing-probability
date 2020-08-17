@@ -3,6 +3,6 @@
 
 #include <vector>
 
-double ecdf2(int n, const std::vector<double>& b, const std::vector<double>& B, bool use_fft);
+double ecdf2(const std::vector<double>& b, const std::vector<double>& B, bool use_fft);
 
 #endif

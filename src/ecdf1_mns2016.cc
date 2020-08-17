@@ -7,6 +7,7 @@
 #include "mm_malloc.h"
 
 #include "ecdf1_mns2016.hh"
+#include "common.hh"
 
 using namespace std;
 
@@ -193,22 +194,20 @@ static int extract_exponent(FLOAT x)
     return exponent;
 }
 
-double ecdf1_mns2016_b(int n, const vector<double>& b)
+double ecdf1_mns2016_b(const vector<double>& b)
 {
-    const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
+    int n = b.size();
+    check_boundary_vector("b", n, b);
 
+    const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
     // cout << "Using translated polynomials! precision: " << FLOAT_PRECISION_BITS << endl;
     // cout << "sizeof(FLOAT) = " << sizeof(FLOAT) << endl;
-    if ((int)b.size() != n) {
-        stringstream ss;
-        ss << "Expecting exactly " << n << "bounds. " << "Got " << b.size() << ".";
-        throw runtime_error(ss.str());
-    }
+
     PolynomialTranslatedMonomials p(n+1);
     p.set_multiplicative_coefficient(0, 1.0);
 
     int total_exponent_delta = 0;
-    for (int i = 0; i < (int)b.size(); ++i) {
+    for (int i = 0; i < n; ++i) {
         //cout << "============= i == " << i << ": " << p << endl;
         p.integrate();
         p.set_additive_coefficient(1, -b[i]);
@@ -242,19 +241,15 @@ double ecdf1_mns2016_b(int n, const vector<double>& b)
     return noncrossing_probability;
 }
 
-double ecdf1_mns2016_B(int n, const vector<double>& B)
+double ecdf1_mns2016_B(const vector<double>& B)
 {
-    if ((int)B.size() != n) {
-        stringstream ss;
-        ss << "Expecting exactly " << n << "bounds. " << "Got " << B.size() << ".";
-        throw runtime_error(ss.str());
-        return 0;
-    }
+    int n = B.size();
+    check_boundary_vector("B", n, B);
 
     vector<double> symmetric_steps(n, 0.0);
-    for (int i = n-B.size(); i < n; ++i) {
-        symmetric_steps[i] = 1.0 - B[B.size() - 1 - i];
+    for (int i = 0; i < n; ++i) {
+        symmetric_steps[i] = 1.0 - B[n - 1 - i];
     }
 
-    return ecdf1_mns2016_b(n, symmetric_steps);
+    return ecdf1_mns2016_b(symmetric_steps);
 }

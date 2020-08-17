@@ -2,17 +2,11 @@
 #define __common_hh__
 
 #include <vector>
+#include <string>
 
-inline void convolve_same_size(int size, const double* src0, const double* src1, double* dest)
-{
-    for (int j = 0; j < size; ++j) {
-        double convolution_at_j = 0.0;
-        for (int k = 0; k <= j; ++k) {
-            convolution_at_j += src0[k] * src1[j-k];
-        }
-        dest[j] = convolution_at_j;
-    }
-}
+void check_boundary_vector(std::string name, int n, const std::vector<double>& v);
+
+void convolve_same_size(int size, const double* src0, const double* src1, double* dest);
 
 template<class T>
 class DoubleBuffer {

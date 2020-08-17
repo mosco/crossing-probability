@@ -11,19 +11,19 @@
 #CXXFLAGS = -Wall -std=c++11 -O3 -march=native -ffast-math 
 #LDFLAGS = -lfftw3 -ffast-math -g
 
-CROSSPROB_OBJECTS = build/crossprob.o build/ecdf1_mns2016.o build/ecdf1_new.o build/ecdf2.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o
+CROSSPROB_OBJECTS = build/crossprob.o build/ecdf1_mns2016.o build/ecdf1_new.o build/ecdf2.o build/fftw_wrappers.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o build/common.o
 
-CROSSPROB_MC_OBJECTS = build/crossprob_mc.o build/string_utils.o build/read_boundaries_file.o build/tinymt64.o
+CROSSPROB_MC_OBJECTS = build/crossprob_mc.o build/string_utils.o build/read_boundaries_file.o build/tinymt64.o build/common.o
 
 all: build bin bin/crossprob bin/crossprob_mc
 
 .PHONY: build bin test clean python depend
 
 build:
-	mkdir build
+	mkdir -p build
 
 bin:
-	mkdir bin
+	mkdir -p bin
 
 bin/crossprob: $(CROSSPROB_OBJECTS)
 	$(CXX) $(CROSSPROB_OBJECTS) $(LDFLAGS) -o $@ 

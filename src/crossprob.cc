@@ -17,7 +17,7 @@ using namespace std;
 static void print_usage()
 {
     cout << "SYNOPSIS\n";
-    cout << "    crossprob <algorithm> <n> <one-sided-boundary-file>\n";
+    cout << "    crossprob <algorithm> <one-or-two-sided-boundaries-filename>\n";
     cout << "\n";
     cout << "DESCRIPTION\n";
     cout << "    Let X_1, ..., X_n be a set of points sampled uniformly from the interval [0,1]\n";
@@ -40,10 +40,7 @@ static void print_usage()
     cout << "        ecdf1-mns2016: an O(n^2) method for one-sided boundaries. [MNS2016]\n";
     cout << "        ecdf1-new: New O(n^2) method, typically faster than ecdf1-mns2016.\n";
     cout << "\n";            
-    cout << "    <n>\n";
-    cout << "        The number of sample points drawn from [0,1].\n";
-    cout << "\n";
-    cout << "    <boundary-functions-file>\n";
+    cout << "    <one-or-two-sided-boundaries-filename>\n";
     cout << "        This text file contains the two lines of comma-separater numbers:\n";
     cout << "            b_1, b_2, ..., b_n\n";
     cout << "            B_1, B_2, ..., B_n\n";
@@ -61,11 +58,11 @@ static void print_usage()
     cout << "    write the following bounds.txt file:\n";
     cout << "    0, 0.15, 0.5,\n";
     cout << "    0.7, 0.9, 1\n";
-    cout << "    and run './bin/crossprob ecdf2-mn2017 3 bounds.txt'\n";
+    cout << "    and run './bin/crossprob ecdf2-mn2017 bounds.txt'\n";
     cout << "\n";
     cout << "    To compute a one-sided crossing probability for two samples\n";
     cout << "    that X_(1) <= 0.5 and X_(2) <= 0.7, we can run\n";
-    cout << "        ./bin/crossprob ecdf1-m2020 2 bounds1.txt\n";
+    cout << "        ./bin/crossprob ecdf1-new bounds1.txt\n";
     cout << "    where bounds1.txt is the following (first line is empty):\n";
     cout << "            \n";
     cout << "    0.5, 0.7\n";
@@ -79,24 +76,24 @@ static void print_usage()
     cout << "             Statistics & Probability Letters. https://doi.org/10.1016/j.spl.2016.11.027\n";
 }
 
-double calculate_ecdf1_mns2016(int n, const vector<double>& b, const vector<double>& B)
+double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf1_mns2016_b(n, b);
+        return 1.0 - ecdf1_mns2016_b(b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf1_mns2016_B(n, B);
+        return 1.0 - ecdf1_mns2016_B(B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-mns2016' command for computing a one-sided boundary crossing.\n");
     }
 }
 
-double calculate_ecdf1_new(int n, const vector<double>& b, const vector<double>& B)
+double calculate_ecdf1_new(const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf1_new_b(n, b);
+        return 1.0 - ecdf1_new_b(b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf1_new_B(n, B);
+        return 1.0 - ecdf1_new_B(B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-m2020' command for computing a one-sided boundary crossing.\n");
@@ -113,39 +110,41 @@ std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
   return out;
 }
 
-double calculate_ecdf2_ks2001(int n, const vector<double>& b, const vector<double>& B)
+double calculate_ecdf2_ks2001(const vector<double>& b, const vector<double>& B)
 {
+    int n = max(b.size(), B.size());
     if ((b.size() == n) && (B.size() == n)) {
-        return 1.0 - ecdf2(n, b, B, false);
+        return 1.0 - ecdf2(b, B, false);
     }
 
     if ((b.size() == 0) && (B.size() == n)) {
         std::vector<double> zeros_vector(n, 0.0);
-        return 1.0 - ecdf2(n, zeros_vector, B, false);
+        return 1.0 - ecdf2(zeros_vector, B, false);
     }
 
     if ((b.size() == n) && (B.size() == 0)) {
         std::vector<double> ones_vector(n, 1.0);
-        return 1.0 - ecdf2(n, b, ones_vector, false);
+        return 1.0 - ecdf2(b, ones_vector, false);
     }
 
     throw runtime_error("Expecting either two boundary lists of length n or one list of length n and one of length zero");
 }
 
-double calculate_ecdf2_mn2017(int n, const vector<double>& b, const vector<double>& B)
+double calculate_ecdf2_mn2017(const vector<double>& b, const vector<double>& B)
 {
+    int n = max(b.size(), B.size());
     if ((b.size() == n) && (B.size() == n)) {
-        return 1.0 - ecdf2(n, b, B, true);
+        return 1.0 - ecdf2(b, B, true);
     }
 
     if ((b.size() == 0) && (B.size() == n)) {
         std::vector<double> zeros_vector(n, 0.0);
-        return 1.0 - ecdf2(n, zeros_vector, B, true);
+        return 1.0 - ecdf2(zeros_vector, B, true);
     }
 
     if ((b.size() == n) && (B.size() == 0)) {
         std::vector<double> ones_vector(n, 1.0);
-        return 1.0 - ecdf2(n, b, ones_vector, true);
+        return 1.0 - ecdf2(b, ones_vector, true);
     }
     throw runtime_error("Expecting either two boundary lists of length n or one list of length n and one of length zero");
 }
@@ -154,26 +153,20 @@ static int handle_command_line_arguments(int argc, char* argv[])
 {
     string command = string(argv[1]);
 
-    long n = string_to_long(argv[2]);
-    if (n < 0) {
-        print_usage();
-        throw runtime_error("n must be non-negative!");
-    }
-
-    string filename = string(argv[3]);
+    string filename = string(argv[2]);
     pair<vector<double>, vector<double> > bounds = read_and_check_boundaries_file(filename);
     const vector<double>& b = bounds.first;
     const vector<double>& B = bounds.second;
 
     double result;
     if (command == "ecdf1-mns2016") {
-        result = calculate_ecdf1_mns2016(n, b, B);
+        result = calculate_ecdf1_mns2016(b, B);
     } else if (command == "ecdf1-new") {
-        result = calculate_ecdf1_new(n, b, B);
+        result = calculate_ecdf1_new(b, B);
     } else if (command == "ecdf2-ks2001") {
-        result = calculate_ecdf2_ks2001(n, b, B);
+        result = calculate_ecdf2_ks2001(b, B);
     } else if (command == "ecdf2-mn2017") {
-        result = calculate_ecdf2_mn2017(n, b, B);
+        result = calculate_ecdf2_mn2017(b, B);
     } else {
         print_usage();
         throw runtime_error("Second command line argument must be one of: 'ecdf1-mns2016', 'ecdf1-new', 'ecdf2-ks2001', 'ecdf2-mn2017'.");
@@ -186,9 +179,9 @@ static int handle_command_line_arguments(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    if (argc != 4) {
+    if (argc != 3) {
         print_usage();
-        cout << "Error: Expecting 3 command line arguments!" << endl;
+        cout << "Error: Expecting 2 command line arguments!" << endl;
         return 1;
     }
     try {
