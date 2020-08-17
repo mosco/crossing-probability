@@ -6,7 +6,7 @@
 #include <cassert>
 #include "mm_malloc.h"
 
-#include "one_sided_noncrossing_probability_n2_old.hh"
+#include "ecdf1_mns2016.hh"
 
 using namespace std;
 
@@ -63,18 +63,11 @@ using namespace std;
     #error FLOAT_PRECISION_BITS must be 64, 80 or 128.
 #endif
 
-// static string double_to_string(double x)
-// {
-//     stringstream ss;
-//     ss.precision(17); // http://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout
-//     ss << x;
-//     return ss.str();
-// }
 
 static string long_double_to_string(long double x)
 {
     stringstream ss;
-    ss.precision(22); // http://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout
+    ss.precision(22);
     ss << x;
     return ss.str();
 }
@@ -163,14 +156,6 @@ void PolynomialTranslatedMonomials::ldexp_all_multiplicative_coefficients(int ex
     }
 }
 
-// static void print_FLOAT_array(const FLOAT* arr, int n)
-// {
-//     for (int i = 0; i < n; ++i) {
-//         cout << TO_STRING(arr[i]) << ", ";
-//     }
-//     cout << endl;
-// }
-
 ostream& operator<<(ostream& stream, const PolynomialTranslatedMonomials& poly)
 {
     for (int i = poly.degree; i >= 0; --i) {
@@ -187,19 +172,6 @@ ostream& operator<<(ostream& stream, const PolynomialTranslatedMonomials& poly)
     }
     return stream;
 }
-
-// static FLOAT minimum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
-// {
-//     assert(p.degree >= 1);
-//     FLOAT m = p.get_multiplicative_coefficient(0);
-//     for (int i = 0; i < p.degree+1; ++i) {
-//         FLOAT x = p.get_multiplicative_coefficient(i);
-//         if (x < m) {
-//             m = x;
-//         }
-//     }
-//     return m;
-// }
 
 static FLOAT maximum_multiplicative_coefficient(const PolynomialTranslatedMonomials& p)
 {
@@ -221,7 +193,7 @@ static int extract_exponent(FLOAT x)
     return exponent;
 }
 
-double ecdf_upper_noncrossing_probability_n2_old(int n, const vector<double>& upper_bound_steps)
+double ecdf1_mns2016_upper(int n, const vector<double>& upper_bound_steps)
 {
     const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
 
@@ -270,7 +242,7 @@ double ecdf_upper_noncrossing_probability_n2_old(int n, const vector<double>& up
     return noncrossing_probability;
 }
 
-double ecdf_lower_noncrossing_probability_n2_old(int n, const vector<double>& lower_bound_steps)
+double ecdf1_mns2016_lower(int n, const vector<double>& lower_bound_steps)
 {
     if ((int)lower_bound_steps.size() > n) {
         stringstream ss;
@@ -284,5 +256,5 @@ double ecdf_lower_noncrossing_probability_n2_old(int n, const vector<double>& lo
         symmetric_steps[i] = 1.0 - lower_bound_steps[lower_bound_steps.size() - 1 - i];
     }
 
-    return ecdf_upper_noncrossing_probability_n2_old(n, symmetric_steps);
+    return ecdf1_mns2016_upper(n, symmetric_steps);
 }

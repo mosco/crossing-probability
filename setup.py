@@ -4,9 +4,9 @@ import os
 module1 = Extension(
     '_crossprob',
     sources = [
-        'src/one_sided_noncrossing_probability_n2_old.cc',
-        'src/one_sided_noncrossing_probability_n2.cc',
-        'src/two_sided_noncrossing_probability.cc',
+        'src/ecdf1_mns2016.cc',
+        'src/ecdf1_new.cc',
+        'src/ecdf2.cc',
         'src/fftw_wrappers.cc',
         'src/fftwconvolver.cc',
         'src/string_utils.cc',

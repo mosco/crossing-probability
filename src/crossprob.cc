@@ -4,11 +4,13 @@
 #include <stdexcept>
 #include <cassert>
 #include <algorithm>
-#include "one_sided_noncrossing_probability_n2_old.hh"
-#include "one_sided_noncrossing_probability_n2.hh"
-#include "two_sided_noncrossing_probability.hh"
+
 #include "read_boundaries_file.hh"
 #include "string_utils.hh"
+
+#include "ecdf1_mns2016.hh"
+#include "ecdf1_new.hh"
+#include "ecdf2.hh"
 
 using namespace std;
 
@@ -36,7 +38,7 @@ static void print_usage()
     cout << "        ecdf2-ks2001: an O(n^3) algorithm for two-sided boundaries. [1]\n";
     cout << "        ecdf2-mn2017: an O(n^2 log n) method for two-sided boundaries. [3]\n";
     cout << "        ecdf1-mns2016: an O(n^2) method for one-sided boundaries. [2]\n";
-    cout << "        ecdf1-m2020: New O(n^2) method, typically faster than ecdf1-mns2016.\n";
+    cout << "        ecdf1-new: New O(n^2) method, typically faster than ecdf1-mns2016.\n";
     cout << "\n";            
     cout << "    <n>\n";
     cout << "        The number of sample points drawn from [0,1].\n";
@@ -80,21 +82,21 @@ static void print_usage()
 double calculate_ecdf1_mns2016(int n, const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf_upper_noncrossing_probability_n2_old(n, b);
+        return 1.0 - ecdf1_mns2016_upper(n, b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf_lower_noncrossing_probability_n2_old(n, B);
+        return 1.0 - ecdf1_mns2016_lower(n, B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-mns2016' command for computing a one-sided boundary crossing.\n");
     }
 }
 
-double calculate_ecdf1_m2020(int n, const vector<double>& b, const vector<double>& B)
+double calculate_ecdf1_new(int n, const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf_upper_noncrossing_probability_n2(n, b);
+        return 1.0 - ecdf1_new_upper(n, b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf_lower_noncrossing_probability_n2(n, B);
+        return 1.0 - ecdf1_new_lower(n, B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-m2020' command for computing a one-sided boundary crossing.\n");
@@ -114,17 +116,17 @@ std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
 double calculate_ecdf2_ks2001(int n, const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() == n) && (B.size() == n)) {
-        return 1.0 - ecdf_noncrossing_probability(n, b, B, false);
+        return 1.0 - ecdf2(n, b, B, false);
     }
 
     if ((b.size() == 0) && (B.size() == n)) {
         std::vector<double> zeros_vector(n, 0.0);
-        return 1.0 - ecdf_noncrossing_probability(n, zeros_vector, B, false);
+        return 1.0 - ecdf2(n, zeros_vector, B, false);
     }
 
     if ((b.size() == n) && (B.size() == 0)) {
         std::vector<double> ones_vector(n, 1.0);
-        return 1.0 - ecdf_noncrossing_probability(n, b, ones_vector, false);
+        return 1.0 - ecdf2(n, b, ones_vector, false);
     }
 
     throw runtime_error("Expecting either two boundary lists of length n or one list of length n and one of length zero");
@@ -133,17 +135,17 @@ double calculate_ecdf2_ks2001(int n, const vector<double>& b, const vector<doubl
 double calculate_ecdf2_mn2017(int n, const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() == n) && (B.size() == n)) {
-        return 1.0 - ecdf_noncrossing_probability(n, b, B, true);
+        return 1.0 - ecdf2(n, b, B, true);
     }
 
     if ((b.size() == 0) && (B.size() == n)) {
         std::vector<double> zeros_vector(n, 0.0);
-        return 1.0 - ecdf_noncrossing_probability(n, zeros_vector, B, true);
+        return 1.0 - ecdf2(n, zeros_vector, B, true);
     }
 
     if ((b.size() == n) && (B.size() == 0)) {
         std::vector<double> ones_vector(n, 1.0);
-        return 1.0 - ecdf_noncrossing_probability(n, b, ones_vector, true);
+        return 1.0 - ecdf2(n, b, ones_vector, true);
     }
     throw runtime_error("Expecting either two boundary lists of length n or one list of length n and one of length zero");
 }
@@ -166,15 +168,15 @@ static int handle_command_line_arguments(int argc, char* argv[])
     double result;
     if (command == "ecdf1-mns2016") {
         result = calculate_ecdf1_mns2016(n, b, B);
-    } else if (command == "ecdf1-m2020") {
-        result = calculate_ecdf1_m2020(n, b, B);
+    } else if (command == "ecdf1-new") {
+        result = calculate_ecdf1_new(n, b, B);
     } else if (command == "ecdf2-ks2001") {
         result = calculate_ecdf2_ks2001(n, b, B);
     } else if (command == "ecdf2-mn2017") {
         result = calculate_ecdf2_mn2017(n, b, B);
     } else {
         print_usage();
-        throw runtime_error("Second command line argument must be one of: 'ecdf1-mns2016', 'ecdf1-m2020', 'ecdf2-ks2001', 'ecdf2-mn2017'.");
+        throw runtime_error("Second command line argument must be one of: 'ecdf1-mns2016', 'ecdf1-new', 'ecdf2-ks2001', 'ecdf2-mn2017'.");
     }
 
     cout << result << endl;

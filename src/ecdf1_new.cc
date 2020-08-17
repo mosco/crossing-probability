@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "one_sided_noncrossing_probability_n2.hh"
+#include "ecdf1_new.hh"
 #include "common.hh"
 #include "poisson_pmf.hh"
 #include "fftwconvolver.hh"
@@ -75,7 +75,7 @@ vector<double> poisson_lower_noncrossing_probability_n2(int n, double intensity,
     return buffers.get_dest();
 }
 
-double ecdf_lower_noncrossing_probability_n2(int n, const vector<double>& lower_bound_steps)
+double ecdf1_new_lower(int n, const vector<double>& lower_bound_steps)
 {
     if ((int)lower_bound_steps.size() > n) {
         stringstream ss;
@@ -91,7 +91,7 @@ double ecdf_lower_noncrossing_probability_n2(int n, const vector<double>& lower_
 }
 // For n=10000, best results k=400...600
 
-double ecdf_upper_noncrossing_probability_n2(int n, const vector<double>& upper_bound_steps)
+double ecdf1_new_upper(int n, const vector<double>& upper_bound_steps)
 {
     if ((int)upper_bound_steps.size() < n) {
         stringstream ss;
@@ -104,5 +104,5 @@ double ecdf_upper_noncrossing_probability_n2(int n, const vector<double>& upper_
         symmetric_steps[i] = 1.0 - upper_bound_steps[upper_bound_steps.size() - 1 - i];
     }
 
-    return ecdf_lower_noncrossing_probability_n2(n, symmetric_steps);
+    return ecdf1_new_lower(n, symmetric_steps);
 }

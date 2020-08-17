@@ -22,12 +22,12 @@ namespace std {
 }
 
 %{
-#include "../src/one_sided_noncrossing_probability_n2_old.hh"
-#include "../src/one_sided_noncrossing_probability_n2.hh"
-#include "../src/two_sided_noncrossing_probability.hh"
+#include "../src/ecdf1_mns2016.hh"
+#include "../src/ecdf1_new.hh"
+#include "../src/ecdf2.hh"
 %}
 
-%include "../src/one_sided_noncrossing_probability_n2_old.hh"
-%include "../src/one_sided_noncrossing_probability_n2.hh"
-%include "../src/two_sided_noncrossing_probability.hh"
+%include "../src/ecdf1_mns2016.hh"
+%include "../src/ecdf1_new.hh"
+%include "../src/ecdf2.hh"
 

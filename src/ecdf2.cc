@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <sstream>
 #include <ctime>
+
+#include "ecdf2.hh"
 #include "fftwconvolver.hh"
 #include "aligned_mem.hh"
 #include "common.hh"
@@ -120,8 +122,11 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
     return buffers.get_src();
 }
 
-double ecdf_noncrossing_probability(int n, const vector<double>& b, const vector<double>& B, bool use_fft)
+double ecdf2(int n, const vector<double>& b, const vector<double>& B, bool use_fft)
 {
+    //TODO: Check that the boundaries are valid here!
+    //Python extensions call this function directly.
+
     if (int(b.size()) != n) {
         throw runtime_error("Expecting exactly n bounds: b_1, ..., b_n");
     }
@@ -129,14 +134,8 @@ double ecdf_noncrossing_probability(int n, const vector<double>& b, const vector
         throw runtime_error("Expecting exactly n bounds: B_1, ..., B_n");
     }
 
-    //clock_t start_clock = clock();
     vector<double> poisson_nocross_probs = poisson_process_noncrossing_probability(n, n, b, B, use_fft);
 
-    //cout << "poisson_nocross_probs[n]: " << poisson_nocross_probs[n] << endl;
-    //cout << "poisson_pmf(n,n): " << poisson_pmf(n,n) << endl;;
-    //clock_t end_clock = clock();
-
-    //cout << "Elapsed clock: " << (end_clock-start_clock)/double(CLOCKS_PER_SEC) << endl;
     return poisson_nocross_probs[n] / poisson_pmf(n, n);
 }
 
