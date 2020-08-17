@@ -44,13 +44,13 @@ private:
 };
 
 
-static bool does_integer_step_function_cross_lower_boundary(const double* steps, size_t num_steps, const vector<double>& g_steps)
+static bool does_integer_step_function_cross_lower_boundary(const double* steps, size_t num_steps, const vector<double>& B)
 {
-    if (num_steps < g_steps.size()) {
+    if (num_steps < B.size()) {
         return true;
     } else {
-        for (size_t i = 0; i < g_steps.size(); ++i) {
-            if (steps[i] > g_steps[i]) {
+        for (size_t i = 0; i < B.size(); ++i) {
+            if (steps[i] > B[i]) {
                 return true;
             }
         }
@@ -58,13 +58,13 @@ static bool does_integer_step_function_cross_lower_boundary(const double* steps,
     return false;
 }
 
-static bool does_integer_step_function_cross_upper_boundary(const double* steps, size_t num_steps, const vector<double>& h_steps)
+static bool does_integer_step_function_cross_upper_boundary(const double* steps, size_t num_steps, const vector<double>& b)
 {
-    if (num_steps > h_steps.size()) {
+    if (num_steps > b.size()) {
         return true;
     } else {
         for (size_t i = 0; i < num_steps; ++i) {
-            if (steps[i] < h_steps[i]) {
+            if (steps[i] < b[i]) {
                 return true;
             }
         }
@@ -72,20 +72,20 @@ static bool does_integer_step_function_cross_upper_boundary(const double* steps,
     }
 }
 
-static bool does_integer_step_function_cross(const double* steps, size_t num_steps, const vector<double>& g_steps, const vector<double>& h_steps)
+static bool does_integer_step_function_cross(const double* steps, size_t num_steps, const vector<double>& b, const vector<double>& B)
 {
-    if (h_steps.size() == 0) {
+    if (b.size() == 0) {
         // Special case, no upper bound specified. Check lower bound crossings only.
-        return does_integer_step_function_cross_lower_boundary(steps, num_steps, g_steps);
+        return does_integer_step_function_cross_lower_boundary(steps, num_steps, B);
     } else {
-        if ((num_steps < g_steps.size()) || (num_steps > h_steps.size())) {
+        if ((num_steps < B.size()) || (num_steps > b.size())) {
             return true;
         }
-        return does_integer_step_function_cross_lower_boundary(steps, num_steps, g_steps) || does_integer_step_function_cross_upper_boundary(steps, num_steps, h_steps);
+        return does_integer_step_function_cross_lower_boundary(steps, num_steps, B) || does_integer_step_function_cross_upper_boundary(steps, num_steps, b);
     }
 }
 
-static double does_random_ecdf_cross(const vector<double>& g_steps, const vector<double>& h_steps, RandomNumberGenerator& rng, vector<double>& tmp_buffer)
+static double does_random_ecdf_cross(const vector<double>& b, const vector<double>& B, RandomNumberGenerator& rng, vector<double>& tmp_buffer)
 {
     double last_x = 0.0;
     for (size_t i = 0; i < tmp_buffer.size(); ++i) {
@@ -96,15 +96,15 @@ static double does_random_ecdf_cross(const vector<double>& g_steps, const vector
     for (size_t i = 0; i < tmp_buffer.size(); ++i) {
         tmp_buffer[i] /= normalizing_factor;
     }
-    return does_integer_step_function_cross(&tmp_buffer[0], tmp_buffer.size(), g_steps, h_steps);
+    return does_integer_step_function_cross(&tmp_buffer[0], tmp_buffer.size(), b, B);
 }
 
-static double ecdf_crossing_probability_montecarlo(long n, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
+static double ecdf_crossing_probability_montecarlo(long n, const vector<double>& b, const vector<double>& B, long num_simulations)
 {
-    if ((long)g_steps.size() > n) {
+    if ((long)B.size() > n) {
         return 1.0;
     }
-    if ((h_steps.size() > 0) && ((long)h_steps.size() < n)) {
+    if ((b.size() > 0) && ((long)b.size() < n)) {
         return 1.0;
     }
 
@@ -113,15 +113,15 @@ static double ecdf_crossing_probability_montecarlo(long n, const vector<double>&
     vector<double> tmp_buffer(n);
     int count_crossings = 0;
     for (int reps = 0; reps < num_simulations; ++reps) {
-        count_crossings += does_random_ecdf_cross(g_steps, h_steps, rng, tmp_buffer);
+        count_crossings += does_random_ecdf_cross(b, B, rng, tmp_buffer);
     }
 
     return double(count_crossings) / num_simulations;
 }
 
-static bool does_random_poisson_process_cross(const vector<double>& g_steps, const vector<double>& h_steps, ExponentialRNG& exprng, vector<double>& tmp_buffer)
+static bool does_random_poisson_process_cross(const vector<double>& b, const vector<double>& B, ExponentialRNG& exprng, vector<double>& tmp_buffer)
 {
-    size_t max_steps = h_steps.size();
+    size_t max_steps = b.size();
     assert(tmp_buffer.size() >= max_steps);
 
     size_t num_steps = 0;
@@ -129,7 +129,7 @@ static bool does_random_poisson_process_cross(const vector<double>& g_steps, con
     while (true) {
         last_x += exprng.generate();
         if (last_x > 1.0) {
-            return does_integer_step_function_cross(&tmp_buffer[0], num_steps, g_steps, h_steps);
+            return does_integer_step_function_cross(&tmp_buffer[0], num_steps, b, B);
         }
         if (num_steps >= max_steps) {
             return true;
@@ -139,18 +139,18 @@ static bool does_random_poisson_process_cross(const vector<double>& g_steps, con
     }
 }
 
-static double poisson_process_crossing_probability_montecarlo(double intensity, const vector<double>& g_steps, const vector<double>& h_steps, long num_simulations)
+static double poisson_process_crossing_probability_montecarlo(double intensity, const vector<double>& b, const vector<double>& B, long num_simulations)
 {
-    if ((h_steps.size() > 0) && (h_steps.size() < g_steps.size())) {
+    if ((b.size() > 0) && (b.size() < B.size())) {
         return 1.0;
     }
 
     ExponentialRNG exprng(time(NULL) + (int)(intensity*1000000.0), 1.0/intensity);
 
-    vector<double> buffer(h_steps.size() + 1);
+    vector<double> buffer(b.size() + 1);
     int count_crossings = 0;
     for (int reps = 0; reps < num_simulations; ++reps) {
-        count_crossings += does_random_poisson_process_cross(g_steps, h_steps, exprng, buffer);
+        count_crossings += does_random_poisson_process_cross(b, B, exprng, buffer);
     }
 
     return double(count_crossings) / num_simulations;
@@ -213,17 +213,17 @@ static int handle_command_line_arguments(int argc, char* argv[])
         throw runtime_error("num-simulations must be non-negative!");
     }
 
-    pair<vector<double>, vector<double> > bounds = read_boundaries_file(filename);
-    verify_boundary_is_valid(bounds.first);
-    verify_boundary_is_valid(bounds.second);
+    pair<vector<double>, vector<double> > bounds = read_and_check_boundaries_file(filename);
+    const vector<double>& b = bounds.first;
+    const vector<double>& B = bounds.second;
 
     if (command == "poisson") {
         // cout << "Running " << num_simulations << " simulations...\n";
-        double crossprob = poisson_process_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
+        double crossprob = poisson_process_crossing_probability_montecarlo(n, b, B, num_simulations);
         cout << crossprob << endl;
     } else if (command == "ecdf") {
         // cout << "Running " << num_simulations << " simulations...\n";
-        double crossprob = ecdf_crossing_probability_montecarlo(n, bounds.first, bounds.second, num_simulations);
+        double crossprob = ecdf_crossing_probability_montecarlo(n, b, B, num_simulations);
         cout << crossprob << endl;
     } else {
         print_usage();
