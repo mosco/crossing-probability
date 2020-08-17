@@ -229,17 +229,17 @@ class VectorDouble(object):
 _crossprob.VectorDouble_swigregister(VectorDouble)
 
 
-def ecdf1_mns2016_lower(n, lower_bound_steps):
-    return _crossprob.ecdf1_mns2016_lower(n, lower_bound_steps)
+def ecdf1_mns2016_B(n, B):
+    return _crossprob.ecdf1_mns2016_B(n, B)
 
-def ecdf1_mns2016_upper(n, upper_bound_steps):
-    return _crossprob.ecdf1_mns2016_upper(n, upper_bound_steps)
+def ecdf1_mns2016_b(n, b):
+    return _crossprob.ecdf1_mns2016_b(n, b)
 
-def ecdf1_new_lower(n, lower_bound_steps):
-    return _crossprob.ecdf1_new_lower(n, lower_bound_steps)
+def ecdf1_new_B(n, B):
+    return _crossprob.ecdf1_new_B(n, B)
 
-def ecdf1_new_upper(n, upper_bound_steps):
-    return _crossprob.ecdf1_new_upper(n, upper_bound_steps)
+def ecdf1_new_b(n, b):
+    return _crossprob.ecdf1_new_b(n, b)
 
 def ecdf2(n, b, B, use_fft):
     return _crossprob.ecdf2(n, b, B, use_fft)

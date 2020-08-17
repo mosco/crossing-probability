@@ -193,26 +193,26 @@ static int extract_exponent(FLOAT x)
     return exponent;
 }
 
-double ecdf1_mns2016_upper(int n, const vector<double>& upper_bound_steps)
+double ecdf1_mns2016_b(int n, const vector<double>& b)
 {
     const int NUM_ITERATIONS_BETWEEN_EXP_FIXES = 16;
 
     // cout << "Using translated polynomials! precision: " << FLOAT_PRECISION_BITS << endl;
     // cout << "sizeof(FLOAT) = " << sizeof(FLOAT) << endl;
-    if ((int)upper_bound_steps.size() < n) {
+    if ((int)b.size() != n) {
         stringstream ss;
-        ss << "empirical CDF must cross upper boundary h(t) since h(1)==" << upper_bound_steps.size() << " < n and the number of samples is n.";
+        ss << "Expecting exactly " << n << "bounds. " << "Got " << b.size() << ".";
         throw runtime_error(ss.str());
     }
     PolynomialTranslatedMonomials p(n+1);
     p.set_multiplicative_coefficient(0, 1.0);
 
     int total_exponent_delta = 0;
-    for (int i = 0; i < (int)upper_bound_steps.size(); ++i) {
+    for (int i = 0; i < (int)b.size(); ++i) {
         //cout << "============= i == " << i << ": " << p << endl;
         p.integrate();
-        p.set_additive_coefficient(1, -upper_bound_steps[i]);
-        p.set_multiplicative_coefficient(0, -p.evaluate(upper_bound_steps[i]));
+        p.set_additive_coefficient(1, -b[i]);
+        p.set_multiplicative_coefficient(0, -p.evaluate(b[i]));
 
         //cout << "Before expfix: " << p << endl;
 
@@ -242,19 +242,19 @@ double ecdf1_mns2016_upper(int n, const vector<double>& upper_bound_steps)
     return noncrossing_probability;
 }
 
-double ecdf1_mns2016_lower(int n, const vector<double>& lower_bound_steps)
+double ecdf1_mns2016_B(int n, const vector<double>& B)
 {
-    if ((int)lower_bound_steps.size() > n) {
+    if ((int)B.size() != n) {
         stringstream ss;
-        ss << "Empirical CDF must cross lower boundary g(t) since g(1)==" << lower_bound_steps.size() << " > n and the number of samples is n.";
+        ss << "Expecting exactly " << n << "bounds. " << "Got " << B.size() << ".";
         throw runtime_error(ss.str());
         return 0;
     }
 
     vector<double> symmetric_steps(n, 0.0);
-    for (int i = n-lower_bound_steps.size(); i < n; ++i) {
-        symmetric_steps[i] = 1.0 - lower_bound_steps[lower_bound_steps.size() - 1 - i];
+    for (int i = n-B.size(); i < n; ++i) {
+        symmetric_steps[i] = 1.0 - B[B.size() - 1 - i];
     }
 
-    return ecdf1_mns2016_upper(n, symmetric_steps);
+    return ecdf1_mns2016_b(n, symmetric_steps);
 }

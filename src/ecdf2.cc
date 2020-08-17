@@ -83,10 +83,6 @@ void update_buffers_and_step_counts(Bound bound, DoubleBuffer<double>& buffers, 
 // TODO: Split function into 2 cases: with_fft and no_fft
 vector<double> poisson_process_noncrossing_probability(int n, double intensity, const vector<double>& b, const vector<double>& B, bool use_fft)
 {
-    //if (lower_and_upper_boundaries_cross(g_steps, h_steps)) {
-    //    return vector<double>();
-    //}
-
     vector<Bound> bounds = join_all_bounds(b, B);
 
     DoubleBuffer<double> buffers(n+1, 0.0);

@@ -32,8 +32,8 @@ def test_ecdf2mn2017():
     assert run('./bin/crossprob ecdf2-mn2017 10 tests/bounds_cksplus_10.txt').strip() ==  b'0.391076'
 
 def test_ecdf1m2020():
-    assert run('./bin/crossprob ecdf1-m2020 10 tests/bounds_cksminus_10.txt').strip() ==  b'0.391076'
-    assert run('./bin/crossprob ecdf1-m2020 10 tests/bounds_cksplus_10.txt').strip() ==  b'0.391076'
+    assert run('./bin/crossprob ecdf1-new 10 tests/bounds_cksminus_10.txt').strip() ==  b'0.391076'
+    assert run('./bin/crossprob ecdf1-new 10 tests/bounds_cksplus_10.txt').strip() ==  b'0.391076'
 
 def test_crossprob_mc_binomial():
     binomial_bounds2 = float(run('./bin/crossprob_mc ecdf 2 tests/bounds2.txt 1000000'))

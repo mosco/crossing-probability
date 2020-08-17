@@ -7374,7 +7374,7 @@ SWIGINTERN PyObject *VectorDouble_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObj
   return SWIG_Python_InitShadowInstance(args);
 }
 
-SWIGINTERN PyObject *_wrap_ecdf1_mns2016_lower(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf1_mns2016_B(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7384,26 +7384,26 @@ SWIGINTERN PyObject *_wrap_ecdf1_mns2016_lower(PyObject *SWIGUNUSEDPARM(self), P
   PyObject *swig_obj[2] ;
   double result;
   
-  if (!SWIG_Python_UnpackTuple(args, "ecdf1_mns2016_lower", 2, 2, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "ecdf1_mns2016_B", 2, 2, swig_obj)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_mns2016_lower" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_mns2016_B" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_mns2016_lower" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_mns2016_B" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_mns2016_lower" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_mns2016_B" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
   {
     try {
-      result = (double)ecdf1_mns2016_lower(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+      result = (double)ecdf1_mns2016_B(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
     } catch(std::runtime_error& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     } catch(std::exception& e) {
@@ -7421,7 +7421,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ecdf1_mns2016_upper(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf1_mns2016_b(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7431,26 +7431,26 @@ SWIGINTERN PyObject *_wrap_ecdf1_mns2016_upper(PyObject *SWIGUNUSEDPARM(self), P
   PyObject *swig_obj[2] ;
   double result;
   
-  if (!SWIG_Python_UnpackTuple(args, "ecdf1_mns2016_upper", 2, 2, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "ecdf1_mns2016_b", 2, 2, swig_obj)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_mns2016_upper" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_mns2016_b" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_mns2016_upper" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_mns2016_b" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_mns2016_upper" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_mns2016_b" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
   {
     try {
-      result = (double)ecdf1_mns2016_upper(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+      result = (double)ecdf1_mns2016_b(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
     } catch(std::runtime_error& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     } catch(std::exception& e) {
@@ -7468,7 +7468,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ecdf1_new_lower(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf1_new_B(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7478,26 +7478,26 @@ SWIGINTERN PyObject *_wrap_ecdf1_new_lower(PyObject *SWIGUNUSEDPARM(self), PyObj
   PyObject *swig_obj[2] ;
   double result;
   
-  if (!SWIG_Python_UnpackTuple(args, "ecdf1_new_lower", 2, 2, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "ecdf1_new_B", 2, 2, swig_obj)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_new_lower" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_new_B" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_new_lower" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_new_B" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_new_lower" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_new_B" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
   {
     try {
-      result = (double)ecdf1_new_lower(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+      result = (double)ecdf1_new_B(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
     } catch(std::runtime_error& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     } catch(std::exception& e) {
@@ -7515,7 +7515,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ecdf1_new_upper(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf1_new_b(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -7525,26 +7525,26 @@ SWIGINTERN PyObject *_wrap_ecdf1_new_upper(PyObject *SWIGUNUSEDPARM(self), PyObj
   PyObject *swig_obj[2] ;
   double result;
   
-  if (!SWIG_Python_UnpackTuple(args, "ecdf1_new_upper", 2, 2, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "ecdf1_new_b", 2, 2, swig_obj)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_new_upper" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "ecdf1_new_b" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
   {
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res2 = swig::asptr(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_new_upper" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ecdf1_new_b" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_new_upper" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_new_b" "', argument " "2"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg2 = ptr;
   }
   {
     try {
-      result = (double)ecdf1_new_upper(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
+      result = (double)ecdf1_new_b(arg1,(std::vector< double,std::allocator< double > > const &)*arg2);
     } catch(std::runtime_error& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     } catch(std::exception& e) {
@@ -7687,10 +7687,10 @@ static PyMethodDef SwigMethods[] = {
 	 { "delete_VectorDouble", _wrap_delete_VectorDouble, METH_O, NULL},
 	 { "VectorDouble_swigregister", VectorDouble_swigregister, METH_O, NULL},
 	 { "VectorDouble_swiginit", VectorDouble_swiginit, METH_VARARGS, NULL},
-	 { "ecdf1_mns2016_lower", _wrap_ecdf1_mns2016_lower, METH_VARARGS, NULL},
-	 { "ecdf1_mns2016_upper", _wrap_ecdf1_mns2016_upper, METH_VARARGS, NULL},
-	 { "ecdf1_new_lower", _wrap_ecdf1_new_lower, METH_VARARGS, NULL},
-	 { "ecdf1_new_upper", _wrap_ecdf1_new_upper, METH_VARARGS, NULL},
+	 { "ecdf1_mns2016_B", _wrap_ecdf1_mns2016_B, METH_VARARGS, NULL},
+	 { "ecdf1_mns2016_b", _wrap_ecdf1_mns2016_b, METH_VARARGS, NULL},
+	 { "ecdf1_new_B", _wrap_ecdf1_new_B, METH_VARARGS, NULL},
+	 { "ecdf1_new_b", _wrap_ecdf1_new_b, METH_VARARGS, NULL},
 	 { "ecdf2", _wrap_ecdf2, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };

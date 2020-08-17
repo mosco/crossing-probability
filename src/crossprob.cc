@@ -82,9 +82,9 @@ static void print_usage()
 double calculate_ecdf1_mns2016(int n, const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf1_mns2016_upper(n, b);
+        return 1.0 - ecdf1_mns2016_b(n, b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf1_mns2016_lower(n, B);
+        return 1.0 - ecdf1_mns2016_B(n, B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-mns2016' command for computing a one-sided boundary crossing.\n");
@@ -94,9 +94,9 @@ double calculate_ecdf1_mns2016(int n, const vector<double>& b, const vector<doub
 double calculate_ecdf1_new(int n, const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf1_new_upper(n, b);
+        return 1.0 - ecdf1_new_b(n, b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf1_new_lower(n, B);
+        return 1.0 - ecdf1_new_B(n, B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-m2020' command for computing a one-sided boundary crossing.\n");

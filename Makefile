@@ -34,7 +34,7 @@ bin/crossprob_mc: $(CROSSPROB_MC_OBJECTS)
 build/%.o: src/%.cc
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
-test: # Running "py.test" also works.
+test: # Running "py.test" also works and produces nicer output.
 	python tests/test_crossprob.py
 
 clean:
