@@ -42,7 +42,7 @@ double PoissonPMFGenerator::evaluate_pmf(double lambda, int k) const
 void PoissonPMFGenerator::compute_array(int k, double lambda)
 {
     assert(k <= max_k);
-    assert(k > 0);
+    assert(k >= 0);
     assert(lambda >= 0);
 
     if (lambda == 0.0) {
