@@ -23,7 +23,11 @@ public:
     PoissonPMFGenerator(int max_k);
     ~PoissonPMFGenerator();
     double evaluate_pmf(double lambda, int k) const;
-    void compute_array(int k, double lambda); // Computes Pr[Pois(lambda) = 0], ..., Pr[Pois(lambda) = k]
+    // Fills pmf_array_ptr with the PMF of a Poisson random variable:
+    //     Pr[Pois(lambda) = 0], ..., Pr[Pois(lambda) = k]
+    // Returns the integer N such that for all indices i >= N we have that due to double-precision rounding
+    //     Pr[Pois(lambda) = i] = 0
+    int compute_array(int k, double lambda); 
     const double* get_array() const {return pmf_array_ptr;}
 private:
     int max_k;

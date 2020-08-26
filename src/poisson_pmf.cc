@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 #include "poisson_pmf.hh"
 #include "aligned_mem.hh"
 
@@ -11,8 +12,8 @@ PoissonPMFGenerator::PoissonPMFGenerator(int max_k)
     assert(max_k > 0);
 
     this->max_k = max_k;
-    log_gamma_LUT = allocate_aligned_doubles(max_k+1);
-    for (int i = 0; i < max_k+1; ++i) {
+    log_gamma_LUT = allocate_aligned_doubles(max_k+2);
+    for (int i = 0; i < max_k+2; ++i) {
         log_gamma_LUT[i] = lgamma(i);
     }
    pmf_array_ptr = allocate_aligned_doubles(max_k+1);
@@ -39,20 +40,23 @@ double PoissonPMFGenerator::evaluate_pmf(double lambda, int k) const
     return exp(-lambda + k*log(lambda) - log_gamma_LUT[k+1]);
 }
 
-void PoissonPMFGenerator::compute_array(int k, double lambda)
+int PoissonPMFGenerator::compute_array(int k, double lambda)
 {
     assert(k <= max_k);
-    assert(k >= 0);
-    assert(lambda >= 0);
+    if (lambda <= 0) {
+            throw runtime_error("Expecting lambda>0 in PoissonPMFGenerator::compute_array()");
+    }
 
-    if (lambda == 0.0) {
-        fill(&pmf_array_ptr[1], &pmf_array_ptr[k+1], 0);
-        pmf_array_ptr[0] = 1.0;
-    } else {
-        double log_lambda = log(lambda);
-        for (int i = 0; i < k+1; ++i) {
-            pmf_array_ptr[i] = exp(-lambda + i*log_lambda - log_gamma_LUT[i+1]);
+    double log_lambda = log(lambda);
+    double prob_poisson_eq_i;
+    int support = 0;
+    for (int i = 0; i < k+1; ++i) {
+        prob_poisson_eq_i = exp(-lambda + i*log_lambda - log_gamma_LUT[i+1]);
+        pmf_array_ptr[i] = prob_poisson_eq_i;
+        if (prob_poisson_eq_i > 0) {
+            support = i+1;
         }
     }
+    return support;
 }
 
