@@ -18,6 +18,8 @@
 
 using namespace std;
 
+const double EPSILON = 1e-17;
+
 enum BoundType {bSTEP, BSTEP, END};  
 
 struct Bound {
@@ -59,23 +61,17 @@ static vector<Bound> join_all_bounds(const vector<double>& b, const vector<doubl
     return bounds;
 }
 
-void update_buffers_and_step_counts(Bound bound, DoubleBuffer<double>& buffers, int& b_step_count, int& B_step_count)
+void update_dest_buffer_and_step_counts(BoundType bound_tag, vector<double>& dest_buffer, int& b_step_count, int& B_step_count)
 {
-    if (bound.tag == bSTEP) {
+    if (bound_tag == bSTEP) {
         ++b_step_count;
-        buffers.get_dest()[b_step_count] = 0.0;
-        // The following line is not necessary, but keeps the arrays cleaner.
-        // This is helpful for doing debug prints.
-        //buffers.get_src()[b_step_count] = 0.0; 
-    } else if (bound.tag == BSTEP) {
-        buffers.get_dest()[B_step_count] = 0.0;
-        // The following line is not necessary, but keeps the arrays cleaner.
-        // This is helpful for doing debug prints.
-        ////buffers.get_src()[B_step_count] = 0.0;
+        dest_buffer[b_step_count] = 0.0;
+    } else if (bound_tag == BSTEP) {
+        dest_buffer[B_step_count] = 0.0;
         ++B_step_count;
     } else {
-        if (bound.tag != END) {
-            cout << "tag: " << bound.tag << "\n";
+        if (bound_tag != END) {
+            cout << "tag: " << bound_tag << "\n";
             throw runtime_error("Expecting END tag");
         }
     }
@@ -102,18 +98,22 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
         int cur_size = b_step_count - B_step_count + 1;
 
         double lambda = intensity*(bounds[i].location-prev_location);
-        pmfgen.compute_array(cur_size, lambda);
-
-        if (use_fft) {
-            fftconvolver.convolve_same_size(cur_size, pmfgen.get_array(), &buffers.get_src()[B_step_count], &buffers.get_dest()[B_step_count]);
+        if (lambda > 0) {
+            int support = pmfgen.compute_array(cur_size, lambda);
+            if (use_fft) {
+                fftconvolver.convolve_same_size(cur_size, pmfgen.get_array(), &buffers.get_src()[B_step_count], &buffers.get_dest()[B_step_count]);
+            } else {
+                convolve_same_size(cur_size, pmfgen.get_array(), &buffers.get_src()[B_step_count], &buffers.get_dest()[B_step_count]);
+            }
+            update_dest_buffer_and_step_counts(bounds[i].tag, buffers.get_dest(), b_step_count, B_step_count);
+            buffers.flip();
+        } else if (lambda==0) {
+            // No need to convolve or copy anything -- just modify src buffer in place.
+            update_dest_buffer_and_step_counts(bounds[i].tag, buffers.get_src(), b_step_count, B_step_count);
         } else {
-            convolve_same_size(cur_size, pmfgen.get_array(), &buffers.get_src()[B_step_count], &buffers.get_dest()[B_step_count]);
+            throw runtime_error("lambda<0 in poisson_process_noncrossing_probability(). This should never happen.");
         }
-
-        update_buffers_and_step_counts(bounds[i], buffers, b_step_count, B_step_count);
-
         prev_location = bounds[i].location;
-        buffers.flip();
     }
 
     return buffers.get_src();
