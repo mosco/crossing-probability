@@ -164,11 +164,11 @@ static void print_usage()
     cout << endl;
     cout << "DESCRIPTION\n";
     cout << "    crossing_probability poisson <boundary-functions-file> <num-simulations>\n";
-    cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < xi_n(t) < h(t) for all t in [0,1]\n";
+    cout << "        Estimates (using Monte-Carlo simulations) the non-crossing probability that that g(t) < xi_n(t) < h(t) for all t in [0,1]\n";
     cout << "        where xi_n(t) is a homogeneous Poisson process of intensity n in the interval [0,1].\n";
     cout << endl;
     cout << "    crossing_probability ecdf <boundary-functions-file> <num-simulations>\n";
-    cout << "        Estimates (using Monte-Carlo simulations) the probability that g(t) < F_n(t) < h(t) for all t in [0,1]\n";
+    cout << "        Estimates (using Monte-Carlo simulations) the non-crossing probability that that g(t) < F_n(t) < h(t) for all t in [0,1]\n";
     cout << "        where F_n(t) is the empirical CDF of n uniform samples in [0,1]. i.e.\n";
     cout << "            F_n(t) = (number of X_i < t)/n  where X_1,...X_n ~ U[0,1].\n";
     cout << endl;
@@ -182,8 +182,8 @@ static void print_usage()
     cout << "        Line 2: the i-th number in this list is sup{t in [0,1] : h(t) <= i}\n";
     cout << endl;
     cout << "        Example:\n";
-    cout << "            0.3, 0.7, 0.9, 1\n";
     cout << "            0, 0, 0.15, 0.5, 0.8\n";
+    cout << "            0.3, 0.7, 0.9, 1\n";
     cout << endl;
     cout << "    <num-simulations>\n";
     cout << "        Number of Monte-Carlo simulation runs.\n";
@@ -213,11 +213,11 @@ static int handle_command_line_arguments(int argc, char* argv[])
     if (command == "poisson") {
         // cout << "Running " << num_simulations << " simulations...\n";
         double crossprob = poisson_process_crossing_probability_montecarlo(n, b, B, num_simulations);
-        cout << crossprob << endl;
+        cout << 1.0-crossprob << endl;
     } else if (command == "ecdf") {
         // cout << "Running " << num_simulations << " simulations...\n";
         double crossprob = ecdf_crossing_probability_montecarlo(n, b, B, num_simulations);
-        cout << crossprob << endl;
+        cout << 1.0-crossprob << endl;
     } else {
         print_usage();
         throw runtime_error("Second command line argument must be 'ecdf' or 'poisson'");

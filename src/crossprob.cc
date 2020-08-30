@@ -5,6 +5,7 @@
 #include <cassert>
 #include <algorithm>
 
+#include "common.hh"
 #include "read_boundaries_file.hh"
 #include "string_utils.hh"
 
@@ -23,9 +24,9 @@ static void print_usage()
     cout << "    Let X_1, ..., X_n be a set of points sampled uniformly from the interval [0,1]\n";
     cout << "    and let X_(1) <= X_(2) <= ... <= X_(n) be the sorted sample.\n";
     cout << "\n";
-    cout << "    This program implements several algorithms for computing the probability that\n";
+    cout << "    This program implements several algorithms for computing the non-crossing probability that\n";
     cout << "        for all i: b_i <= X_(i) <= B_i\n"; 
-    cout << "    It also has one-sided crossing variants:\n";
+    cout << "    It also has one-sided non-crossing variants:\n";
     cout << "        for all i: b_i <= X_(i)\n";
     cout << "    and\n";
     cout << "        for all i: X_(i) <= B_i\n";
@@ -79,9 +80,9 @@ static void print_usage()
 double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf1_mns2016_b(b);
+        return ecdf1_mns2016_b(b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf1_mns2016_B(B);
+        return ecdf1_mns2016_B(B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-mns2016' command for computing a one-sided boundary crossing.\n");
@@ -91,40 +92,30 @@ double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)
 double calculate_ecdf1_new(const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return 1.0 - ecdf1_new_b(b);
+        return ecdf1_new_b(b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return 1.0 - ecdf1_new_B(B);
+        return ecdf1_new_B(B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-m2020' command for computing a one-sided boundary crossing.\n");
     }
 }
 
-template <typename T>
-std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
-  if ( !v.empty() ) {
-    out << '[';
-    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
-    out << "\b\b]";
-  }
-  return out;
-}
-
 double calculate_ecdf2_ks2001(const vector<double>& b, const vector<double>& B)
 {
     int n = max(b.size(), B.size());
     if ((b.size() == n) && (B.size() == n)) {
-        return 1.0 - ecdf2(b, B, false);
+        return ecdf2(b, B, false);
     }
 
     if ((b.size() == 0) && (B.size() == n)) {
         std::vector<double> zeros_vector(n, 0.0);
-        return 1.0 - ecdf2(zeros_vector, B, false);
+        return ecdf2(zeros_vector, B, false);
     }
 
     if ((b.size() == n) && (B.size() == 0)) {
         std::vector<double> ones_vector(n, 1.0);
-        return 1.0 - ecdf2(b, ones_vector, false);
+        return ecdf2(b, ones_vector, false);
     }
 
     throw runtime_error("Expecting either two boundary lists of length n or one list of length n and one of length zero");
@@ -134,17 +125,17 @@ double calculate_ecdf2_mn2017(const vector<double>& b, const vector<double>& B)
 {
     int n = max(b.size(), B.size());
     if ((b.size() == n) && (B.size() == n)) {
-        return 1.0 - ecdf2(b, B, true);
+        return ecdf2(b, B, true);
     }
 
     if ((b.size() == 0) && (B.size() == n)) {
         std::vector<double> zeros_vector(n, 0.0);
-        return 1.0 - ecdf2(zeros_vector, B, true);
+        return ecdf2(zeros_vector, B, true);
     }
 
     if ((b.size() == n) && (B.size() == 0)) {
         std::vector<double> ones_vector(n, 1.0);
-        return 1.0 - ecdf2(b, ones_vector, true);
+        return ecdf2(b, ones_vector, true);
     }
     throw runtime_error("Expecting either two boundary lists of length n or one list of length n and one of length zero");
 }
