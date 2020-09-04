@@ -3,22 +3,31 @@
 
 #include <vector>
 #include <complex>
-
-class FFTW_R2C_1D_Executor;
-class FFTW_C2R_1D_Executor;
+#include <fftw3.h>
 
 class FFTWConvolver {
 public:
     FFTWConvolver(int maximum_input_size);
     ~FFTWConvolver();
-    void convolve_same_size(int input_buffers_size, const double* input_buffer_0, const double* input_buffer_1, double* output_buffer);
+    void convolve_same_size(int size, const double* input_a, const double* input_b, double* output);
 private:
-    std::vector<FFTW_R2C_1D_Executor*> r2c_executors;
-    std::vector<FFTW_C2R_1D_Executor*> c2r_executors;
+    int maximum_input_size;
 
     std::complex<double>* tmp_complex;
 
-    int maximum_input_size;
+
+    // The r2c plans perform, for various sizes, a real to complex FFT with input at r2c_in and output at r2c_out
+    double* r2c_in;
+    std::complex<double>* r2c_out;
+    std::vector<fftw_plan> r2c_plans;
+    fftw_plan memoized_r2c_plan(int rounded_size);
+
+    // The c2r plans perform, for various sizes, a complex to real FFT with input at c2r_in and output at c2r_out
+    std::complex<double>* c2r_in;
+    double* c2r_out;
+    std::vector<fftw_plan> c2r_plans;
+    fftw_plan memoized_c2r_plan(int rounded_size);
+
 };
 
 #endif
