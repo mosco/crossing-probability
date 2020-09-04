@@ -144,10 +144,13 @@ static int handle_command_line_arguments(int argc, char* argv[])
 {
     string command = string(argv[1]);
 
+
     string filename = string(argv[2]);
     pair<vector<double>, vector<double> > bounds = read_and_check_boundaries_file(filename);
     const vector<double>& b = bounds.first;
     const vector<double>& B = bounds.second;
+
+
 
     double result;
     if (command == "ecdf1-mns2016") {
@@ -157,6 +160,7 @@ static int handle_command_line_arguments(int argc, char* argv[])
     } else if (command == "ecdf2-ks2001") {
         result = calculate_ecdf2_ks2001(b, B);
     } else if (command == "ecdf2-mn2017") {
+
         result = calculate_ecdf2_mn2017(b, B);
     } else {
         print_usage();

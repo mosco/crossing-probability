@@ -46,4 +46,16 @@ inline void DoubleBuffer<T>::flip()
     buf0_is_src = !buf0_is_src;
 }
 
+
+template <typename T>
+std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
+  if ( !v.empty() ) {
+    out << std::string("[");
+    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
+    out << std::string("\b\b]");
+  }
+  return out;
+}
+
 #endif
+

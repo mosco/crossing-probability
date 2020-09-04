@@ -16,7 +16,7 @@ using namespace std;
 #if FLOAT_PRECISION_BITS == 128
 #include "string_utils.hh"
     extern "C" {
-        #include <quadmath.h>
+        #include <quadmath.h> // Supported in GCC but not clang
     }
     typedef __float128 FLOAT;
     #define EXP expq

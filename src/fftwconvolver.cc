@@ -108,7 +108,11 @@ void FFTWConvolver::convolve_same_size(
     const double* __restrict__ input_b,
     double* __restrict__ output)
 {
-    assert(size <= maximum_input_size);
+    if (size > maximum_input_size) {
+        stringstream ss;
+        ss << "FFTWConvolver::convolve_same_size received input of size " << size << ". This is bigger than maximum_input_size==" << maximum_input_size;
+        throw runtime_error(ss.str());
+    }
     if (size <= 0) {
         return; // Nothing to do
     }

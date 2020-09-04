@@ -18,8 +18,6 @@
 
 using namespace std;
 
-const double EPSILON = 1e-17;
-
 enum BoundType {bSTEP, BSTEP, END};  
 
 struct Bound {
@@ -86,7 +84,6 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
     buffers.get_src()[0] = 1.0;
 
     FFTWConvolver fftconvolver(n+1); 
-
     PoissonPMFGenerator pmfgen(n+1);
 
     int b_step_count = 0;
@@ -99,7 +96,7 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
 
         double lambda = intensity*(bounds[i].location-prev_location);
         if (lambda > 0) {
-            int support = pmfgen.compute_array(cur_size, lambda);
+            pmfgen.compute_array(cur_size, lambda);
             if (use_fft) {
                 fftconvolver.convolve_same_size(cur_size, pmfgen.get_array(), &buffers.get_src()[B_step_count], &buffers.get_dest()[B_step_count]);
             } else {
@@ -115,7 +112,6 @@ vector<double> poisson_process_noncrossing_probability(int n, double intensity, 
         }
         prev_location = bounds[i].location;
     }
-
     return buffers.get_src();
 }
 
