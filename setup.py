@@ -7,16 +7,20 @@ module1 = Extension(
         'src/common.cc',
         'src/string_utils.cc',
         'src/poisson_pmf.cc',
-        'src/fftw_wrappers.cc',
         'src/fftwconvolver.cc',
         'src/ecdf1_mns2016.cc',
         'src/ecdf1_new.cc',
         'src/ecdf2.cc',
         'python_extension/crossprob.cc'
     ],
-    extra_compile_args = ['-Wall', '-std=c++11', '-O3', '-march=native', '-ffast-math'],
-    extra_link_args = ['-lfftw3'],
-    undef_macros = ["NDEBUG"]
+    extra_compile_args = ['-Wall', '-std=c++11', '-ffast-math', '-march=native'],
+
+    # Path to FFTW3:
+    # Note that if you're running in Anaconda Python, it includes Intel's MKL implementation of FFT
+    # which is compatible with the FFTW3 API. In that case you don't actually need to link anything and the code will probably run slightly faster on Intel CPUs.
+    extra_link_args = ['-L/usr/local/lib/', '-lfftw3'],
+
+    #undef_macros = ["NDEBUG"]
 )
 
 LONG_DESCRIPTION = """crossprob - crossing probabilities for one-dimensional empirical processes
