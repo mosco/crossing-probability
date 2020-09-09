@@ -12,9 +12,9 @@ template<class T>
 class DoubleBuffer {
     public:
         DoubleBuffer(int n, T value);
-        std::vector<T>& get_src();
-        std::vector<T>& get_dest();
-        void flip();
+        std::vector<T>& get_src()  { return buf0_is_src ? buf0 : buf1; };
+        std::vector<T>& get_dest() { return buf0_is_src ? buf1 : buf0; };
+        void flip() { buf0_is_src = !buf0_is_src; };
 
     private:
         std::vector<T> buf0;
@@ -27,25 +27,6 @@ DoubleBuffer<T>::DoubleBuffer(int n, T value) :
     buf0(n, value), buf1(n, value), buf0_is_src(true)
 {
 }
-
-template<class T>
-inline std::vector<T>& DoubleBuffer<T>::get_src()
-{
-    return buf0_is_src ? buf0 : buf1;
-}
-
-template<class T>
-inline std::vector<T>& DoubleBuffer<T>::get_dest()
-{
-    return buf0_is_src ? buf1 : buf0;
-}
-
-template<class T>
-inline void DoubleBuffer<T>::flip()
-{
-    buf0_is_src = !buf0_is_src;
-}
-
 
 template <typename T>
 std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {

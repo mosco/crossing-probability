@@ -28,17 +28,6 @@ PoissonPMFGenerator::~PoissonPMFGenerator()
     free_aligned_mem(log_gamma_LUT);
 }
 
-double PoissonPMFGenerator::evaluate_pmf(double lambda, int k) const
-{
-    assert(lambda >= 0);
-    assert(k >= 0);
-
-    if (lambda == 0) {
-        return (k == 0) ? 1.0 : 0.0;
-    }
-
-    return exp(-lambda + k*log(lambda) - log_gamma_LUT[k+1]);
-}
 
 void PoissonPMFGenerator::compute_array(int k, double lambda)
 {

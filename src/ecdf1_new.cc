@@ -120,7 +120,7 @@ double ecdf1_new_B(const vector<double>& B)
     // Asymptotically any k in the range [logn, n/logn] should give optimal results as n goes to infinity.
     // Setting k=c*sqrt(n) and minimizing the asymptotic runtime, we obtain k=sqrt(2*n),
     // however, empirically slightly lower numbers give better results.
-    int k = sqrt(n)/2 + 1; // The +1 is to prevent it from being zero for small array sizes.
+    int k = sqrt(n) + 1; // The +1 is to prevent it from being zero for small array sizes.
 
 
     vector<double> poisson_nocross_probabilities = poisson_B_noncrossing_probability_n2(n, n, B, k);

@@ -22,7 +22,17 @@ class PoissonPMFGenerator {
 public:
     PoissonPMFGenerator(int max_k);
     ~PoissonPMFGenerator();
-    double evaluate_pmf(double lambda, int k) const;
+    double evaluate_pmf(double lambda, int k) const
+    {
+        assert(lambda >= 0);
+        assert(k >= 0);
+
+        if (lambda == 0) {
+            return (k == 0) ? 1.0 : 0.0;
+        }
+
+        return exp(-lambda + k*log(lambda) - log_gamma_LUT[k+1]);
+    };
     // Fills pmf_array_ptr with the PMF of a Poisson random variable:
     //     Pr[Pois(lambda) = 0], ..., Pr[Pois(lambda) = k]
     // Returns the smallest integer N such that for all indices i >= N we have that due to double-precision rounding

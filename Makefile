@@ -10,7 +10,7 @@
 #LD = g++
 
 #CXX = gcc
-CXXFLAGS = -Wall -std=c++11 -O3 -ffast-math -fwrapv -march=native -g
+CXXFLAGS = -Wall -std=c++11 -O3 -ffast-math -fwrapv -march=native -DNDEBUG
 
 # Flags for linking with FFTW3:
 LDFLAGS = -march=native -g -lfftw3 
