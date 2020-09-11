@@ -5,6 +5,11 @@ Fast C++ programs (with Python interface) for computing the boundary crossing pr
 
 Currently, the main application of this code is to compute p-values for continuous goodness-of-fit tests such as Kolmogorov-Smirnov and their power for detecting specific distributions. These code may be applied to other problems in the fields of sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.  
 
+To learn more, check out the preprint:
+
+[Amit Moscovich (2020). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics.](https://arxiv.org/abs/2009.04954)
+
+![Illustration](https://raw.githubusercontent.com/mosco/crossing-probability/master/illustration.pdf)
 
 # Building the binaries
 
@@ -37,3 +42,8 @@ If you installed FFTW3 on your system, the compilation should just work. If FFTW
 
 Just run **./bin/crossprob** or **./bin/crossprob_mc**. Usage instructions will be displayed.
 
+# Contact
+
+Feel free to ask any questions: moscovich@gmail.com
+
+Amit Moscovich.
