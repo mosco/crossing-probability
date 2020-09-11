@@ -46,9 +46,9 @@ Its parameters are:
 
 Faster functions are available for the special case of a single boundary:
     ecdf1_new_b(b)
-        Implements a new O(n^2) algorithm. B_i are implicitly assumed to be 1. 
+        Implements a new O(n^2) algorithm [NEW]. B_i are implicitly assumed to be 1. 
     ecdf1_new_B(B)
-        Implements the O(n^2) algorithm. b_i are implicitly assumed to be 0. 
+        Implements the O(n^2) algorithm [NEW]. b_i are implicitly assumed to be 0. 
     ecdf1_mns2016_b(b)
         Implements the O(n^2) algorithm of [MNS2016]. B_i are implicitly assumed to be 1. 
         Generally slower and less numerically stable than ecdf1_new_b()
@@ -69,6 +69,7 @@ REFERENCES
               p-value calculation. Electronic Journal of Statistics. https://doi.org/10.1214/16-EJS1172
     [MN2017] Amit Moscovich, Boaz Nadler (2017). Fast calculation of boundary crossing probabilities for Poisson processes.
              Statistics & Probability Letters. https://doi.org/10.1016/j.spl.2016.11.027
+    [NEW]    Amit Moscovich (2020). Preprint. https://arxiv.org/abs/2009.04954
 
 MODULE REFERENCE
     https://github.com/mosco/crossing-probability
