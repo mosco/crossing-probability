@@ -75,7 +75,7 @@ static void print_usage()
     cout << "             p-value calculation. Electronic Journal of Statistics. https://doi.org/10.1214/16-EJS1172\n";
     cout << "    [MN2017] Amit Moscovich, Boaz Nadler (2017). Fast calculation of boundary crossing probabilities for Poisson processes.\n";
     cout << "             Statistics & Probability Letters. https://doi.org/10.1016/j.spl.2016.11.027\n";
-    cout << "    [NEW]    Amit Moscovich (2020). Preprint. https://arxiv.org/abs/2009.04954\n";
+    cout << "    [NEW]    Amit Moscovich (2020). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics. Preprint. https://arxiv.org/abs/2009.04954\n";
 }
 
 double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)
