@@ -9,7 +9,7 @@ To learn more, check out the preprint:
 
 [Amit Moscovich (2020). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics.](https://arxiv.org/abs/2009.04954)
 
-![Illustration](https://raw.githubusercontent.com/mosco/crossing-probability/master/illustration.pdf)
+![Illustration of one-sided crossing](https://raw.githubusercontent.com/mosco/crossing-probability/master/illustration-one-sided.svg)
 
 # Building the binaries
 
