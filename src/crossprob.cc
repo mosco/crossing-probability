@@ -39,7 +39,7 @@ static void print_usage()
     cout << "        ecdf2-ks2001: an O(n^3) algorithm for two-sided boundaries. [KS2001]\n";
     cout << "        ecdf2-mn2017: an O(n^2 log n) method for two-sided boundaries. [MN2017]\n";
     cout << "        ecdf1-mns2016: an O(n^2) method for one-sided boundaries. [MNS2016]\n";
-    cout << "        ecdf1-new: New O(n^2) method, typically faster than ecdf1-mns2016.\n";
+    cout << "        ecdf1-new: New O(n^2) method, typically faster than ecdf1-mns2016. [NEW]\n";
     cout << "\n";            
     cout << "    <one-or-two-sided-boundaries-filename>\n";
     cout << "        This text file contains the two lines of comma-separater numbers:\n";
@@ -75,6 +75,7 @@ static void print_usage()
     cout << "             p-value calculation. Electronic Journal of Statistics. https://doi.org/10.1214/16-EJS1172\n";
     cout << "    [MN2017] Amit Moscovich, Boaz Nadler (2017). Fast calculation of boundary crossing probabilities for Poisson processes.\n";
     cout << "             Statistics & Probability Letters. https://doi.org/10.1016/j.spl.2016.11.027\n";
+    cout << "    [NEW]    Amit Moscovich (2020). Preprint. https://arxiv.org/abs/2009.04954\n";
 }
 
 double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)

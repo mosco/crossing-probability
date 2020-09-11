@@ -10,11 +10,11 @@
 #LD = g++
 
 #CXX = gcc
-CXXFLAGS = -Wall -std=c++11 -O3 -ffast-math -fwrapv -march=native -DNDEBUG
+CXXFLAGS = -Wall -std=c++11 -O3 -ffast-math -fwrapv -march=native
 
 # Flags for linking with FFTW3:
 LDFLAGS = -march=native -g -lfftw3 
-# Flags for linking with Intel's MKL library which has an FFTW3-compatible interface and is faster:
+# Flags for linking with Intel's MKL library which has an FFTW3-compatible interface and is typically faster on Intel chips:
 #LDFLAGS = -march=native -g -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
 
 LD = $(CXX)

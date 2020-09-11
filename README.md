@@ -1,15 +1,14 @@
 crossing-probability
 ====================
 
-Fast C++ programs (with Python interface) for computing the boundary crossing probability of Poisson processes and empirical CDFs.
+Fast C++ programs (with Python interface) for computing the boundary crossing probability of the empirical CDF.
 
 Currently, the main application of this code is to compute p-values for continuous goodness-of-fit tests such as Kolmogorov-Smirnov and their power for detecting specific distributions. These code may be applied to other problems in the fields of sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.  
 
-More details are available at [my homepage](https://mosco.github.io/#crossprob).
 
 # Building the binaries
 
-I've tried to build the code on Linux and Mac OSX only. Building on Windows should be possible (e.g. using MinGW or some other GCC installation), but I haven't tried it.
+I've tried to build the code on Linux and Mac OSX only. Building on Windows should be possible (e.g. using MinGW or some other GCC installation), but I haven't tried it. It was tested on the gcc and clang compilers.
 
 Prerequisite: The [FFTW3](http://www.fftw.org/) library. [Installation instructions](http://www.fftw.org/download.html).
 
@@ -17,14 +16,14 @@ Simply run
 `make`
 This will build two programs in the ./bin directory:
 
-* **bin/crossprob** implements algorithms described in [Moscovich and Nadler 2017](https://www.sciencedirect.com/science/article/pii/S0167715216302802) [(preprint)](https://arxiv.org/abs/1503.04363) for computing one-sided and two-sided crossing probabilities for the Poisson process and empirical CDF.
+* **bin/crossprob** implements algorithms for computing one-sided and two-sided crossing probabilities.
 * **bin/crossprob_mc** estimates crossing probabilities using Monte-Carlo simulations.
  
-You may run the tests with ```make test```.
+Then run the tests ```make test```.
 
 # Building the Python extension
 
-Run ```python setup.py install``` to build and install the python module ```crossprob``` into your site-packages directory. This uses the standard distutils system.
+Run ```make python``` followed by ```python setup.py install``` to build and install the python module ```crossprob``` into your site-packages directory. This uses the standard distutils system. You should then be able to "import crossprob" in your python code.
 
 ## Build errors?
 
@@ -38,9 +37,3 @@ If you installed FFTW3 on your system, the compilation should just work. If FFTW
 
 Just run **./bin/crossprob** or **./bin/crossprob_mc**. Usage instructions will be displayed.
 
-
-# Contact
-
-Feel free to ask any questions: moscovich@gmail.com
-
-Amit Moscovich.
