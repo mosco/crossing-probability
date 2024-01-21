@@ -7,8 +7,9 @@ Currently, the main application of this code is to compute p-values for continuo
 
 To learn more, check out the papers:
 
-[Amit Moscovich (2023). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics. Computational Statistics & Data Analysis 185 (2023): 107769.]([https://arxiv.org/abs/2009.04954](https://doi.org/10.1016/j.csda.2023.107769))
-[Amit Moscovich, Boaz Nadler. Fast calculation of boundary crossing probabilities for Poisson processes. Statistics & Probability Letters 123 (2017): 177-182.](https://doi.org/10.1016/j.spl.2016.11.027 )
+[Amit Moscovich. *Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics*. Computational Statistics & Data Analysis 185 (2023): 107769. https://doi.org/10.1016/j.csda.2023.107769](https://doi.org/10.1016/j.csda.2023.107769)
+
+[Amit Moscovich, Boaz Nadler. *Fast calculation of boundary crossing probabilities for Poisson processes*. Statistics & Probability Letters 123 (2017): 177-182. https://doi.org/10.1016/j.spl.2016.11.027](https://doi.org/10.1016/j.spl.2016.11.027)
 
 ![Illustration of one-sided crossing](https://raw.githubusercontent.com/mosco/crossing-probability/master/illustration-one-sided.svg)
 
