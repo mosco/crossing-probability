@@ -5,9 +5,10 @@ Fast C++ programs (with Python interface) for computing the boundary crossing pr
 
 Currently, the main application of this code is to compute p-values for continuous goodness-of-fit tests such as Kolmogorov-Smirnov and their power for detecting specific distributions. These code may be applied to other problems in the fields of sequential analysis, change-point detection, queuing theory, diffusion, finance, etc.  
 
-To learn more, check out the preprint:
+To learn more, check out the papers:
 
-[Amit Moscovich (2020). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics.](https://arxiv.org/abs/2009.04954)
+[Amit Moscovich (2023). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics. Computational Statistics & Data Analysis 185 (2023): 107769.]([https://arxiv.org/abs/2009.04954](https://doi.org/10.1016/j.csda.2023.107769))
+[Amit Moscovich, Boaz Nadler. Fast calculation of boundary crossing probabilities for Poisson processes. Statistics & Probability Letters 123 (2017): 177-182.](https://doi.org/10.1016/j.spl.2016.11.027 )
 
 ![Illustration of one-sided crossing](https://raw.githubusercontent.com/mosco/crossing-probability/master/illustration-one-sided.svg)
 
