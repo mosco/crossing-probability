@@ -9,7 +9,7 @@ module1 = Extension(
         'src/poisson_pmf.cc',
         'src/fftwconvolver.cc',
         'src/ecdf1_mns2016.cc',
-        'src/ecdf1_new.cc',
+        'src/ecdf1_m2023.cc',
         'src/ecdf2.cc',
         'python_extension/crossprob.cc'
     ],
@@ -45,16 +45,16 @@ Its parameters are:
              otherwise the O(n^3) algorithm of [KS2001]
 
 Faster functions are available for the special case of a single boundary:
-    ecdf1_new_b(b)
+    ecdf1_m2023_b(b)
         Implements a new O(n^2) algorithm [NEW]. B_i are implicitly assumed to be 1. 
-    ecdf1_new_B(B)
+    ecdf1_m2023_B(B)
         Implements the O(n^2) algorithm [NEW]. b_i are implicitly assumed to be 0. 
     ecdf1_mns2016_b(b)
         Implements the O(n^2) algorithm of [MNS2016]. B_i are implicitly assumed to be 1. 
-        Generally slower and less numerically stable than ecdf1_new_b()
+        Generally slower and less numerically stable than ecdf1_m2023_b()
     ecdf1_mns2016_B(B)
         Implements the O(n^2) algorithm of [MNS2016]. b_i are implicitly assumed to be 0. 
-        Generally slower and less numerically stable than ecdf1_new_B()
+        Generally slower and less numerically stable than ecdf1_m2023_B()
 
 EXAMPLES
     For a sample X_1, X_2, X_3 with order statistics X_(1) <= X_(2) <= X(3), the probability

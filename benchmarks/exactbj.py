@@ -56,7 +56,7 @@ def Mn_plus_bounds(n, Mn_plus_value):
 def Mn_plus_distribution(n, x):
     """Probability of having Mn_plus < x under the null hypothesis that X_1,...X_n ~ U[0,1]"""
     b_bounds = Mn_plus_bounds(n, x)
-    return 1.0 - crossprob.ecdf1_new_b(b_bounds)
+    return 1.0 - crossprob.ecdf1_m2023_b(b_bounds)
     #return 1.0 - crossprob.ecdf2(b_bounds, [1]*len(b_bounds), True)
 
 N_BINARY_SEARCH_STEPS_MAX = 110 
@@ -96,7 +96,7 @@ def inverse_Mn_plus(n, alpha, debug_prints):
     assert i < N_BINARY_SEARCH_STEPS_MAX-1, "Reached N_BINARY_SEARCH_STEPS_MAX => did not converge!"
     result = mid
     alpha_bounds = Mn_plus_bounds(n, result)
-    nocross_probability = 1.0 - crossprob.ecdf1_new_b(alpha_bounds)
+    nocross_probability = 1.0 - crossprob.ecdf1_m2023_b(alpha_bounds)
     relative_error = absolute(alpha - nocross_probability)/alpha 
     if relative_error > EPSILON:
         print('Large relative error!', relative_error)
@@ -184,7 +184,7 @@ def precalc_timings_Mn_plus(alpha, max_ks2001_n, max_mns2016_n, num_reps):
             timings_mn2017[i] = min(timings_mn2017[i], t.elapsed)
 
             with Timer('NEW') as t:
-                results_new[i] = 1.0-crossprob.ecdf1_new_b(bounds)
+                results_new[i] = 1.0-crossprob.ecdf1_m2023_b(bounds)
             timings_new[i] = min(timings_new[i], t.elapsed)
 
             pickler.dump(f'Mn_plus_timings_{alpha}',
@@ -214,7 +214,7 @@ def precalc_timings_Mn_plus_largescale(threshold, n_range):
             bounds = Mn_plus_bounds(n, threshold)
 
         with Timer('NEW') as t:
-            results_new[i] = 1.0-crossprob.ecdf1_new_b(bounds)
+            results_new[i] = 1.0-crossprob.ecdf1_m2023_b(bounds)
         timings_new[i] = min(timings_new[i], t.elapsed)
 
         with Timer('MN2017') as t:

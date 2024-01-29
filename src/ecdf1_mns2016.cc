@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cstring>
 #include <cassert>
+#include <iterator>
 #include "mm_malloc.h"
 
 #include "ecdf1_mns2016.hh"

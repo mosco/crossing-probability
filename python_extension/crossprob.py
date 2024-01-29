@@ -27,16 +27,16 @@ Its parameters are:
              otherwise the O(n^3) algorithm of [KS2001]
 
 Faster functions are available for the special case of a single boundary:
-    ecdf1_new_b(b)
+    ecdf1_m2023_b(b)
         Implements a new O(n^2) algorithm. B_i are implicitly assumed to be 1. 
-    ecdf1_new_B(B)
+    ecdf1_m2023_B(B)
         Implements the O(n^2) algorithm. b_i are implicitly assumed to be 0. 
     ecdf1_mns2016_b(b)
         Implements the O(n^2) algorithm of [MNS2016]. B_i are implicitly assumed to be 1. 
-        Generally slower and less numerically stable than ecdf1_new_b()
+        Generally slower and less numerically stable than ecdf1_m2023_b()
     ecdf1_mns2016_B(B)
         Implements the O(n^2) algorithm of [MNS2016]. b_i are implicitly assumed to be 0. 
-        Generally slower and less numerically stable than ecdf1_new_B()
+        Generally slower and less numerically stable than ecdf1_m2023_B()
 
 EXAMPLES
     For a sample X_1, X_2, X_3 with order statistics X_(1) <= X_(2) <= X(3), the probability
@@ -294,12 +294,12 @@ def ecdf1_mns2016_b(b):
     r"""ecdf1_mns2016_b(VectorDouble b) -> double"""
     return _crossprob.ecdf1_mns2016_b(b)
 
-def ecdf1_new_B(B):
-    r"""ecdf1_new_B(VectorDouble B) -> double"""
-    return _crossprob.ecdf1_new_B(B)
+def ecdf1_m2023_B(B):
+    r"""ecdf1_m2023_B(VectorDouble B) -> double"""
+    return _crossprob.ecdf1_m2023_B(B)
 
-def ecdf1_new_b(b):
-    r"""ecdf1_new_b(VectorDouble b) -> double"""
-    return _crossprob.ecdf1_new_b(b)
+def ecdf1_m2023_b(b):
+    r"""ecdf1_m2023_b(VectorDouble b) -> double"""
+    return _crossprob.ecdf1_m2023_b(b)
 
 

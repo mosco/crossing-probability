@@ -19,7 +19,7 @@ LDFLAGS = -march=native -g -lfftw3
 
 LD = $(CXX)
 
-CROSSPROB_OBJECTS = build/crossprob.o build/ecdf1_mns2016.o build/ecdf1_new.o build/ecdf2.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o build/common.o
+CROSSPROB_OBJECTS = build/crossprob.o build/ecdf1_mns2016.o build/ecdf1_m2023.o build/ecdf2.o build/fftwconvolver.o build/string_utils.o build/read_boundaries_file.o build/poisson_pmf.o build/common.o
 
 CROSSPROB_MC_OBJECTS = build/crossprob_mc.o build/string_utils.o build/read_boundaries_file.o build/tinymt64.o build/common.o
 
@@ -65,13 +65,13 @@ depend:
 
 src/common.o: src/common.hh
 src/crossprob.o: src/common.hh src/read_boundaries_file.hh
-src/crossprob.o: src/string_utils.hh src/ecdf1_mns2016.hh src/ecdf1_new.hh
+src/crossprob.o: src/string_utils.hh src/ecdf1_mns2016.hh src/ecdf1_m2023.hh
 src/crossprob.o: src/ecdf2.hh
 src/crossprob_mc.o: src/string_utils.hh src/read_boundaries_file.hh
 src/crossprob_mc.o: src/tinymt64.h
 src/ecdf1_mns2016.o: src/ecdf1_mns2016.hh src/common.hh
-src/ecdf1_new.o: src/ecdf1_new.hh src/common.hh src/poisson_pmf.hh
-src/ecdf1_new.o: src/fftwconvolver.hh src/aligned_mem.hh src/string_utils.hh
+src/ecdf1_m2023.o: src/ecdf1_m2023.hh src/common.hh src/poisson_pmf.hh
+src/ecdf1_m2023.o: src/fftwconvolver.hh src/aligned_mem.hh src/string_utils.hh
 src/ecdf2.o: src/ecdf2.hh src/fftwconvolver.hh src/aligned_mem.hh
 src/ecdf2.o: src/common.hh src/poisson_pmf.hh src/string_utils.hh
 src/ecdf2.o: src/read_boundaries_file.hh

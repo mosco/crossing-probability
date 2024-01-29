@@ -4,13 +4,14 @@
 #include <stdexcept>
 #include <cassert>
 #include <algorithm>
+#include <iterator>
 
 #include "common.hh"
 #include "read_boundaries_file.hh"
 #include "string_utils.hh"
 
 #include "ecdf1_mns2016.hh"
-#include "ecdf1_new.hh"
+#include "ecdf1_m2023.hh"
 #include "ecdf2.hh"
 
 using namespace std;
@@ -39,7 +40,7 @@ static void print_usage()
     cout << "        ecdf2-ks2001: an O(n^3) algorithm for two-sided boundaries. [KS2001]\n";
     cout << "        ecdf2-mn2017: an O(n^2 log n) method for two-sided boundaries. [MN2017]\n";
     cout << "        ecdf1-mns2016: an O(n^2) method for one-sided boundaries. [MNS2016]\n";
-    cout << "        ecdf1-new: New O(n^2) method, typically faster than ecdf1-mns2016. [NEW]\n";
+    cout << "        ecdf1-m2023: New O(n^2) method, typically faster than ecdf1-mns2016. [M2023]\n";
     cout << "\n";            
     cout << "    <one-or-two-sided-boundaries-filename>\n";
     cout << "        This text file contains the two lines of comma-separater numbers:\n";
@@ -63,7 +64,7 @@ static void print_usage()
     cout << "\n";
     cout << "    To compute a one-sided crossing probability for two samples\n";
     cout << "    that X_(1) <= 0.5 and X_(2) <= 0.7, we can run\n";
-    cout << "        ./bin/crossprob ecdf1-new bounds1.txt\n";
+    cout << "        ./bin/crossprob ecdf1-m2023 bounds1.txt\n";
     cout << "    where bounds1.txt is the following (first line is empty):\n";
     cout << "            \n";
     cout << "    0.5, 0.7\n";
@@ -75,7 +76,8 @@ static void print_usage()
     cout << "             p-value calculation. Electronic Journal of Statistics. https://doi.org/10.1214/16-EJS1172\n";
     cout << "    [MN2017] Amit Moscovich, Boaz Nadler (2017). Fast calculation of boundary crossing probabilities for Poisson processes.\n";
     cout << "             Statistics & Probability Letters. https://doi.org/10.1016/j.spl.2016.11.027\n";
-    cout << "    [NEW]    Amit Moscovich (2020). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics. Preprint. https://arxiv.org/abs/2009.04954\n";
+    cout << "    [M2023]  Amit Moscovich (2023). Fast calculation of p-values for one-sided Kolmogorov-Smirnov type statistics.\n";
+    cout << "             Computational Statistics & Data Analysis. https://doi.org/10.1016/j.csda.2023.107769\n";
 }
 
 double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)
@@ -90,12 +92,12 @@ double calculate_ecdf1_mns2016(const vector<double>& b, const vector<double>& B)
     }
 }
 
-double calculate_ecdf1_new(const vector<double>& b, const vector<double>& B)
+double calculate_ecdf1_m2023(const vector<double>& b, const vector<double>& B)
 {
     if ((b.size() > 0) && (B.size() == 0)) {
-        return ecdf1_new_b(b);
+        return ecdf1_m2023_b(b);
     } else if ((b.size() == 0) && (B.size() > 0)) {
-        return ecdf1_new_B(B);
+        return ecdf1_m2023_B(B);
     } else {
         print_usage();
         throw runtime_error("Expecting EITHER a lower or an upper boundary function when using the 'ecdf1-m2020' command for computing a one-sided boundary crossing.\n");
@@ -156,8 +158,8 @@ static int handle_command_line_arguments(int argc, char* argv[])
     double result;
     if (command == "ecdf1-mns2016") {
         result = calculate_ecdf1_mns2016(b, B);
-    } else if (command == "ecdf1-new") {
-        result = calculate_ecdf1_new(b, B);
+    } else if (command == "ecdf1-m2023") {
+        result = calculate_ecdf1_m2023(b, B);
     } else if (command == "ecdf2-ks2001") {
         result = calculate_ecdf2_ks2001(b, B);
     } else if (command == "ecdf2-mn2017") {
@@ -165,7 +167,7 @@ static int handle_command_line_arguments(int argc, char* argv[])
         result = calculate_ecdf2_mn2017(b, B);
     } else {
         print_usage();
-        throw runtime_error("Second command line argument must be one of: 'ecdf1-mns2016', 'ecdf1-new', 'ecdf2-ks2001', 'ecdf2-mn2017'.");
+        throw runtime_error("Second command line argument must be one of: 'ecdf1-mns2016', 'ecdf1-m2023', 'ecdf2-ks2001', 'ecdf2-mn2017'.");
     }
 
     cout << result << endl;

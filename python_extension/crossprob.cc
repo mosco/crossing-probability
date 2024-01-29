@@ -4699,7 +4699,7 @@ SWIGINTERN void std_vector_Sl_double_Sg__insert__SWIG_1(std::vector< double > *s
 
 #include "../src/ecdf2.hh"
 #include "../src/ecdf1_mns2016.hh"
-#include "../src/ecdf1_new.hh"
+#include "../src/ecdf1_m2023.hh"
 
 
 SWIGINTERN int
@@ -7500,7 +7500,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ecdf1_new_B(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf1_m2023_B(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< double,std::allocator< double > > *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
@@ -7513,16 +7513,16 @@ SWIGINTERN PyObject *_wrap_ecdf1_new_B(PyObject *SWIGUNUSEDPARM(self), PyObject 
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res1 = swig::asptr(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ecdf1_new_B" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ecdf1_m2023_B" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_new_B" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_m2023_B" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg1 = ptr;
   }
   {
     try {
-      result = (double)ecdf1_new_B((std::vector< double,std::allocator< double > > const &)*arg1);
+      result = (double)ecdf1_m2023_B((std::vector< double,std::allocator< double > > const &)*arg1);
     } catch(std::runtime_error& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     } catch(std::exception& e) {
@@ -7540,7 +7540,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ecdf1_new_b(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_ecdf1_m2023_b(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::vector< double,std::allocator< double > > *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
@@ -7553,16 +7553,16 @@ SWIGINTERN PyObject *_wrap_ecdf1_new_b(PyObject *SWIGUNUSEDPARM(self), PyObject 
     std::vector< double,std::allocator< double > > *ptr = (std::vector< double,std::allocator< double > > *)0;
     res1 = swig::asptr(swig_obj[0], &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ecdf1_new_b" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ecdf1_m2023_b" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_new_b" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ecdf1_m2023_b" "', argument " "1"" of type '" "std::vector< double,std::allocator< double > > const &""'"); 
     }
     arg1 = ptr;
   }
   {
     try {
-      result = (double)ecdf1_new_b((std::vector< double,std::allocator< double > > const &)*arg1);
+      result = (double)ecdf1_m2023_b((std::vector< double,std::allocator< double > > const &)*arg1);
     } catch(std::runtime_error& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     } catch(std::exception& e) {
@@ -7638,8 +7638,8 @@ static PyMethodDef SwigMethods[] = {
 	 { "ecdf2", _wrap_ecdf2, METH_VARARGS, "ecdf2(VectorDouble b, VectorDouble B, bool use_fft) -> double"},
 	 { "ecdf1_mns2016_B", _wrap_ecdf1_mns2016_B, METH_O, "ecdf1_mns2016_B(VectorDouble B) -> double"},
 	 { "ecdf1_mns2016_b", _wrap_ecdf1_mns2016_b, METH_O, "ecdf1_mns2016_b(VectorDouble b) -> double"},
-	 { "ecdf1_new_B", _wrap_ecdf1_new_B, METH_O, "ecdf1_new_B(VectorDouble B) -> double"},
-	 { "ecdf1_new_b", _wrap_ecdf1_new_b, METH_O, "ecdf1_new_b(VectorDouble b) -> double"},
+	 { "ecdf1_m2023_B", _wrap_ecdf1_m2023_B, METH_O, "ecdf1_m2023_B(VectorDouble B) -> double"},
+	 { "ecdf1_m2023_b", _wrap_ecdf1_m2023_b, METH_O, "ecdf1_m2023_b(VectorDouble b) -> double"},
 	 { NULL, NULL, 0, NULL }
 };
 

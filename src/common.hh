@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <iterator>
 
 void check_boundary_vector(std::string name, int n, const std::vector<double>& v);
 
