@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-#include "ecdf1_new.hh"
+#include "ecdf1_m2023.hh"
 #include "common.hh"
 #include "poisson_pmf.hh"
 #include "fftwconvolver.hh"
@@ -111,9 +111,9 @@ vector<double> poisson_B_noncrossing_probability_n2(int n, double intensity, con
     return buffers.get_dest();
 }
 
-double ecdf1_new_B(const vector<double>& B)
+double ecdf1_m2023_B(const vector<double>& B)
 {
-    //cout << "Called ecdf1_new_B()\n";
+    //cout << "Called ecdf1_m2023_B()\n";
     int n = B.size();
     check_boundary_vector("B", n, B);
 
@@ -128,9 +128,9 @@ double ecdf1_new_B(const vector<double>& B)
 }
 // For n=10000, best results k=400...600
 
-double ecdf1_new_b(const vector<double>& b)
+double ecdf1_m2023_b(const vector<double>& b)
 {
-    //cout << "Called ecdf1_new_b()\n";
+    //cout << "Called ecdf1_m2023_b()\n";
     int n = b.size();
     check_boundary_vector("b", n, b);
 
@@ -139,5 +139,5 @@ double ecdf1_new_b(const vector<double>& b)
         symmetric_steps[i] = 1.0 - b[b.size() - 1 - i];
     }
 
-    return ecdf1_new_B(symmetric_steps);
+    return ecdf1_m2023_B(symmetric_steps);
 }

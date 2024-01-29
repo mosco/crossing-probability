@@ -14,7 +14,7 @@ using namespace std;
 //const int ROUNDING = 2048;
 //const int MINIMUM_SIZE_FOR_FFTW_CONVOLUTION = 80;
 
-// Good for ecdf1-new
+// Good for ecdf1-m2023
 const int ROUNDING = 2048;
 const int MINIMUM_SIZE_FOR_FFTW_CONVOLUTION = 128;
 

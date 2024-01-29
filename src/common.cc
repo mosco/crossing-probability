@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <sstream>
+#include <limits>
 
 using namespace std;
 
